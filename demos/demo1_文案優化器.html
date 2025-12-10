@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文案優化器 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .example-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .example-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .example-text {
+            color: #856404;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📝 文案優化器</h1>
+        <p class="subtitle">將你的文字草稿優化成專業文案</p>
+
+        <div class="info-box">
+            <strong>💡 使用說明:</strong><br>
+            1. 在下方輸入你的原始文案(可以是草稿或重點)<br>
+            2. 選擇文案類型與語氣風格<br>
+            3. 點擊「生成提示詞」按鈕<br>
+            4. 複製生成的提示詞,貼到 Google Antigravity 中使用
+        </div>
+
+        <div class="form-group">
+            <label for="originalText">📄 原始文案內容</label>
+            <textarea id="originalText" placeholder="例如:下週三要去動物園,早上8點出發,下午3點回來,要帶水壺和帽子,費用300元"></textarea>
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="docType">📋 文案類型</label>
+                <select id="docType">
+                    <option value="家長通知">家長通知</option>
+                    <option value="聯絡簿">聯絡簿</option>
+                    <option value="課程介紹">課程介紹</option>
+                    <option value="活動文宣">活動文宣</option>
+                    <option value="Email">Email</option>
+                    <option value="會議記錄">會議記錄</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="tone">🎭 語氣風格</label>
+                <select id="tone">
+                    <option value="親切但專業">親切但專業</option>
+                    <option value="正式專業">正式專業</option>
+                    <option value="活潑友善">活潑友善</option>
+                    <option value="簡潔明確">簡潔明確</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+
+            <div class="example-section">
+                <div class="example-title">📌 下一步:</div>
+                <div class="example-text">
+                    1. 點擊上方「複製提示詞」按鈕<br>
+                    2. 開啟 Google Antigravity<br>
+                    3. 將提示詞貼上並送出<br>
+                    4. 查看 AI 生成的優化結果<br>
+                    5. 如需調整,可以繼續對話要求修改
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generatePrompt() {
+            const originalText = document.getElementById('originalText').value.trim();
+            const docType = document.getElementById('docType').value;
+            const tone = document.getElementById('tone').value;
+
+            if (!originalText) {
+                alert('請先輸入原始文案內容!');
+                return;
+            }
+
+            let prompt = '';
+
+            // 根據文案類型生成不同的提示詞
+            switch (docType) {
+                case '家長通知':
+                    prompt = `請幫我將以下內容優化成正式的家長通知,語氣要${tone}:
+
+${originalText}
+
+要求:
+1. 使用繁體中文
+2. 結構清晰,適當分段呈現
+3. 包含所有重要資訊(時間、地點、攜帶物品、費用等)
+4. 加上適當的問候語與結尾
+5. 語氣${tone}
+6. 如有需要,可以使用項目符號或編號列表`;
+                    break;
+
+                case '聯絡簿':
+                    prompt = `請幫我將以下內容優化成聯絡簿的每日記錄,語氣要${tone}:
+
+${originalText}
+
+要求:
+1. 使用繁體中文
+2. 簡潔扼要,不超過 150 字
+3. 語氣${tone}
+4. 重點清楚
+5. 如有需要提醒家長協助的部分,請委婉說明`;
+                    break;
+
+                case '課程介紹':
+                    prompt = `請幫我將以下內容優化成課程介紹文案,語氣要${tone}:
+
+${originalText}
+
+要求:
+1. 使用繁體中文
+2. 結構化呈現(課程目標、內容大綱、評量方式等)
+3. 語氣${tone}
+4. 吸引人且專業
+5. 清楚說明學習成果`;
+                    break;
+
+                case '活動文宣':
+                    prompt = `請幫我將以下內容優化成活動宣傳文案,語氣要${tone}:
+
+${originalText}
+
+要求:
+1. 使用繁體中文
+2. 開頭要吸引人
+3. 語氣${tone}
+4. 包含明確的行動呼籲(Call to Action)
+5. 強調活動亮點與參加價值`;
+                    break;
+
+                case 'Email':
+                    prompt = `請幫我將以下內容優化成 Email 格式,語氣要${tone}:
+
+${originalText}
+
+要求:
+1. 使用繁體中文
+2. 包含適當的稱謂與結尾
+3. 語氣${tone}
+4. 結構清晰,分段呈現
+5. 主旨明確`;
+                    break;
+
+                case '會議記錄':
+                    prompt = `請幫我將以下內容整理成正式的會議記錄,語氣要${tone}:
+
+${originalText}
+
+要求:
+1. 使用繁體中文
+2. 包含會議基本資訊(時間、地點、出席人員)
+3. 討論事項條列清楚
+4. 決議事項明確
+5. 語氣${tone}`;
+                    break;
+            }
+
+            // 顯示結果
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+
+            // 滾動到結果區域
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ 已複製!';
+                btn.style.background = '#218838';
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            }).catch(err => {
+                alert('複製失敗,請手動選取文字複製');
+            });
+        }
+
+        // 範例填充功能(可選)
+        window.addEventListener('load', () => {
+            // 可以在這裡添加範例文案的快速填充功能
+        });
+    </script>
+</body>
+
+</html>

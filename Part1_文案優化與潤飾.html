@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Part 1 - 文案優化與潤飾</title>
+    <style>
+        /* 基礎設定 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* === 導航列 === */
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            pointer-events: auto !important;
+        }
+
+        .nav-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons { display: flex; gap: 12px; }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: auto !important;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* === 導航箭頭 === */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto !important;
+        }
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* === 投影片容器 === */
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 20;
+        }
+
+        /* === 內容卡片 === */
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            max-width: 1400px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        /* 其他通用樣式 */
+        h1 { color: #667eea; font-size: 56px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 38px; margin-bottom: 35px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 26px; margin: 30px 0 15px 0; }
+        p, li { font-size: 20px; line-height: 1.8; color: #444; margin-bottom: 15px; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #282c34; color: #abb2bf; padding: 25px; border-radius: 12px; overflow-x: auto; margin: 25px 0; font-size: 18px; line-height: 1.6; font-family: monospace; }
+        .box { padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 6px solid; font-size: 20px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .highlight { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #004d40; }
+        
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .concept-card { background: #f8f9fa; padding: 25px; border-radius: 15px; border: 1px solid #e9ecef; transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-8px); border-color: #667eea; }
+        
+        .demo-btn { background: linear-gradient(90deg, #667eea, #764ba2); color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 5px 15px rgba(102,126,234,0.3); pointer-events: auto !important; text-decoration: none; display: inline-block; }
+        .demo-btn:hover { transform: scale(1.05); }
+
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 4000; padding: 10px 25px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+        .dot.active { background: #667eea; transform: scale(1.3); }
+
+        .step-list { counter-reset: step-counter; list-style: none; }
+        .step-list li { counter-increment: step-counter; margin-bottom: 20px; padding-left: 60px; position: relative; }
+        .step-list li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; background: linear-gradient(135deg, #667eea, #764ba2); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <!-- 導航列 -->
+    <div class="nav-bar">
+        <div class="nav-title">📝 Part 1 - 文案優化與潤飾</div>
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">🏠 回首頁</a>
+            <button class="nav-btn" onclick="goToSlide(0)">📄 第一頁</button>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+        </div>
+    </div>
+
+    <!-- 投影片內容 -->
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h4 style="color: #667eea; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Google Antigravity 教學應用</h4>
+                <h1>Part 1: 文案優化與潤飾</h1>
+                <h2 style="border: none; font-weight: normal; font-size: 28px; color: #666; max-width: 800px;">
+                    讓 AI 成為你的文字編輯助手,快速優化各種教學文案
+                </h2>
+                <div style="margin-top: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                    <span class="highlight">家長通知</span>
+                    <span class="highlight">聯絡簿</span>
+                    <span class="highlight">課程介紹</span>
+                    <span class="highlight">活動文宣</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: 學習目標 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎯 本單元學習目標</h2>
+                <p>學會使用 Google Antigravity 優化各種教學文案,提升溝通效率與專業度。</p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>1. 認識應用情境</h3>
+                        <p>了解哪些教學文案適合用 AI 優化,如家長通知、聯絡簿、課程介紹等。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>2. 掌握提示詞技巧</h3>
+                        <p>學會撰寫有效的提示詞,讓 AI 產生符合需求的文案。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>3. 調整語氣風格</h3>
+                        <p>根據不同對象(家長/學生/同事)調整文案的正式度與親切度。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>4. 實際操作練習</h3>
+                        <p>透過實際案例練習,立即應用在教學工作中。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 為什麼需要這個工具 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>💡 為什麼需要文案優化工具?</h2>
+                <h3>老師們的常見困擾</h3>
+                <ul>
+                    <li>📝 <strong>時間不夠</strong> - 每天要處理大量文字工作,沒時間仔細潤飾</li>
+                    <li>😰 <strong>詞窮卡關</strong> - 想表達的意思很清楚,但不知道怎麼寫得更好</li>
+                    <li>🎭 <strong>語氣拿捏</strong> - 不確定用什麼語氣最適合(太正式?太隨便?)</li>
+                    <li>🔄 <strong>重複性高</strong> - 類似的通知每週都要寫,但又不能完全一樣</li>
+                </ul>
+                <div class="box success" style="margin-top: 30px;">
+                    <strong>💡 解決方案:</strong> 使用 Antigravity 只需要 30 秒,就能將粗略的文字優化成專業、清晰、有溫度的文案!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 實際應用情境 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📋 實際應用情境</h2>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>🏫 家長通知</h3>
+                        <p><strong>範例:</strong> 校外教學通知、繳費提醒、防疫措施說明</p>
+                        <p><strong>重點:</strong> 清晰、正式、完整資訊</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📓 聯絡簿</h3>
+                        <p><strong>範例:</strong> 每日學習狀況、作業說明、提醒事項</p>
+                        <p><strong>重點:</strong> 簡潔、親切、具體</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📚 課程介紹</h3>
+                        <p><strong>範例:</strong> 課程大綱、教學目標、評量方式</p>
+                        <p><strong>重點:</strong> 專業、結構化、吸引人</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎉 活動文宣</h3>
+                        <p><strong>範例:</strong> 運動會邀請、才藝表演宣傳、社團招生</p>
+                        <p><strong>重點:</strong> 活潑、有感染力、行動呼籲</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Antigravity 操作步驟 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🚀 Antigravity 操作步驟</h2>
+                <p>跟著以下 5 個步驟,輕鬆完成文案優化!</p>
+                <ol class="step-list">
+                    <li>
+                        <strong>開啟 Antigravity</strong><br>
+                        在瀏覽器中開啟 Google Antigravity 對話介面
+                    </li>
+                    <li>
+                        <strong>準備原始文案</strong><br>
+                        將你想優化的文字內容準備好(可以是草稿或重點)
+                    </li>
+                    <li>
+                        <strong>輸入提示詞</strong><br>
+                        使用我們提供的提示詞範本,填入你的內容
+                    </li>
+                    <li>
+                        <strong>檢視與調整</strong><br>
+                        查看 AI 生成的結果,如果不滿意可以要求修改
+                    </li>
+                    <li>
+                        <strong>複製使用</strong><br>
+                        將優化後的文案複製到你需要的地方(Word、聯絡簿系統等)
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 6: 提示詞範例 - 家長通知 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📝 提示詞範例 1: 家長通知</h2>
+                <h3>情境:校外教學通知</h3>
+                <div class="box info">
+                    <strong>原始草稿:</strong><br>
+                    下週三要去動物園,早上8點出發,下午3點回來,要帶水壺和帽子,費用300元
+                </div>
+                <h3>提示詞範本</h3>
+                <pre><code>請幫我將以下內容優化成正式的家長通知,語氣要專業但親切:
+
+[貼上你的原始內容]
+
+要求:
+1. 使用繁體中文
+2. 結構清晰,分段呈現
+3. 包含時間、地點、攜帶物品、費用等重要資訊
+4. 加上適當的問候語與結尾
+5. 語氣正式但溫暖</code></pre>
+                <a href="demos/demo1_文案優化器.html" target="_blank" class="demo-btn">🔗 開啟互動式 Demo</a>
+            </div>
+        </div>
+
+        <!-- Slide 7: AI 生成結果示範 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>✨ AI 生成結果示範</h2>
+                <div class="box success">
+                    <strong>優化後的家長通知:</strong><br><br>
+                    親愛的家長您好:<br><br>
+                    
+                    為了豐富孩子的學習體驗,本班將於下週三(12月13日)前往台北市立動物園進行校外教學活動。相關事項說明如下:<br><br>
+                    
+                    <strong>📅 活動時間:</strong><br>
+                    • 出發時間:上午 8:00(請準時到校)<br>
+                    • 預計返校:下午 3:00<br><br>
+                    
+                    <strong>🎒 攜帶物品:</strong><br>
+                    • 水壺(請裝滿開水)<br>
+                    • 遮陽帽<br>
+                    • 輕便背包<br><br>
+                    
+                    <strong>💰 活動費用:</strong><br>
+                    • 每位學生 300 元(含門票及遊覽車費用)<br>
+                    • 請於本週五前繳交<br><br>
+                    
+                    若有任何問題,歡迎隨時與我聯繫。期待孩子們能在這次活動中收穫滿滿!<br><br>
+                    
+                    ○○老師 敬上
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 提示詞範例 - 聯絡簿 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📝 提示詞範例 2: 聯絡簿</h2>
+                <h3>情境:每日學習狀況</h3>
+                <pre><code>請幫我將以下內容優化成聯絡簿的每日記錄,語氣要親切簡潔:
+
+[貼上你的原始內容,例如:今天數學教分數,小明還不太懂,國語考試平均85分]
+
+要求:
+1. 使用繁體中文
+2. 簡潔扼要,不超過 150 字
+3. 語氣溫暖親切
+4. 重點清楚
+5. 如有需要提醒家長協助的部分,請委婉說明</code></pre>
+                <div class="box warning" style="margin-top: 20px;">
+                    <strong>💡 小技巧:</strong> 如果要針對個別學生,可以在提示詞中加上「請以第二人稱『您的孩子』來描述」
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: 語氣調整技巧 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎭 語氣調整技巧</h2>
+                <p>根據不同對象,調整文案的正式度:</p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>👔 正式專業</h3>
+                        <p><strong>適用:</strong> 給校長、教育局、正式公文</p>
+                        <p><strong>關鍵詞:</strong> 「語氣正式專業」「使用書面語」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🤝 親切溫暖</h3>
+                        <p><strong>適用:</strong> 給家長、日常通知</p>
+                        <p><strong>關鍵詞:</strong> 「語氣親切但專業」「溫暖有禮」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>😊 活潑友善</h3>
+                        <p><strong>適用:</strong> 給學生、活動宣傳</p>
+                        <p><strong>關鍵詞:</strong> 「語氣活潑有趣」「適合學生閱讀」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💼 簡潔明確</h3>
+                        <p><strong>適用:</strong> 給同事、工作交接</p>
+                        <p><strong>關鍵詞:</strong> 「簡潔扼要」「條列式呈現」</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 實作練習 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>💻 實作練習</h2>
+                <h3>任務:優化一則家長通知</h3>
+                <div class="box info">
+                    <strong>情境:</strong> 下週要進行期中考,你需要通知家長考試範圍與注意事項。<br><br>
+                    <strong>原始草稿:</strong><br>
+                    下週一到週三期中考,國語1-6課,數學1-5單元,自然1-3單元,社會1-4課。要帶2B鉛筆、橡皮擦、直尺。考試時間每科40分鐘。
+                </div>
+                <h3>請嘗試:</h3>
+                <ol>
+                    <li>開啟 Antigravity</li>
+                    <li>使用前面學到的提示詞範本</li>
+                    <li>將上述內容優化成正式的家長通知</li>
+                    <li>調整語氣為「親切但專業」</li>
+                </ol>
+                <a href="demos/demo1_文案優化器.html" target="_blank" class="demo-btn">🔗 使用互動式工具練習</a>
+            </div>
+        </div>
+
+        <!-- Slide 11: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>❓ 常見問題 Q&A</h2>
+                <h3>Q1: AI 生成的內容可以直接使用嗎?</h3>
+                <p><strong>A:</strong> 建議先檢查內容是否正確,特別是日期、金額等重要資訊。AI 是輔助工具,最終仍需要老師確認。</p>
+                
+                <h3>Q2: 如果生成的結果不滿意怎麼辦?</h3>
+                <p><strong>A:</strong> 可以在對話中繼續要求修改,例如:「請改成更簡潔的版本」或「語氣可以再親切一點」。</p>
+                
+                <h3>Q3: 每次都要重新輸入提示詞嗎?</h3>
+                <p><strong>A:</strong> 可以將常用的提示詞範本存在 Word 或記事本中,需要時複製貼上即可。</p>
+                
+                <h3>Q4: 會不會每個老師生成的內容都一樣?</h3>
+                <p><strong>A:</strong> 不會!因為每個人的原始內容不同,AI 會根據你提供的資訊客製化生成。</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: 延伸應用 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🌟 延伸應用</h2>
+                <p>除了基本的文案優化,你還可以用 Antigravity 做這些事:</p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>📧 Email 撰寫</h3>
+                        <p>給家長的個別信件、給廠商的詢價信、給同事的協調信</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📱 社群貼文</h3>
+                        <p>班級 FB 社團公告、Line 群組訊息、Instagram 活動宣傳</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📄 會議記錄</h3>
+                        <p>將會議重點整理成正式的會議記錄格式</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎓 推薦信</h3>
+                        <p>學生升學推薦信、實習推薦信的初稿撰寫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: 總結 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎉 Part 1 總結</h2>
+                <h3>今天我們學會了:</h3>
+                <ul style="font-size: 22px; line-height: 2;">
+                    <li>✅ 認識文案優化的應用情境(家長通知、聯絡簿、課程介紹等)</li>
+                    <li>✅ 掌握有效的提示詞撰寫技巧</li>
+                    <li>✅ 根據不同對象調整語氣風格</li>
+                    <li>✅ 實際操作 Antigravity 優化文案</li>
+                </ul>
+                <div class="box success" style="margin-top: 30px;">
+                    <strong>💡 下一步行動:</strong><br>
+                    1. 將常用的提示詞範本存檔備用<br>
+                    2. 挑選一則近期要發的通知,實際練習優化<br>
+                    3. 觀察家長或同事的反應,持續調整<br>
+                </div>
+                <p style="text-align: center; margin-top: 40px; font-size: 24px;">
+                    <strong>下一個 Part:</strong> 個人化教案生成器 📚
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 導航箭頭 -->
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">❮</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">❯</button>
+
+    <!-- 頁碼指示器 -->
+    <div class="indicators" id="indicatorContainer"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function init() {
+            createIndicators();
+            showSlide(0);
+            updateButtons();
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        function handleKeydown(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        }
+
+        function createIndicators() {
+            const container = document.getElementById('indicatorContainer');
+            container.innerHTML = '';
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.onclick = () => goToSlide(index);
+                container.appendChild(dot);
+            });
+        }
+
+        function showSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === index);
+            });
+
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

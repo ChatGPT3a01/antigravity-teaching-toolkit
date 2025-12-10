@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學習數據分析與視覺化 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 150px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analysis-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .analysis-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .analysis-card:hover {
+            border-color: #667eea;
+        }
+
+        .analysis-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .analysis-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .analysis-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .sample-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .sample-btn:hover {
+            background: #138496;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>📊 學習數據分析與視覺化</h1>
+        <p class="subtitle">把成績數據變成有意義的分析報告</p>
+
+        <div class="info-box">
+            <strong>💡 功能說明：</strong>輸入學生成績數據，AI 幫你分析趨勢、找出需要關注的學生，並產生視覺化建議。
+        </div>
+
+        <div class="form-group">
+            <label>
+                📈 輸入成績數據
+                <button class="sample-btn" onclick="fillSample()">填入範例數據</button>
+            </label>
+            <textarea id="data" placeholder="格式範例（每行一位學生）：
+學生姓名, 國語, 數學, 自然, 社會
+
+例如：
+王小明, 85, 72, 90, 88
+李小華, 92, 95, 88, 91
+張小美, 78, 65, 72, 80
+..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>📊 分析類型（可複選）</label>
+            <div class="analysis-types">
+                <div class="analysis-card selected" onclick="toggleAnalysis(this, '成績統計')">
+                    <div class="analysis-icon">📉</div>
+                    <div class="analysis-name">成績統計</div>
+                </div>
+                <div class="analysis-card selected" onclick="toggleAnalysis(this, '學生排名')">
+                    <div class="analysis-icon">🏆</div>
+                    <div class="analysis-name">學生排名</div>
+                </div>
+                <div class="analysis-card" onclick="toggleAnalysis(this, '弱科分析')">
+                    <div class="analysis-icon">⚠️</div>
+                    <div class="analysis-name">弱科分析</div>
+                </div>
+                <div class="analysis-card" onclick="toggleAnalysis(this, '進步追蹤')">
+                    <div class="analysis-icon">📈</div>
+                    <div class="analysis-name">進步追蹤</div>
+                </div>
+                <div class="analysis-card" onclick="toggleAnalysis(this, '分組建議')">
+                    <div class="analysis-icon">👥</div>
+                    <div class="analysis-name">分組建議</div>
+                </div>
+                <div class="analysis-card" onclick="toggleAnalysis(this, '視覺化圖表')">
+                    <div class="analysis-icon">📊</div>
+                    <div class="analysis-name">視覺化圖表</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="output">📋 輸出格式</label>
+                <select id="output">
+                    <option value="詳細報告">詳細報告（含所有分析）</option>
+                    <option value="摘要報告">摘要報告（重點整理）</option>
+                    <option value="Excel建議">Excel 公式建議</option>
+                    <option value="家長通知">家長通知版（簡化）</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="focus">🎯 特別關注</label>
+                <select id="focus">
+                    <option value="全班概況">全班概況</option>
+                    <option value="需補救學生">需補救學生</option>
+                    <option value="資優學生">資優學生</option>
+                    <option value="科目差異">科目差異大的學生</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="extra">📌 額外需求（選填）</label>
+            <input type="text" id="extra" placeholder="例如：標示及格邊緣的學生、建議補救教學策略">
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成數據分析提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+
+            <div class="tip-box">
+                <strong>💡 使用建議：</strong><br>
+                • 將數據和提示詞一起貼到 Antigravity<br>
+                • AI 可以產生分析結果，也可以建議 Excel 圖表製作方式<br>
+                • 如需保護學生隱私，可使用代號取代真實姓名
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedAnalysis = ['成績統計', '學生排名'];
+
+        function toggleAnalysis(card, type) {
+            card.classList.toggle('selected');
+            if (card.classList.contains('selected')) {
+                selectedAnalysis.push(type);
+            } else {
+                selectedAnalysis = selectedAnalysis.filter(t => t !== type);
+            }
+        }
+
+        function fillSample() {
+            const sampleData = `學生, 國語, 數學, 自然, 社會
+王小明, 85, 72, 90, 88
+李小華, 92, 95, 88, 91
+張小美, 78, 65, 72, 80
+陳大偉, 88, 82, 85, 87
+林小琳, 95, 90, 92, 94
+黃小龍, 62, 58, 70, 65
+周小芳, 75, 78, 80, 76
+吳小強, 70, 88, 75, 72
+趙小雲, 82, 75, 78, 85
+鄭小敏, 90, 85, 88, 90
+劉小傑, 55, 48, 60, 58
+許小玲, 80, 70, 82, 78
+蔡小偉, 87, 92, 85, 82
+謝小君, 73, 68, 75, 70
+楊小豪, 91, 88, 90, 92`;
+
+            document.getElementById('data').value = sampleData;
+        }
+
+        function generatePrompt() {
+            const data = document.getElementById('data').value.trim();
+            const output = document.getElementById('output').value;
+            const focus = document.getElementById('focus').value;
+            const extra = document.getElementById('extra').value.trim();
+
+            if (!data) {
+                alert('請輸入成績數據！');
+                return;
+            }
+
+            if (selectedAnalysis.length === 0) {
+                alert('請至少選擇一種分析類型！');
+                return;
+            }
+
+            let prompt = `請幫我分析以下學生成績數據：
+
+【成績數據】
+${data}
+
+【分析需求】
+${selectedAnalysis.map(a => `- ${a}`).join('\n')}
+
+【輸出格式】${output}
+【特別關注】${focus}
+
+【請提供以下分析】
+1. 基本統計：平均分、最高分、最低分、及格率
+2. 各科目表現分析
+3. 需要特別關注的學生（含原因說明）
+4. 教學建議與改進方向`;
+
+            if (selectedAnalysis.includes('視覺化圖表')) {
+                prompt += `\n5. 建議製作的圖表類型及 Excel 製作步驟`;
+            }
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            prompt += `\n
+【注意事項】
+- 使用繁體中文
+- 數據解讀要客觀
+- 建議要具體可行
+- 適合老師用於班級經營參考`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

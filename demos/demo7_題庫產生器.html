@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多元評量題庫產生器 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .question-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .type-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .type-card:hover {
+            border-color: #667eea;
+        }
+
+        .type-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .type-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .type-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .bloom-levels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .bloom-tag {
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid;
+        }
+
+        .bloom-tag.remember { background: #e3f2fd; border-color: #2196f3; color: #1565c0; }
+        .bloom-tag.understand { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
+        .bloom-tag.apply { background: #fff3e0; border-color: #ff9800; color: #e65100; }
+        .bloom-tag.analyze { background: #fce4ec; border-color: #e91e63; color: #c2185b; }
+        .bloom-tag.evaluate { background: #f3e5f5; border-color: #9c27b0; color: #7b1fa2; }
+        .bloom-tag.create { background: #ffebee; border-color: #f44336; color: #c62828; }
+
+        .bloom-tag.selected {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>📋 多元評量題庫產生器</h1>
+        <p class="subtitle">快速產生各種題型的評量試題，含答案與解析</p>
+
+        <div class="info-box">
+            <strong>💡 功能特色：</strong>支援多種題型、可選擇認知層次（布魯姆分類）、自動產生答案與詳解。
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="subject">📘 科目</label>
+                <select id="subject">
+                    <option value="國語">國語</option>
+                    <option value="數學">數學</option>
+                    <option value="自然">自然</option>
+                    <option value="社會">社會</option>
+                    <option value="英語">英語</option>
+                    <option value="健康與體育">健康與體育</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">🎓 年級</label>
+                <select id="grade">
+                    <option value="國小一年級">國小一年級</option>
+                    <option value="國小二年級">國小二年級</option>
+                    <option value="國小三年級">國小三年級</option>
+                    <option value="國小四年級">國小四年級</option>
+                    <option value="國小五年級">國小五年級</option>
+                    <option value="國小六年級">國小六年級</option>
+                    <option value="國中一年級">國中一年級</option>
+                    <option value="國中二年級">國中二年級</option>
+                    <option value="國中三年級">國中三年級</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="topic">📝 評量範圍/單元</label>
+            <input type="text" id="topic" placeholder="例如：第一課到第三課、分數的四則運算、台灣的地理環境">
+        </div>
+
+        <div class="form-group">
+            <label>📊 題型選擇（點選可複選）</label>
+            <div class="question-types">
+                <div class="type-card selected" onclick="toggleType(this, '選擇題')">
+                    <div class="type-icon">🔘</div>
+                    <div class="type-name">選擇題</div>
+                </div>
+                <div class="type-card selected" onclick="toggleType(this, '是非題')">
+                    <div class="type-icon">⭕</div>
+                    <div class="type-name">是非題</div>
+                </div>
+                <div class="type-card" onclick="toggleType(this, '填空題')">
+                    <div class="type-icon">📝</div>
+                    <div class="type-name">填空題</div>
+                </div>
+                <div class="type-card" onclick="toggleType(this, '配合題')">
+                    <div class="type-icon">🔗</div>
+                    <div class="type-name">配合題</div>
+                </div>
+                <div class="type-card" onclick="toggleType(this, '簡答題')">
+                    <div class="type-icon">💬</div>
+                    <div class="type-name">簡答題</div>
+                </div>
+                <div class="type-card" onclick="toggleType(this, '應用題')">
+                    <div class="type-icon">🧮</div>
+                    <div class="type-name">應用題</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>🧠 認知層次（布魯姆分類法）</label>
+            <div class="bloom-levels">
+                <span class="bloom-tag remember selected" onclick="toggleBloom(this, '記憶')">記憶</span>
+                <span class="bloom-tag understand selected" onclick="toggleBloom(this, '理解')">理解</span>
+                <span class="bloom-tag apply" onclick="toggleBloom(this, '應用')">應用</span>
+                <span class="bloom-tag analyze" onclick="toggleBloom(this, '分析')">分析</span>
+                <span class="bloom-tag evaluate" onclick="toggleBloom(this, '評鑑')">評鑑</span>
+                <span class="bloom-tag create" onclick="toggleBloom(this, '創造')">創造</span>
+            </div>
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="count">📋 題目數量</label>
+                <select id="count">
+                    <option value="5">5 題</option>
+                    <option value="10" selected>10 題</option>
+                    <option value="15">15 題</option>
+                    <option value="20">20 題</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="difficulty">📈 整體難度</label>
+                <select id="difficulty">
+                    <option value="簡單">簡單（基礎概念）</option>
+                    <option value="中等" selected>中等（一般程度）</option>
+                    <option value="困難">困難（進階挑戰）</option>
+                    <option value="混合">混合（由易到難）</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="extra">📌 額外需求（選填）</label>
+            <textarea id="extra" rows="3" placeholder="例如：&#10;- 選擇題要有4個選項&#10;- 包含圖表判讀題&#10;- 避免太相似的題目"></textarea>
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成題庫提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedTypes = ['選擇題', '是非題'];
+        let selectedBlooms = ['記憶', '理解'];
+
+        function toggleType(card, type) {
+            card.classList.toggle('selected');
+            if (card.classList.contains('selected')) {
+                selectedTypes.push(type);
+            } else {
+                selectedTypes = selectedTypes.filter(t => t !== type);
+            }
+        }
+
+        function toggleBloom(tag, level) {
+            tag.classList.toggle('selected');
+            if (tag.classList.contains('selected')) {
+                selectedBlooms.push(level);
+            } else {
+                selectedBlooms = selectedBlooms.filter(b => b !== level);
+            }
+        }
+
+        function generatePrompt() {
+            const subject = document.getElementById('subject').value;
+            const grade = document.getElementById('grade').value;
+            const topic = document.getElementById('topic').value.trim();
+            const count = document.getElementById('count').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const extra = document.getElementById('extra').value.trim();
+
+            if (!topic) {
+                alert('請輸入評量範圍！');
+                return;
+            }
+
+            if (selectedTypes.length === 0) {
+                alert('請至少選擇一種題型！');
+                return;
+            }
+
+            let prompt = `請幫我設計一份評量試題，資訊如下：
+
+【基本資訊】
+- 科目：${subject}
+- 年級：${grade}
+- 範圍：${topic}
+- 題數：${count} 題
+- 難度：${difficulty}
+
+【題型要求】
+${selectedTypes.map(t => `- ${t}`).join('\n')}
+
+【認知層次】
+${selectedBlooms.map(b => `- ${b}`).join('\n')}
+
+【輸出格式】
+每題請包含：
+1. 題號
+2. 題目內容
+3. 選項（若為選擇題）
+4. 參考答案
+5. 詳細解析
+6. 對應的認知層次
+
+【注意事項】
+- 使用繁體中文
+- 題目敘述清楚完整
+- 選項要有鑑別度，避免明顯錯誤的選項
+- 解析要詳細，能幫助學生理解
+- 難度分布合理`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

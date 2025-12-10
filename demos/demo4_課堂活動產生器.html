@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式課堂活動產生器 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .activity-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .activity-card {
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .activity-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .activity-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .activity-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .activity-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #856404;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        /* 即時預覽 */
+        .preview-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>🎮 互動式課堂活動產生器</h1>
+        <p class="subtitle">讓每堂課都充滿樂趣與學習動力</p>
+
+        <div class="info-box">
+            <strong>🎯 使用情境：</strong>想要讓課堂更活潑？選擇活動類型，AI 幫你設計完整的活動流程！
+        </div>
+
+        <div class="form-group">
+            <label>🎪 選擇活動類型</label>
+            <div class="activity-types">
+                <div class="activity-card selected" onclick="selectActivity(this, 'quiz')">
+                    <div class="activity-icon">❓</div>
+                    <div class="activity-name">搶答競賽</div>
+                </div>
+                <div class="activity-card" onclick="selectActivity(this, 'group')">
+                    <div class="activity-icon">👥</div>
+                    <div class="activity-name">小組合作</div>
+                </div>
+                <div class="activity-card" onclick="selectActivity(this, 'game')">
+                    <div class="activity-icon">🎲</div>
+                    <div class="activity-name">桌遊教學</div>
+                </div>
+                <div class="activity-card" onclick="selectActivity(this, 'roleplay')">
+                    <div class="activity-icon">🎭</div>
+                    <div class="activity-name">角色扮演</div>
+                </div>
+                <div class="activity-card" onclick="selectActivity(this, 'escape')">
+                    <div class="activity-icon">🔐</div>
+                    <div class="activity-name">密室逃脫</div>
+                </div>
+                <div class="activity-card" onclick="selectActivity(this, 'station')">
+                    <div class="activity-icon">🎯</div>
+                    <div class="activity-name">闖關活動</div>
+                </div>
+            </div>
+            <input type="hidden" id="activityType" value="quiz">
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="subject">📘 科目</label>
+                <select id="subject">
+                    <option value="國語">國語</option>
+                    <option value="數學">數學</option>
+                    <option value="自然">自然</option>
+                    <option value="社會">社會</option>
+                    <option value="英語">英語</option>
+                    <option value="綜合活動">綜合活動</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">🎓 年級</label>
+                <select id="grade">
+                    <option value="國小低年級（1-2年級）">國小低年級</option>
+                    <option value="國小中年級（3-4年級）">國小中年級</option>
+                    <option value="國小高年級（5-6年級）">國小高年級</option>
+                    <option value="國中">國中</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duration">⏱️ 活動時長</label>
+                <select id="duration">
+                    <option value="10分鐘">10分鐘（暖身）</option>
+                    <option value="20分鐘">20分鐘（半堂課）</option>
+                    <option value="40分鐘" selected>40分鐘（一堂課）</option>
+                    <option value="80分鐘">80分鐘（兩堂課）</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="students">👨‍🎓 學生人數</label>
+                <select id="students">
+                    <option value="10-15人">10-15人</option>
+                    <option value="16-25人">16-25人</option>
+                    <option value="26-35人" selected>26-35人</option>
+                    <option value="36人以上">36人以上</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="topic">📝 教學主題/單元</label>
+            <input type="text" id="topic" placeholder="例如：分數的乘除、台灣歷史、生態系統">
+        </div>
+
+        <div class="form-group">
+            <label for="goals">🎯 活動目標（選填）</label>
+            <textarea id="goals" placeholder="例如：&#10;- 複習本週教學內容&#10;- 培養團隊合作能力&#10;- 提升學生學習興趣"></textarea>
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成活動設計提示詞</button>
+
+        <div class="preview-section" id="previewSection">
+            <div class="preview-title">📋 活動類型說明</div>
+            <div class="preview-content" id="previewContent"></div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+        </div>
+    </div>
+
+    <script>
+        const activityDescriptions = {
+            quiz: {
+                name: '搶答競賽',
+                desc: '適合複習課程內容，讓學生分組搶答，增加競爭樂趣。可搭配計分板和獎勵制度。',
+                includes: ['題目設計', '計分規則', '分組方式', '獎勵機制']
+            },
+            group: {
+                name: '小組合作',
+                desc: '培養團隊合作能力，讓學生共同完成任務或解決問題。',
+                includes: ['分組策略', '任務設計', '角色分配', '成果分享方式']
+            },
+            game: {
+                name: '桌遊教學',
+                desc: '將教學內容融入桌遊形式，在遊戲中學習。',
+                includes: ['遊戲規則', '所需材料', '教學連結點', '遊戲時間規劃']
+            },
+            roleplay: {
+                name: '角色扮演',
+                desc: '讓學生扮演特定角色，透過情境體驗加深理解。',
+                includes: ['角色設定', '情境劇本', '道具準備', '反思討論引導']
+            },
+            escape: {
+                name: '密室逃脫',
+                desc: '設計謎題關卡，學生必須運用所學知識解謎過關。',
+                includes: ['謎題設計', '線索安排', '時間限制', '提示機制']
+            },
+            station: {
+                name: '闖關活動',
+                desc: '設置多個關卡，學生輪流挑戰不同任務。',
+                includes: ['關卡設計', '動線規劃', '關主說明', '過關條件']
+            }
+        };
+
+        let selectedActivity = 'quiz';
+
+        function selectActivity(card, type) {
+            document.querySelectorAll('.activity-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedActivity = type;
+            document.getElementById('activityType').value = type;
+            showPreview(type);
+        }
+
+        function showPreview(type) {
+            const info = activityDescriptions[type];
+            const preview = document.getElementById('previewSection');
+            const content = document.getElementById('previewContent');
+
+            content.innerHTML = `
+                <strong>${info.name}</strong><br><br>
+                ${info.desc}<br><br>
+                <strong>活動設計將包含：</strong>
+                <ul style="margin-top: 10px;">
+                    ${info.includes.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            preview.classList.add('show');
+        }
+
+        function generatePrompt() {
+            const subject = document.getElementById('subject').value;
+            const grade = document.getElementById('grade').value;
+            const duration = document.getElementById('duration').value;
+            const students = document.getElementById('students').value;
+            const topic = document.getElementById('topic').value.trim();
+            const goals = document.getElementById('goals').value.trim();
+            const activityInfo = activityDescriptions[selectedActivity];
+
+            if (!topic) {
+                alert('請輸入教學主題！');
+                return;
+            }
+
+            let prompt = `請幫我設計一個「${activityInfo.name}」課堂活動，資訊如下：
+
+【基本資訊】
+- 科目：${subject}
+- 年級：${grade}
+- 主題：${topic}
+- 活動時長：${duration}
+- 學生人數：${students}
+- 活動類型：${activityInfo.name}`;
+
+            if (goals) {
+                prompt += `\n\n【活動目標】\n${goals}`;
+            }
+
+            prompt += `\n
+【請包含以下內容】
+1. 活動名稱（吸引人的標題）
+2. 活動目標（2-3點）
+3. 所需材料與準備
+4. 活動流程（含時間分配）
+   - 暖身/說明規則
+   - 主要活動
+   - 總結/頒獎
+5. ${activityInfo.includes.join('\n5. ')}
+6. 注意事項與教學小技巧
+7. 備案（如果時間不夠或太多的調整方式）
+
+請使用繁體中文，內容要具體可執行，讓老師可以直接按照流程操作。`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+
+        // 初始顯示預覽
+        showPreview('quiz');
+    </script>
+</body>
+
+</html>

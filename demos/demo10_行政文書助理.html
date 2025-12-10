@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行政文書自動化助理 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .doc-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .doc-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .doc-card:hover {
+            border-color: #667eea;
+        }
+
+        .doc-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .doc-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .doc-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .template-hint {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #856404;
+            display: none;
+        }
+
+        .template-hint.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>📄 行政文書自動化助理</h1>
+        <p class="subtitle">快速生成各種行政文書、公告、計畫書</p>
+
+        <div class="info-box">
+            <strong>💡 節省時間：</strong>將重點資訊輸入，AI 幫你整理成正式的行政文書格式。
+        </div>
+
+        <div class="form-group">
+            <label>📋 選擇文書類型</label>
+            <div class="doc-types">
+                <div class="doc-card selected" onclick="selectDoc(this, 'meeting')">
+                    <div class="doc-icon">📝</div>
+                    <div class="doc-name">會議記錄</div>
+                </div>
+                <div class="doc-card" onclick="selectDoc(this, 'plan')">
+                    <div class="doc-icon">📊</div>
+                    <div class="doc-name">活動計畫</div>
+                </div>
+                <div class="doc-card" onclick="selectDoc(this, 'announce')">
+                    <div class="doc-icon">📢</div>
+                    <div class="doc-name">公告通知</div>
+                </div>
+                <div class="doc-card" onclick="selectDoc(this, 'report')">
+                    <div class="doc-icon">📑</div>
+                    <div class="doc-name">成果報告</div>
+                </div>
+                <div class="doc-card" onclick="selectDoc(this, 'apply')">
+                    <div class="doc-icon">📨</div>
+                    <div class="doc-name">申請公文</div>
+                </div>
+                <div class="doc-card" onclick="selectDoc(this, 'letter')">
+                    <div class="doc-icon">✉️</div>
+                    <div class="doc-name">感謝函</div>
+                </div>
+            </div>
+            <input type="hidden" id="docType" value="meeting">
+        </div>
+
+        <div class="template-hint" id="templateHint"></div>
+
+        <div class="form-group">
+            <label for="content">📝 輸入重點內容/草稿</label>
+            <textarea id="content" placeholder="輸入你的重點資訊，例如：
+
+會議記錄：今天開會討論下學期校外教學，決定去科博館，預算每人500元，需要6台遊覽車...
+
+活動計畫：想辦一個閱讀週活動，4月第二週，有說故事比賽、好書交換、作家講座..."></textarea>
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="school">🏫 學校/單位名稱</label>
+                <input type="text" id="school" placeholder="例如：○○國民小學">
+            </div>
+
+            <div class="form-group">
+                <label for="tone">🎭 正式程度</label>
+                <select id="tone">
+                    <option value="正式公文">正式公文</option>
+                    <option value="一般行政" selected>一般行政</option>
+                    <option value="內部簡易">內部簡易</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="extra">📌 額外需求（選填）</label>
+            <input type="text" id="extra" placeholder="例如：需要包含經費明細表、需要附上時程表">
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成文書提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+        </div>
+    </div>
+
+    <script>
+        const docTemplates = {
+            meeting: {
+                name: '會議記錄',
+                hint: '請包含：會議時間、地點、出席人員、討論事項、決議事項等',
+                format: `會議記錄格式：
+- 會議名稱
+- 時間/地點
+- 主席/記錄
+- 出席人員
+- 討論事項（依序編號）
+- 決議事項
+- 臨時動議
+- 散會時間`
+            },
+            plan: {
+                name: '活動計畫',
+                hint: '請包含：活動目的、時間、地點、參加對象、活動流程、經費預算等',
+                format: `活動計畫格式：
+- 計畫名稱
+- 依據
+- 目的
+- 辦理單位
+- 活動時間/地點
+- 參加對象
+- 活動內容
+- 經費概算
+- 預期效益
+- 本計畫經核准後實施`
+            },
+            announce: {
+                name: '公告通知',
+                hint: '請包含：公告事由、相關規定或說明、注意事項等',
+                format: `公告格式：
+- 主旨
+- 說明（分點敘述）
+- 注意事項
+- 聯絡方式`
+            },
+            report: {
+                name: '成果報告',
+                hint: '請包含：活動緣起、執行過程、成果說明、檢討與建議等',
+                format: `成果報告格式：
+- 活動名稱
+- 辦理時間/地點
+- 參與人數
+- 活動內容摘要
+- 活動成果
+- 經費使用說明
+- 檢討與建議
+- 附件（照片說明）`
+            },
+            apply: {
+                name: '申請公文',
+                hint: '請包含：申請事由、申請內容、相關說明等',
+                format: `公文格式：
+- 受文者
+- 主旨（簡要說明來文目的）
+- 說明（詳細說明）
+- 擬辦（請求事項）
+- 附件`
+            },
+            letter: {
+                name: '感謝函',
+                hint: '請包含：感謝對象、感謝事由、具體事蹟說明等',
+                format: `感謝函格式：
+- 受文者稱謂
+- 感謝事由
+- 具體描述貢獻/協助
+- 祝福語
+- 發文單位/日期`
+            }
+        };
+
+        let selectedDocType = 'meeting';
+
+        function selectDoc(card, type) {
+            document.querySelectorAll('.doc-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedDocType = type;
+            document.getElementById('docType').value = type;
+
+            // 顯示提示
+            const hint = document.getElementById('templateHint');
+            hint.innerHTML = `<strong>💡 ${docTemplates[type].name}提示：</strong><br>${docTemplates[type].hint}`;
+            hint.classList.add('show');
+        }
+
+        function generatePrompt() {
+            const content = document.getElementById('content').value.trim();
+            const school = document.getElementById('school').value.trim();
+            const tone = document.getElementById('tone').value;
+            const extra = document.getElementById('extra').value.trim();
+            const template = docTemplates[selectedDocType];
+
+            if (!content) {
+                alert('請輸入重點內容！');
+                return;
+            }
+
+            let prompt = `請幫我將以下內容整理成正式的「${template.name}」：
+
+【原始內容】
+${content}
+
+【文書類型】${template.name}
+【正式程度】${tone}`;
+
+            if (school) {
+                prompt += `\n【發文單位】${school}`;
+            }
+
+            prompt += `
+
+【格式要求】
+${template.format}
+
+【注意事項】
+- 使用繁體中文
+- 格式正式、條理清楚
+- 用詞精準、避免口語化
+- 內容完整、不遺漏重要資訊
+- 適當使用編號或項目符號
+- 日期格式使用民國年`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+
+        // 初始顯示提示
+        document.getElementById('templateHint').innerHTML = `<strong>💡 ${docTemplates.meeting.name}提示：</strong><br>${docTemplates.meeting.hint}`;
+        document.getElementById('templateHint').classList.add('show');
+    </script>
+</body>
+
+</html>

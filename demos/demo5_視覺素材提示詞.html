@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教學視覺素材提示詞產生器 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .style-card {
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .style-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .style-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .style-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .style-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .eng-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .eng-btn:hover {
+            background: #138496;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>🎨 教學視覺素材提示詞產生器</h1>
+        <p class="subtitle">生成專業的 AI 繪圖提示詞，快速製作教學插圖</p>
+
+        <div class="info-box">
+            <strong>💡 這是什麼？</strong><br>
+            產生可用於 AI 繪圖工具（如 Midjourney、DALL-E、Stable Diffusion、Ideogram）的提示詞，幫你快速製作教學插圖。
+        </div>
+
+        <div class="form-group">
+            <label>🖼️ 選擇圖片風格</label>
+            <div class="style-grid">
+                <div class="style-card selected" onclick="selectStyle(this, 'cute')">
+                    <div class="style-icon">🥰</div>
+                    <div class="style-name">可愛卡通</div>
+                </div>
+                <div class="style-card" onclick="selectStyle(this, 'simple')">
+                    <div class="style-icon">✏️</div>
+                    <div class="style-name">簡筆畫</div>
+                </div>
+                <div class="style-card" onclick="selectStyle(this, 'flat')">
+                    <div class="style-icon">🎯</div>
+                    <div class="style-name">扁平設計</div>
+                </div>
+                <div class="style-card" onclick="selectStyle(this, 'realistic')">
+                    <div class="style-icon">📷</div>
+                    <div class="style-name">寫實風格</div>
+                </div>
+                <div class="style-card" onclick="selectStyle(this, 'watercolor')">
+                    <div class="style-icon">🎨</div>
+                    <div class="style-name">水彩風格</div>
+                </div>
+                <div class="style-card" onclick="selectStyle(this, 'infographic')">
+                    <div class="style-icon">📊</div>
+                    <div class="style-name">資訊圖表</div>
+                </div>
+            </div>
+            <input type="hidden" id="imageStyle" value="cute">
+        </div>
+
+        <div class="form-group">
+            <label for="topic">📝 圖片主題/內容描述</label>
+            <textarea id="topic" placeholder="詳細描述你需要的圖片內容，例如：&#10;&#10;• 一棵正在進行光合作用的植物，陽光照射，箭頭標示二氧化碳進入和氧氣釋出&#10;• 小朋友們在操場玩躲避球的場景&#10;• 台灣地圖，標示主要的山脈和河流" rows="4"></textarea>
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="purpose">📚 使用目的</label>
+                <select id="purpose">
+                    <option value="教學簡報">教學簡報</option>
+                    <option value="學習單">學習單</option>
+                    <option value="海報">海報/公告</option>
+                    <option value="繪本">繪本/故事書</option>
+                    <option value="遊戲卡">遊戲卡片</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="target">👶 適合對象</label>
+                <select id="target">
+                    <option value="幼兒園">幼兒園</option>
+                    <option value="國小低年級">國小低年級</option>
+                    <option value="國小中高年級" selected>國小中高年級</option>
+                    <option value="國中">國中</option>
+                    <option value="通用">通用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>🎨 主要色調</label>
+            <div class="color-palette">
+                <div class="color-option selected" style="background: linear-gradient(135deg, #FF6B6B, #FFE66D);" onclick="selectColor(this, '暖色系（紅、橙、黃）')" title="暖色系"></div>
+                <div class="color-option" style="background: linear-gradient(135deg, #4ECDC4, #44A8B3);" onclick="selectColor(this, '冷色系（藍、綠、青）')" title="冷色系"></div>
+                <div class="color-option" style="background: linear-gradient(135deg, #A8E6CF, #DCEDC1);" onclick="selectColor(this, '清新自然（綠色系）')" title="清新自然"></div>
+                <div class="color-option" style="background: linear-gradient(135deg, #FFB6C1, #DDA0DD);" onclick="selectColor(this, '粉嫩可愛（粉色系）')" title="粉嫩可愛"></div>
+                <div class="color-option" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="selectColor(this, '科技感（紫藍色系）')" title="科技感"></div>
+                <div class="color-option" style="background: linear-gradient(135deg, #f5f5f5, #e0e0e0);" onclick="selectColor(this, '簡約黑白灰')" title="簡約黑白"></div>
+            </div>
+            <input type="hidden" id="colorScheme" value="暖色系（紅、橙、黃）">
+        </div>
+
+        <div class="form-group">
+            <label for="extra">📌 額外要求（選填）</label>
+            <input type="text" id="extra" placeholder="例如：白色背景、沒有文字、高解析度、正方形比例">
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 中文提示詞</div>
+            <div class="prompt-box" id="promptOutputCN"></div>
+
+            <div class="result-title" style="margin-top: 30px;">🌐 英文提示詞（適用於 Midjourney / DALL-E）</div>
+            <div class="prompt-box" id="promptOutputEN"></div>
+
+            <div class="btn-group">
+                <button class="copy-btn" onclick="copyPrompt('cn')">📋 複製中文</button>
+                <button class="eng-btn" onclick="copyPrompt('en')">📋 複製英文</button>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 使用建議：</strong><br>
+                • <strong>Midjourney / DALL-E：</strong>使用英文提示詞效果較佳<br>
+                • <strong>Ideogram：</strong>中英文皆可，英文建議<br>
+                • <strong>Antigravity 圖片生成：</strong>可使用中文提示詞
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const styleInfo = {
+            cute: { cn: '可愛卡通風格，圓潤線條，大眼睛角色', en: 'cute cartoon style, rounded lines, chibi characters, kawaii' },
+            simple: { cn: '簡筆畫風格，線條簡潔，黑白線稿', en: 'simple line drawing, minimalist sketch, clean lines' },
+            flat: { cn: '扁平設計風格，幾何形狀，現代簡約', en: 'flat design, geometric shapes, modern minimalist, vector style' },
+            realistic: { cn: '寫實風格，細節豐富，真實感', en: 'realistic style, detailed, photorealistic' },
+            watercolor: { cn: '水彩畫風格，柔和暈染，藝術感', en: 'watercolor style, soft blending, artistic, hand-painted look' },
+            infographic: { cn: '資訊圖表風格，清晰標示，教育性', en: 'infographic style, clear labels, educational diagram' }
+        };
+
+        const targetAge = {
+            '幼兒園': 'for preschool children',
+            '國小低年級': 'for elementary school students ages 6-8',
+            '國小中高年級': 'for elementary school students ages 9-12',
+            '國中': 'for middle school students',
+            '通用': 'for educational purposes'
+        };
+
+        let selectedStyle = 'cute';
+        let selectedColor = '暖色系（紅、橙、黃）';
+
+        function selectStyle(card, style) {
+            document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedStyle = style;
+            document.getElementById('imageStyle').value = style;
+        }
+
+        function selectColor(element, color) {
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedColor = color;
+            document.getElementById('colorScheme').value = color;
+        }
+
+        function generatePrompt() {
+            const topic = document.getElementById('topic').value.trim();
+            const purpose = document.getElementById('purpose').value;
+            const target = document.getElementById('target').value;
+            const extra = document.getElementById('extra').value.trim();
+
+            if (!topic) {
+                alert('請輸入圖片主題描述！');
+                return;
+            }
+
+            const style = styleInfo[selectedStyle];
+
+            // 中文提示詞
+            let promptCN = `【教學插圖】${topic}
+
+風格：${style.cn}
+色調：${selectedColor}
+用途：${purpose}
+對象：${target}學生適用
+特點：清晰易懂、教育性強、適合投影展示`;
+
+            if (extra) {
+                promptCN += `\n額外要求：${extra}`;
+            }
+
+            // 英文提示詞
+            let promptEN = `Educational illustration: ${topic}
+
+Style: ${style.en}
+Color scheme: ${selectedColor.replace('（', ' (').replace('）', ')')}
+Purpose: ${purpose} ${targetAge[target]}
+Features: clear, educational, easy to understand, suitable for classroom presentation`;
+
+            if (extra) {
+                promptEN += `\nAdditional: ${extra}`;
+            }
+
+            // 加入常用的質量詞
+            promptEN += `\n\n--v 6 --ar 16:9 --style raw`;
+
+            document.getElementById('promptOutputCN').textContent = promptCN;
+            document.getElementById('promptOutputEN').textContent = promptEN;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt(lang) {
+            const promptText = lang === 'cn'
+                ? document.getElementById('promptOutputCN').textContent
+                : document.getElementById('promptOutputEN').textContent;
+
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btns = document.querySelectorAll(lang === 'cn' ? '.copy-btn' : '.eng-btn');
+                btns.forEach(btn => {
+                    const originalText = btn.textContent;
+                    btn.textContent = '✅ 已複製！';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

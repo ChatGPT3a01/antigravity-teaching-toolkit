@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Part 5 - 教學視覺素材創作</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+        }
+
+        .nav-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            max-width: 1400px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 56px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 38px;
+            margin-bottom: 35px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 12px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 26px;
+            margin: 30px 0 15px 0;
+        }
+
+        p,
+        li {
+            font-size: 20px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .concept-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .box {
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 6px solid;
+        }
+
+        .success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            font-size: 16px;
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .prev-arrow {
+            left: 30px;
+        }
+
+        .next-arrow {
+            right: 30px;
+        }
+
+        .indicators {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 4000;
+            padding: 10px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #667eea;
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🎨 Part 5 - 教學視覺素材創作</div>
+        <div><a href="index.html" class="nav-btn">🏠 回首頁</a></div>
+    </div>
+    <div class="slide-container">
+        <div class="slide active">
+            <div class="content-card" style="text-align: center;">
+                <h1>Part 5: 教學視覺素材創作</h1>
+                <h2 style="border: none; font-size: 28px; color: #666;">用 AI 生成教學插圖、概念圖、情境圖片</h2>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎯 學習目標</h2>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>1. 圖片生成技巧</h3>
+                        <p>使用 Antigravity 的圖片生成功能</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>2. 提示詞撰寫</h3>
+                        <p>描述清楚的視覺需求</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>3. 教學應用</h3>
+                        <p>將圖片應用在簡報、學習單中</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="content-card">
+                <h2>📝 提示詞範例</h2>
+                <pre>請生成一張教學用插圖:
+
+主題:光合作用過程
+風格:簡潔、教育性、適合國小學生
+內容:
+- 一棵綠色植物
+- 陽光照射
+- 二氧化碳進入葉子
+- 氧氣釋放
+- 清楚的箭頭標示流程
+
+色彩:明亮、清新
+尺寸:適合投影片使用</pre>
+                <div class="box success">
+                    <strong>💡 提示:</strong> 描述越詳細,生成的圖片越符合需求!包含風格、色彩、構圖等資訊。
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎉 Part 5 總結</h2>
+                <ul style="font-size: 22px; line-height: 2;">
+                    <li>✅ 學會使用 AI 生成教學圖片</li>
+                    <li>✅ 掌握圖片提示詞撰寫技巧</li>
+                    <li>✅ 了解如何應用在教學中</li>
+                </ul>
+                <p style="text-align: center; margin-top: 40px; font-size: 24px;">
+                    <strong>下一個 Part:</strong> 程式教育輔助系統 💻
+                </p>
+            </div>
+        </div>
+    </div>
+    <button class="nav-arrow prev-arrow" onclick="changeSlide(-1)">❮</button>
+    <button class="nav-arrow next-arrow" onclick="changeSlide(1)">❯</button>
+    <div class="indicators" id="indicatorContainer"></div>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        function init() { createIndicators(); showSlide(0); document.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') changeSlide(-1); if (e.key === 'ArrowRight') changeSlide(1); }); }
+        function createIndicators() { const c = document.getElementById('indicatorContainer'); slides.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot'; d.onclick = () => goToSlide(i); c.appendChild(d); }); }
+        function showSlide(i) { if (i < 0) i = 0; if (i >= slides.length) i = slides.length - 1; slides.forEach(s => s.classList.remove('active')); slides[i].classList.add('active'); currentSlide = i; document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === i)); }
+        function changeSlide(d) { showSlide(currentSlide + d); }
+        function goToSlide(i) { showSlide(i); }
+        init();
+    </script>
+</body>
+
+</html>

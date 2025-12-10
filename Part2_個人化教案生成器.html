@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Part 2 - 個人化教案生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            pointer-events: auto !important;
+        }
+
+        .nav-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: auto !important;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto !important;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-arrow {
+            left: 30px;
+        }
+
+        .next-arrow {
+            right: 30px;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 20;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            max-width: 1400px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 56px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 38px;
+            margin-bottom: 35px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 12px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 26px;
+            margin: 30px 0 15px 0;
+        }
+
+        p,
+        li {
+            font-size: 20px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        code {
+            background: #f0f2f5;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #d63384;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 25px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 25px 0;
+            font-size: 18px;
+            line-height: 1.6;
+            font-family: monospace;
+        }
+
+        .box {
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 6px solid;
+            font-size: 20px;
+        }
+
+        .info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #0d47a1;
+        }
+
+        .success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #004d40;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .concept-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-8px);
+            border-color: #667eea;
+        }
+
+        .demo-btn {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            pointer-events: auto !important;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .demo-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .indicators {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 4000;
+            padding: 10px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #667eea;
+            transform: scale(1.3);
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">📚 Part 2 - 個人化教案生成器</div>
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">🏠 回首頁</a>
+            <button class="nav-btn" onclick="goToSlide(0)">📄 第一頁</button>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+        </div>
+    </div>
+
+    <div class="slide-container">
+        <div class="slide active">
+            <div class="content-card"
+                style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h4 style="color: #667eea; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Google
+                    Antigravity 教學應用</h4>
+                <h1>Part 2: 個人化教案生成器</h1>
+                <h2 style="border: none; font-weight: normal; font-size: 28px; color: #666; max-width: 800px;">
+                    30 分鐘完成一份完整教案,從課綱到評量一次搞定
+                </h2>
+                <div style="margin-top: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                    <span class="highlight">學習目標</span>
+                    <span class="highlight">教學流程</span>
+                    <span class="highlight">評量設計</span>
+                    <span class="highlight">差異化教學</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎯 本單元學習目標</h2>
+                <p>學會使用 Antigravity 快速生成結構完整、符合課綱的教案。</p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>1. 教案結構設計</h3>
+                        <p>了解完整教案應包含的要素:學習目標、教學活動、評量方式等。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>2. 提示詞撰寫</h3>
+                        <p>學會如何提供關鍵資訊,讓 AI 生成符合需求的教案。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>3. 客製化調整</h3>
+                        <p>根據班級特性、學生程度調整教案內容。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>4. 實際應用</h3>
+                        <p>立即產出可用的教案,節省備課時間。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>💡 為什麼需要教案生成器?</h2>
+                <h3>備課的挑戰</h3>
+                <ul>
+                    <li>⏰ <strong>時間壓力</strong> - 每週要準備多科教案,時間不夠用</li>
+                    <li>📋 <strong>格式繁瑣</strong> - 教案格式要求多,容易遺漏重點</li>
+                    <li>🎯 <strong>對齊課綱</strong> - 要確保教學目標符合課綱能力指標</li>
+                    <li>🔄 <strong>差異化教學</strong> - 需要設計不同程度的學習活動</li>
+                </ul>
+                <div class="box success" style="margin-top: 30px;">
+                    <strong>💡 解決方案:</strong> 使用 Antigravity 輸入主題與年級,30 分鐘內就能產出完整教案架構,再根據班級特性微調即可!
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>🚀 Antigravity 操作步驟</h2>
+                <ol class="step-list">
+                    <li><strong>確認教學資訊</strong><br>科目、年級、單元主題、節數</li>
+                    <li><strong>準備課綱指標</strong><br>查詢該單元對應的課綱能力指標</li>
+                    <li><strong>輸入提示詞</strong><br>使用教案生成範本,填入關鍵資訊</li>
+                    <li><strong>生成教案架構</strong><br>AI 產出完整教案,包含目標、流程、評量</li>
+                    <li><strong>客製化調整</strong><br>根據班級特性修改活動內容</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>📝 提示詞範例</h2>
+                <h3>情境:國小五年級自然科教案</h3>
+                <pre><code>請幫我設計一份完整的教案,資訊如下:
+
+【基本資訊】
+- 科目:自然科學
+- 年級:國小五年級
+- 單元主題:植物的繁殖
+- 節數:3 節課(每節 40 分鐘)
+
+【學習目標】
+- 認識植物的有性生殖與無性生殖
+- 觀察並記錄植物生長過程
+- 培養科學探究的態度
+
+請包含:
+1. 詳細的學習目標(對應課綱能力指標)
+2. 每節課的教學流程(引起動機、發展活動、綜合活動)
+3. 教學資源與教具
+4. 評量方式(形成性評量與總結性評量)
+5. 差異化教學策略</code></pre>
+                <a href="demos/demo2_教案生成器.html" target="_blank" class="demo-btn">🔗 開啟互動式 Demo</a>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>✨ AI 生成結果示範</h2>
+                <div class="box success">
+                    <strong>教案架構範例:</strong><br><br>
+                    <strong>一、學習目標</strong><br>
+                    1. 能說明植物有性生殖與無性生殖的差異<br>
+                    2. 能觀察並記錄植物生長的變化<br>
+                    3. 能運用科學方法進行探究活動<br><br>
+
+                    <strong>二、第一節課(引起動機)</strong><br>
+                    • 展示不同植物的繁殖方式圖片<br>
+                    • 提問:植物如何產生下一代?<br>
+                    • 分組討論並發表...<br><br>
+
+                    <strong>三、評量方式</strong><br>
+                    • 形成性評量:課堂觀察、小組討論參與度<br>
+                    • 總結性評量:觀察記錄表、學習單<br>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎨 進階技巧:差異化教學</h2>
+                <h3>在提示詞中加入差異化需求</h3>
+                <pre><code>請在教案中加入差異化教學策略:
+
+【學生程度分組】
+- 基礎組:需要更多視覺輔助與具體操作
+- 進階組:可以進行更深入的探究活動
+- 資優組:設計延伸挑戰任務
+
+請為每組設計適合的學習活動與評量方式</code></pre>
+                <div class="box info" style="margin-top: 20px;">
+                    <strong>💡 提示:</strong> 越詳細的需求描述,AI 生成的教案越符合你的期待!
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>❓ 常見問題 Q&A</h2>
+                <h3>Q1: 生成的教案可以直接使用嗎?</h3>
+                <p><strong>A:</strong> 建議作為架構參考,再根據班級實際狀況調整。AI 提供的是通用架構,老師的專業判斷仍然很重要。</p>
+
+                <h3>Q2: 如何確保符合課綱?</h3>
+                <p><strong>A:</strong> 在提示詞中明確列出課綱能力指標,AI 會據此設計學習目標。</p>
+
+                <h3>Q3: 可以生成多科教案嗎?</h3>
+                <p><strong>A:</strong> 可以!只要在提示詞中更換科目與主題即可,適用於國語、數學、社會、自然等各科。</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎉 Part 2 總結</h2>
+                <h3>今天我們學會了:</h3>
+                <ul style="font-size: 22px; line-height: 2;">
+                    <li>✅ 認識完整教案的結構要素</li>
+                    <li>✅ 使用 Antigravity 快速生成教案架構</li>
+                    <li>✅ 設計差異化教學策略</li>
+                    <li>✅ 客製化調整教案內容</li>
+                </ul>
+                <div class="box success" style="margin-top: 30px;">
+                    <strong>💡 下一步行動:</strong><br>
+                    1. 選擇下週要教的單元,實際生成一份教案<br>
+                    2. 與同事分享,互相交流使用心得<br>
+                    3. 建立自己的提示詞範本庫<br>
+                </div>
+                <p style="text-align: center; margin-top: 40px; font-size: 24px;">
+                    <strong>下一個 Part:</strong> 差異化學習單製作 📝
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">❮</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">❯</button>
+    <div class="indicators" id="indicatorContainer"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        function init() { createIndicators(); showSlide(0); updateButtons(); document.addEventListener('keydown', handleKeydown); }
+        function handleKeydown(e) { if (e.key === 'ArrowLeft') changeSlide(-1); if (e.key === 'ArrowRight') changeSlide(1); }
+        function createIndicators() { const container = document.getElementById('indicatorContainer'); container.innerHTML = ''; slides.forEach((_, index) => { const dot = document.createElement('div'); dot.className = 'dot'; dot.onclick = () => goToSlide(index); container.appendChild(dot); }); }
+        function showSlide(index) { if (index < 0) index = 0; if (index >= totalSlides) index = totalSlides - 1; slides.forEach(slide => slide.classList.remove('active')); slides[index].classList.add('active'); currentSlide = index; const dots = document.querySelectorAll('.dot'); dots.forEach((dot, idx) => { dot.classList.toggle('active', idx === index); }); updateButtons(); }
+        function changeSlide(direction) { showSlide(currentSlide + direction); }
+        function goToSlide(index) { showSlide(index); }
+        function updateButtons() { document.getElementById('prevBtn').disabled = currentSlide === 0; document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1; }
+        function toggleFullscreen() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
+        init();
+    </script>
+</body>
+
+</html>

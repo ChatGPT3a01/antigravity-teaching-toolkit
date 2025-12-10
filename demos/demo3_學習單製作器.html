@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>差異化學習單製作器 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .level-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .level-card {
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .level-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .level-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .level-card.basic { border-top: 5px solid #4caf50; }
+        .level-card.intermediate { border-top: 5px solid #ff9800; }
+        .level-card.advanced { border-top: 5px solid #f44336; }
+
+        .level-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .level-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .level-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #e0e0e0;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>📝 差異化學習單製作器</h1>
+        <p class="subtitle">一份主題，三種難度，照顧每位學生的學習需求</p>
+
+        <div class="info-box">
+            <strong>💡 什麼是差異化學習單？</strong><br>
+            針對同一個教學主題，設計基礎、進階、挑戰三種難度版本，讓不同程度的學生都能獲得適合的練習。
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="subject">📘 科目</label>
+                <select id="subject">
+                    <option value="國語">國語</option>
+                    <option value="數學">數學</option>
+                    <option value="自然">自然</option>
+                    <option value="社會">社會</option>
+                    <option value="英語">英語</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">🎓 年級</label>
+                <select id="grade">
+                    <option value="國小一年級">國小一年級</option>
+                    <option value="國小二年級">國小二年級</option>
+                    <option value="國小三年級">國小三年級</option>
+                    <option value="國小四年級">國小四年級</option>
+                    <option value="國小五年級">國小五年級</option>
+                    <option value="國小六年級">國小六年級</option>
+                    <option value="國中一年級">國中一年級</option>
+                    <option value="國中二年級">國中二年級</option>
+                    <option value="國中三年級">國中三年級</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="topic">📝 學習單主題</label>
+            <input type="text" id="topic" placeholder="例如：分數的加減、成語運用、植物的構造">
+        </div>
+
+        <div class="form-group">
+            <label>🎯 選擇要生成的版本（可複選）</label>
+            <div class="level-selector">
+                <div class="level-card basic selected" onclick="toggleLevel(this, 'basic')">
+                    <div class="level-icon">🟢</div>
+                    <div class="level-title">基礎版</div>
+                    <div class="level-desc">圖示輔助、步驟清楚<br>適合需要額外支持的學生</div>
+                    <input type="checkbox" id="level-basic" checked style="display:none;">
+                </div>
+                <div class="level-card intermediate selected" onclick="toggleLevel(this, 'intermediate')">
+                    <div class="level-icon">🟡</div>
+                    <div class="level-title">進階版</div>
+                    <div class="level-desc">混合題型、應用情境<br>適合一般程度學生</div>
+                    <input type="checkbox" id="level-intermediate" checked style="display:none;">
+                </div>
+                <div class="level-card advanced selected" onclick="toggleLevel(this, 'advanced')">
+                    <div class="level-icon">🔴</div>
+                    <div class="level-title">挑戰版</div>
+                    <div class="level-desc">複雜應用、開放思考<br>適合資優或學習快速的學生</div>
+                    <input type="checkbox" id="level-advanced" checked style="display:none;">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>📋 題型選擇（可複選）</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" value="選擇題" checked> 選擇題
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="填空題" checked> 填空題
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="配合題"> 配合題
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="簡答題" checked> 簡答題
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="應用題"> 應用題
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="繪圖題"> 繪圖題
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="extra">📌 額外需求（選填）</label>
+            <textarea id="extra" placeholder="例如：&#10;- 希望包含生活情境題&#10;- 基礎版要有範例引導&#10;- 挑戰版包含延伸思考題"></textarea>
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成學習單提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleLevel(card, level) {
+            card.classList.toggle('selected');
+            document.getElementById('level-' + level).checked = card.classList.contains('selected');
+        }
+
+        function generatePrompt() {
+            const subject = document.getElementById('subject').value;
+            const grade = document.getElementById('grade').value;
+            const topic = document.getElementById('topic').value.trim();
+            const extra = document.getElementById('extra').value.trim();
+
+            if (!topic) {
+                alert('請輸入學習單主題！');
+                return;
+            }
+
+            const basic = document.getElementById('level-basic').checked;
+            const intermediate = document.getElementById('level-intermediate').checked;
+            const advanced = document.getElementById('level-advanced').checked;
+
+            if (!basic && !intermediate && !advanced) {
+                alert('請至少選擇一個版本！');
+                return;
+            }
+
+            // 取得選中的題型
+            const questionTypes = [];
+            document.querySelectorAll('.checkbox-group input:checked').forEach(cb => {
+                questionTypes.push(cb.value);
+            });
+
+            let prompt = `請幫我設計差異化學習單，資訊如下：
+
+【基本資訊】
+- 科目：${subject}
+- 年級：${grade}
+- 主題：${topic}
+- 題型：${questionTypes.join('、')}
+
+請設計以下版本的學習單：
+`;
+
+            if (basic) {
+                prompt += `
+【🟢 基礎版】適合學習較慢的學生
+- 使用圖示輔助理解
+- 題目簡單，步驟清楚
+- 約 5-8 題
+- 提供範例引導
+- 字體可以稍大，版面簡潔
+`;
+            }
+
+            if (intermediate) {
+                prompt += `
+【🟡 進階版】適合一般程度學生
+- 混合多種題型
+- 包含應用題或情境題
+- 約 8-10 題
+- 難度適中，有一定挑戰性
+`;
+            }
+
+            if (advanced) {
+                prompt += `
+【🔴 挑戰版】適合資優或學習快速的學生
+- 複雜應用題
+- 需要多步驟思考
+- 約 6-8 題（難度較高）
+- 可包含開放性問題或延伸探究
+`;
+            }
+
+            prompt += `
+【每個版本都要包含】
+1. 學習目標（簡短說明）
+2. 題目內容
+3. 參考答案
+
+請使用繁體中文，格式清楚易讀，方便直接印出使用。`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

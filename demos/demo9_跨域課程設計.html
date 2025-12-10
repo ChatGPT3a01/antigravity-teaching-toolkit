@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨域專案課程設計器 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .subject-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .subject-tag {
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid;
+        }
+
+        .subject-tag.chinese { background: #ffebee; border-color: #ef5350; color: #c62828; }
+        .subject-tag.math { background: #e3f2fd; border-color: #42a5f5; color: #1565c0; }
+        .subject-tag.science { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
+        .subject-tag.social { background: #fff3e0; border-color: #ffa726; color: #e65100; }
+        .subject-tag.english { background: #f3e5f5; border-color: #ab47bc; color: #7b1fa2; }
+        .subject-tag.art { background: #fce4ec; border-color: #ec407a; color: #c2185b; }
+        .subject-tag.tech { background: #e0f2f1; border-color: #26a69a; color: #00695c; }
+        .subject-tag.pe { background: #fff8e1; border-color: #ffca28; color: #f57f17; }
+
+        .subject-tag.selected {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .theme-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .theme-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-card:hover {
+            border-color: #667eea;
+        }
+
+        .theme-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .theme-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .theme-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #1b5e20;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>🎓 跨域專案課程設計器</h1>
+        <p class="subtitle">整合多學科的 PBL 專案式學習課程</p>
+
+        <div class="info-box">
+            <strong>🌟 什麼是跨域課程？</strong><br>
+            將不同學科的知識整合在一個專案主題中，讓學生在解決真實問題的過程中學習多領域知識。
+        </div>
+
+        <div class="form-group">
+            <label>📚 選擇整合的學科（至少選 2 個）</label>
+            <div class="subject-tags">
+                <span class="subject-tag chinese selected" onclick="toggleSubject(this, '國語')">國語</span>
+                <span class="subject-tag math selected" onclick="toggleSubject(this, '數學')">數學</span>
+                <span class="subject-tag science" onclick="toggleSubject(this, '自然')">自然</span>
+                <span class="subject-tag social" onclick="toggleSubject(this, '社會')">社會</span>
+                <span class="subject-tag english" onclick="toggleSubject(this, '英語')">英語</span>
+                <span class="subject-tag art" onclick="toggleSubject(this, '藝術')">藝術</span>
+                <span class="subject-tag tech" onclick="toggleSubject(this, '科技')">科技</span>
+                <span class="subject-tag pe" onclick="toggleSubject(this, '健體')">健體</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>🎯 專案主題方向</label>
+            <div class="theme-cards">
+                <div class="theme-card selected" onclick="selectTheme(this, '環境永續')">
+                    <div class="theme-icon">🌍</div>
+                    <div class="theme-name">環境永續</div>
+                </div>
+                <div class="theme-card" onclick="selectTheme(this, '在地文化')">
+                    <div class="theme-icon">🏛️</div>
+                    <div class="theme-name">在地文化</div>
+                </div>
+                <div class="theme-card" onclick="selectTheme(this, '健康生活')">
+                    <div class="theme-icon">💪</div>
+                    <div class="theme-name">健康生活</div>
+                </div>
+                <div class="theme-card" onclick="selectTheme(this, '科技應用')">
+                    <div class="theme-icon">🤖</div>
+                    <div class="theme-name">科技應用</div>
+                </div>
+                <div class="theme-card" onclick="selectTheme(this, '社會議題')">
+                    <div class="theme-icon">🤝</div>
+                    <div class="theme-name">社會議題</div>
+                </div>
+                <div class="theme-card" onclick="selectTheme(this, '自訂主題')">
+                    <div class="theme-icon">✏️</div>
+                    <div class="theme-name">自訂主題</div>
+                </div>
+            </div>
+            <input type="hidden" id="themeType" value="環境永續">
+        </div>
+
+        <div class="form-group" id="customThemeGroup" style="display: none;">
+            <label for="customTheme">📝 自訂專案主題</label>
+            <input type="text" id="customTheme" placeholder="例如：我們的校園、社區小旅行、未來城市設計">
+        </div>
+
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="grade">🎓 年級</label>
+                <select id="grade">
+                    <option value="國小低年級（1-2年級）">國小低年級</option>
+                    <option value="國小中年級（3-4年級）">國小中年級</option>
+                    <option value="國小高年級（5-6年級）" selected>國小高年級</option>
+                    <option value="國中">國中</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duration">⏱️ 課程時長</label>
+                <select id="duration">
+                    <option value="1週（4-6節課）">1週（4-6節課）</option>
+                    <option value="2週（8-12節課）" selected>2週（8-12節課）</option>
+                    <option value="1個月（16-20節課）">1個月</option>
+                    <option value="一學期專案">一學期專案</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="output">📋 成果展現</label>
+                <select id="output">
+                    <option value="海報展覽">海報展覽</option>
+                    <option value="口頭報告" selected>口頭報告</option>
+                    <option value="實作作品">實作作品</option>
+                    <option value="影片製作">影片製作</option>
+                    <option value="綜合展演">綜合展演</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="goals">🎯 課程目標（選填）</label>
+            <textarea id="goals" rows="3" placeholder="例如：&#10;- 培養學生解決問題的能力&#10;- 學習團隊合作與溝通&#10;- 連結課本知識與生活應用"></textarea>
+        </div>
+
+        <button class="generate-btn" onclick="generatePrompt()">🚀 生成跨域課程設計提示詞</button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedSubjects = ['國語', '數學'];
+        let selectedTheme = '環境永續';
+
+        function toggleSubject(tag, subject) {
+            tag.classList.toggle('selected');
+            if (tag.classList.contains('selected')) {
+                selectedSubjects.push(subject);
+            } else {
+                selectedSubjects = selectedSubjects.filter(s => s !== subject);
+            }
+        }
+
+        function selectTheme(card, theme) {
+            document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedTheme = theme;
+            document.getElementById('themeType').value = theme;
+
+            // 顯示/隱藏自訂主題輸入框
+            document.getElementById('customThemeGroup').style.display =
+                theme === '自訂主題' ? 'block' : 'none';
+        }
+
+        function generatePrompt() {
+            const grade = document.getElementById('grade').value;
+            const duration = document.getElementById('duration').value;
+            const output = document.getElementById('output').value;
+            const goals = document.getElementById('goals').value.trim();
+            const customTheme = document.getElementById('customTheme').value.trim();
+
+            if (selectedSubjects.length < 2) {
+                alert('請至少選擇 2 個整合學科！');
+                return;
+            }
+
+            let theme = selectedTheme;
+            if (selectedTheme === '自訂主題') {
+                if (!customTheme) {
+                    alert('請輸入自訂專案主題！');
+                    return;
+                }
+                theme = customTheme;
+            }
+
+            let prompt = `請幫我設計一個跨領域專案式學習（PBL）課程：
+
+【基本資訊】
+- 年級：${grade}
+- 專案主題：${theme}
+- 課程時長：${duration}
+- 成果展現：${output}
+
+【整合學科】
+${selectedSubjects.map(s => `- ${s}`).join('\n')}
+
+【設計需求】
+請提供完整的課程設計，包含：
+
+1. 專案名稱（吸引學生的標題）
+
+2. 課程簡介
+   - 核心問題（Driving Question）
+   - 學習目標（各學科的連結點）
+
+3. 各學科整合說明
+   - 每個學科在專案中扮演的角色
+   - 具體的學習內容與能力指標
+
+4. 課程流程（週/節次規劃）
+   - 引起動機
+   - 探索階段
+   - 製作階段
+   - 發表階段
+   - 反思階段
+
+5. 學習活動設計
+   - 個人任務
+   - 小組任務
+   - 全班活動
+
+6. 評量方式
+   - 形成性評量
+   - 總結性評量
+   - 評量規準（Rubric）
+
+7. 所需資源與材料
+
+8. 教師備課建議`;
+
+            if (goals) {
+                prompt += `\n\n【課程目標】\n${goals}`;
+            }
+
+            prompt += `\n
+【注意事項】
+- 使用繁體中文
+- 活動設計要具體可執行
+- 考量學生年齡特性
+- 強調學生中心的學習
+- 重視跨學科的自然連結`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

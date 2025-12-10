@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>程式教育輔助系統 - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 120px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .prompt-box {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .lang-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .lang-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-card:hover {
+            border-color: #667eea;
+        }
+
+        .lang-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .lang-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .lang-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
+
+        <h1>💻 程式教育輔助系統</h1>
+        <p class="subtitle">AI 幫你解釋程式碼、除錯、設計練習題</p>
+
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('explain')">📖 程式解說</button>
+            <button class="tab-btn" onclick="switchTab('debug')">🔧 程式除錯</button>
+            <button class="tab-btn" onclick="switchTab('exercise')">✏️ 練習題設計</button>
+        </div>
+
+        <!-- Tab 1: 程式解說 -->
+        <div id="tab-explain" class="tab-content active">
+            <div class="info-box">
+                <strong>💡 功能說明：</strong>將程式碼轉換成學生易懂的說明，包含逐行解析與類比說明。
+            </div>
+
+            <div class="form-group">
+                <label>🖥️ 程式語言</label>
+                <div class="lang-cards">
+                    <div class="lang-card selected" onclick="selectLang(this, 'Scratch')">
+                        <div class="lang-icon">🐱</div>
+                        <div class="lang-name">Scratch</div>
+                    </div>
+                    <div class="lang-card" onclick="selectLang(this, 'Python')">
+                        <div class="lang-icon">🐍</div>
+                        <div class="lang-name">Python</div>
+                    </div>
+                    <div class="lang-card" onclick="selectLang(this, 'JavaScript')">
+                        <div class="lang-icon">📜</div>
+                        <div class="lang-name">JavaScript</div>
+                    </div>
+                    <div class="lang-card" onclick="selectLang(this, 'C語言')">
+                        <div class="lang-icon">⚙️</div>
+                        <div class="lang-name">C 語言</div>
+                    </div>
+                </div>
+                <input type="hidden" id="language" value="Scratch">
+            </div>
+
+            <div class="form-group">
+                <label for="code1">📝 貼上程式碼</label>
+                <textarea id="code1" placeholder="# 範例 Python 程式碼
+for i in range(1, 6):
+    print('*' * i)"></textarea>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="level1">🎓 學生程度</label>
+                    <select id="level1">
+                        <option value="完全初學者">完全初學者</option>
+                        <option value="有基礎概念">有基礎概念</option>
+                        <option value="已有經驗">已有經驗</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="style1">📋 解說風格</label>
+                    <select id="style1">
+                        <option value="生活類比">生活類比</option>
+                        <option value="逐行解析">逐行解析</option>
+                        <option value="流程圖說明">流程圖說明</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="generate-btn" onclick="generateExplain()">🚀 生成程式解說提示詞</button>
+        </div>
+
+        <!-- Tab 2: 程式除錯 -->
+        <div id="tab-debug" class="tab-content">
+            <div class="info-box">
+                <strong>🔧 功能說明：</strong>協助找出程式錯誤，並用學生能理解的方式說明問題與修正方法。
+            </div>
+
+            <div class="form-group">
+                <label for="code2">📝 貼上有問題的程式碼</label>
+                <textarea id="code2" placeholder="# 範例：有錯誤的程式碼
+for i in range(10)
+    print(i)"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="error">⚠️ 錯誤訊息（選填）</label>
+                <input type="text" id="error" placeholder="例如：SyntaxError: invalid syntax">
+            </div>
+
+            <div class="form-group">
+                <label for="expected">🎯 預期結果（選填）</label>
+                <input type="text" id="expected" placeholder="例如：印出 1 到 10 的數字">
+            </div>
+
+            <button class="generate-btn" onclick="generateDebug()">🚀 生成除錯提示詞</button>
+        </div>
+
+        <!-- Tab 3: 練習題設計 -->
+        <div id="tab-exercise" class="tab-content">
+            <div class="info-box">
+                <strong>✏️ 功能說明：</strong>根據教學主題，生成程式練習題目與參考解答。
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="lang3">🖥️ 程式語言</label>
+                    <select id="lang3">
+                        <option value="Scratch">Scratch</option>
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="concept">📚 教學主題</label>
+                    <select id="concept">
+                        <option value="變數與資料型態">變數與資料型態</option>
+                        <option value="條件判斷 if-else">條件判斷 if-else</option>
+                        <option value="迴圈 for/while">迴圈 for/while</option>
+                        <option value="函式">函式</option>
+                        <option value="串列/陣列">串列/陣列</option>
+                        <option value="綜合練習">綜合練習</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="difficulty">📊 難度</label>
+                    <select id="difficulty">
+                        <option value="基礎">基礎（概念理解）</option>
+                        <option value="進階">進階（應用練習）</option>
+                        <option value="挑戰">挑戰（綜合思考）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="count">📋 題目數量</label>
+                    <select id="count">
+                        <option value="3">3 題</option>
+                        <option value="5">5 題</option>
+                        <option value="10">10 題</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="theme">🎨 情境主題（選填）</label>
+                <input type="text" id="theme" placeholder="例如：遊戲設計、數學計算、生活應用">
+            </div>
+
+            <button class="generate-btn" onclick="generateExercise()">🚀 生成練習題提示詞</button>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="prompt-box" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedLanguage = 'Scratch';
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function selectLang(card, lang) {
+            document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedLanguage = lang;
+            document.getElementById('language').value = lang;
+        }
+
+        function generateExplain() {
+            const code = document.getElementById('code1').value.trim();
+            const level = document.getElementById('level1').value;
+            const style = document.getElementById('style1').value;
+
+            if (!code) {
+                alert('請貼上程式碼！');
+                return;
+            }
+
+            const prompt = `請幫我解說以下 ${selectedLanguage} 程式碼，讓${level}的學生能夠理解：
+
+\`\`\`
+${code}
+\`\`\`
+
+解說要求：
+1. 使用繁體中文
+2. 解說風格：${style}
+3. 先概述這段程式的功能
+4. 逐步解釋每個重要部分
+5. 使用生活化的比喻幫助理解
+6. 指出學生常犯的錯誤
+7. 提供一個延伸練習的建議`;
+
+            showResult(prompt);
+        }
+
+        function generateDebug() {
+            const code = document.getElementById('code2').value.trim();
+            const error = document.getElementById('error').value.trim();
+            const expected = document.getElementById('expected').value.trim();
+
+            if (!code) {
+                alert('請貼上有問題的程式碼！');
+                return;
+            }
+
+            let prompt = `請幫我找出以下程式碼的問題，並用學生能理解的方式說明：
+
+\`\`\`
+${code}
+\`\`\``;
+
+            if (error) {
+                prompt += `\n\n錯誤訊息：${error}`;
+            }
+
+            if (expected) {
+                prompt += `\n\n預期結果：${expected}`;
+            }
+
+            prompt += `\n
+請提供：
+1. 問題說明：這段程式碼哪裡出錯了
+2. 原因解釋：為什麼會發生這個錯誤（用簡單的話說明）
+3. 修正方式：如何修改程式碼
+4. 修正後的完整程式碼
+5. 預防建議：如何避免類似的錯誤
+
+使用繁體中文，語氣親切易懂。`;
+
+            showResult(prompt);
+        }
+
+        function generateExercise() {
+            const lang = document.getElementById('lang3').value;
+            const concept = document.getElementById('concept').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const count = document.getElementById('count').value;
+            const theme = document.getElementById('theme').value.trim();
+
+            let prompt = `請幫我設計 ${count} 道 ${lang} 程式練習題：
+
+【設計要求】
+- 主題：${concept}
+- 難度：${difficulty}
+- 程式語言：${lang}`;
+
+            if (theme) {
+                prompt += `\n- 情境主題：${theme}`;
+            }
+
+            prompt += `
+
+【每題要包含】
+1. 題目描述（清楚說明要做什麼）
+2. 輸入範例
+3. 預期輸出
+4. 提示（給學生的小提示）
+5. 參考解答
+6. 解答說明
+
+【注意事項】
+- 使用繁體中文
+- 題目由淺入深排列
+- 題目要有趣、貼近學生生活
+- 難度符合「${difficulty}」程度
+- 適合學生自學使用`;
+
+            showResult(prompt);
+        }
+
+        function showResult(prompt) {
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ 已複製！';
+                setTimeout(() => {
+                    btn.textContent = '📋 複製提示詞';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
