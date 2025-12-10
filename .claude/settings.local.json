@@ -3,7 +3,14 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: AI 教學應用工具箱\n\n- 10 個互動式實作工具 (demos/)\n- 10 個簡報教學頁面\n- 首頁整合工具與簡報連結\n- README 說明文件\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(gh:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\n修正中文檔名連結為 URL 編碼格式\n\n- 更新 index.html 中所有簡報和工具連結為 URL 編碼\n- 更新 README.md 中的線上體驗連結\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(timeout:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\n更新使用方式為 Antigravity 安裝教學\n\n- 新增 Antigravity 安裝教學連結\n- 新增 Antigravity + Pandoc AI 整理術連結\n- 移除舊的專案結構和部署說明\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
     ]
   }
 }
