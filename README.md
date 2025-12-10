@@ -31,56 +31,22 @@
 
 ## 使用方式
 
-### 方法一：線上使用（推薦）
+### 步驟一：安裝 Antigravity
+請先安裝 Antigravity 擴充功能：
+- [Antigravity 安裝教學](https://drive.google.com/file/d/1CZd48Mxd-isH-bnJg0ydS13zwQ9N-uFu/view?usp=sharing)
+
+### 步驟二：開始使用
 1. 點擊上方「線上體驗」連結
 2. 選擇需要的工具
 3. 填寫相關資訊
 4. 點擊「生成提示詞」
-5. 複製產生的提示詞到 AI 助手（如 ChatGPT、Claude、Gemini）
-
-### 方法二：本機使用
-1. 下載整個專案
-2. 用瀏覽器開啟 `index.html`
-3. 選擇工具開始使用
+5. 複製產生的提示詞到 AI 助手使用
 
 ---
 
-## 專案結構
+## 延伸學習
 
-```
-├── index.html                # 首頁（工具總覽）
-├── demos/                    # 互動式工具
-│   ├── demo1_文案優化器.html
-│   ├── demo2_教案生成器.html
-│   ├── demo3_學習單製作器.html
-│   ├── demo4_課堂活動產生器.html
-│   ├── demo5_視覺素材提示詞.html
-│   ├── demo6_程式教育助手.html
-│   ├── demo7_題庫產生器.html
-│   ├── demo8_數據分析工具.html
-│   ├── demo9_跨域課程設計.html
-│   └── demo10_行政文書助理.html
-├── Part1_文案優化與潤飾.html  # 簡報教學
-├── Part2_個人化教案生成器.html
-├── Part3_差異化學習單製作.html
-├── Part4_互動式課堂活動APP開發.html
-├── Part5_教學視覺素材創作.html
-├── Part6_程式教育輔助系統.html
-├── Part7_多元評量題庫建置.html
-├── Part8_學習數據分析與視覺化.html
-├── Part9_跨域專案課程設計.html
-└── Part10_行政文書自動化助理.html
-```
-
----
-
-## 部署到 GitHub Pages
-
-1. 建立新的 GitHub Repository
-2. 上傳所有檔案
-3. 到 Settings → Pages
-4. Source 選擇 `main` branch
-5. 等待幾分鐘後，即可透過 `https://你的帳號.github.io/antigravity-teaching-toolkit/` 存取
+- [Antigravity + Pandoc AI 整理術](https://chatgpt3a01.github.io/Antigravity-Pandoc-AI/)
 
 ---
 
