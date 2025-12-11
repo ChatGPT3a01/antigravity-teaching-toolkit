@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教案生成器 - Demo</title>
+    <title>教案/培訓生成器 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -39,7 +39,66 @@
             text-align: center;
             color: #666;
             font-size: 18px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -114,11 +173,6 @@
             animation: fadeIn 0.5s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .result-title {
             font-size: 24px;
             color: #667eea;
@@ -165,20 +219,16 @@
             color: #0d47a1;
         }
 
-        .back-btn {
-            display: inline-block;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-bottom: 30px;
-            transition: background 0.3s;
+        .info-box.edu {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #1b5e20;
         }
 
-        .back-btn:hover {
-            background: rgba(102, 126, 234, 0.2);
+        .info-box.biz {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
         }
 
         .template-btns {
@@ -210,97 +260,177 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📚 教案生成器</h1>
-        <p class="subtitle">輸入教學主題，快速生成完整教案架構</p>
+        <h1>📚 教案/培訓生成器</h1>
+        <p class="subtitle">教育 × 企業雙軌版 - 快速生成完整教案或培訓方案</p>
 
-        <div class="info-box">
-            <strong>💡 使用說明:</strong><br>
-            1. 填寫教學基本資訊（科目、年級、主題）<br>
-            2. 選擇教學時長與教學法<br>
-            3. 點擊「生成教案提示詞」<br>
-            4. 複製提示詞到 Antigravity 獲得完整教案
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('edu')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('biz')">🏢 企業版</button>
         </div>
 
-        <div class="form-group">
-            <label>📖 快速範本</label>
-            <div class="template-btns">
-                <button class="template-btn" onclick="fillTemplate('math')">數學課</button>
-                <button class="template-btn" onclick="fillTemplate('chinese')">國語課</button>
-                <button class="template-btn" onclick="fillTemplate('science')">自然課</button>
-                <button class="template-btn" onclick="fillTemplate('social')">社會課</button>
-                <button class="template-btn" onclick="fillTemplate('english')">英語課</button>
-            </div>
-        </div>
-
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="subject">📘 科目</label>
-                <select id="subject">
-                    <option value="國語">國語</option>
-                    <option value="數學">數學</option>
-                    <option value="自然">自然</option>
-                    <option value="社會">社會</option>
-                    <option value="英語">英語</option>
-                    <option value="藝術">藝術</option>
-                    <option value="健康與體育">健康與體育</option>
-                    <option value="綜合活動">綜合活動</option>
-                </select>
+        <!-- 教育版內容 -->
+        <div id="edu-content" class="tab-content active">
+            <div class="info-box edu">
+                <strong>🎓 教育版使用說明:</strong><br>
+                1. 填寫教學基本資訊（科目、年級、主題）<br>
+                2. 選擇教學時長與教學法<br>
+                3. 點擊「生成教案提示詞」<br>
+                4. 複製提示詞到 Antigravity 獲得完整教案
             </div>
 
             <div class="form-group">
-                <label for="grade">🎓 年級</label>
-                <select id="grade">
-                    <option value="國小一年級">國小一年級</option>
-                    <option value="國小二年級">國小二年級</option>
-                    <option value="國小三年級">國小三年級</option>
-                    <option value="國小四年級">國小四年級</option>
-                    <option value="國小五年級">國小五年級</option>
-                    <option value="國小六年級">國小六年級</option>
-                    <option value="國中一年級">國中一年級</option>
-                    <option value="國中二年級">國中二年級</option>
-                    <option value="國中三年級">國中三年級</option>
-                </select>
+                <label>📖 快速範本</label>
+                <div class="template-btns">
+                    <button class="template-btn" onclick="fillTemplate('math')">數學課</button>
+                    <button class="template-btn" onclick="fillTemplate('chinese')">國語課</button>
+                    <button class="template-btn" onclick="fillTemplate('science')">自然課</button>
+                    <button class="template-btn" onclick="fillTemplate('social')">社會課</button>
+                    <button class="template-btn" onclick="fillTemplate('english')">英語課</button>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="subject">📘 科目</label>
+                    <select id="subject">
+                        <option value="國語">國語</option>
+                        <option value="數學">數學</option>
+                        <option value="自然">自然</option>
+                        <option value="社會">社會</option>
+                        <option value="英語">英語</option>
+                        <option value="藝術">藝術</option>
+                        <option value="健康與體育">健康與體育</option>
+                        <option value="綜合活動">綜合活動</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade">🎓 年級</label>
+                    <select id="grade">
+                        <option value="國小一年級">國小一年級</option>
+                        <option value="國小二年級">國小二年級</option>
+                        <option value="國小三年級">國小三年級</option>
+                        <option value="國小四年級">國小四年級</option>
+                        <option value="國小五年級">國小五年級</option>
+                        <option value="國小六年級">國小六年級</option>
+                        <option value="國中一年級">國中一年級</option>
+                        <option value="國中二年級">國中二年級</option>
+                        <option value="國中三年級">國中三年級</option>
+                        <option value="高中一年級">高中一年級</option>
+                        <option value="高中二年級">高中二年級</option>
+                        <option value="高中三年級">高中三年級</option>
+                        <option value="高職一年級">高職一年級</option>
+                        <option value="高職二年級">高職二年級</option>
+                        <option value="高職三年級">高職三年級</option>
+                        <option value="大學">大學</option>
+                        <option value="研究所">研究所</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">⏱️ 教學時長</label>
+                    <select id="duration">
+                        <option value="一節課（40分鐘）">一節課（40分鐘）</option>
+                        <option value="兩節課（80分鐘）">兩節課（80分鐘）</option>
+                        <option value="三節課（120分鐘）">三節課（120分鐘）</option>
+                        <option value="一週課程">一週課程</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="method">📋 教學法</label>
+                    <select id="method">
+                        <option value="講述法搭配討論">講述法搭配討論</option>
+                        <option value="探究式學習">探究式學習</option>
+                        <option value="合作學習">合作學習</option>
+                        <option value="問題導向學習">問題導向學習</option>
+                        <option value="翻轉教室">翻轉教室</option>
+                        <option value="遊戲化學習">遊戲化學習</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="duration">⏱️ 教學時長</label>
-                <select id="duration">
-                    <option value="一節課（40分鐘）">一節課（40分鐘）</option>
-                    <option value="兩節課（80分鐘）">兩節課（80分鐘）</option>
-                    <option value="三節課（120分鐘）">三節課（120分鐘）</option>
-                    <option value="一週課程">一週課程</option>
-                </select>
+                <label for="topic">📝 教學主題/單元名稱</label>
+                <input type="text" id="topic" placeholder="例如：分數的加減、台灣的地形、動物的生態">
             </div>
 
             <div class="form-group">
-                <label for="method">📋 教學法</label>
-                <select id="method">
-                    <option value="講述法搭配討論">講述法搭配討論</option>
-                    <option value="探究式學習">探究式學習</option>
-                    <option value="合作學習">合作學習</option>
-                    <option value="問題導向學習">問題導向學習</option>
-                    <option value="翻轉教室">翻轉教室</option>
-                    <option value="遊戲化學習">遊戲化學習</option>
-                </select>
+                <label for="objectives">🎯 學習目標（選填）</label>
+                <textarea id="objectives" placeholder="例如：&#10;1. 能理解分數的基本概念&#10;2. 能進行同分母分數的加減運算&#10;3. 能應用於生活情境中"></textarea>
             </div>
+
+            <div class="form-group">
+                <label for="requirements">📌 特殊需求（選填）</label>
+                <textarea id="requirements" placeholder="例如：&#10;- 班上有特殊生需要額外輔助&#10;- 需要融入資訊科技&#10;- 希望包含戶外活動"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateEduPrompt()">🚀 生成教案提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label for="topic">📝 教學主題/單元名稱</label>
-            <input type="text" id="topic" placeholder="例如：分數的加減、台灣的地形、動物的生態">
-        </div>
+        <!-- 企業版內容 -->
+        <div id="biz-content" class="tab-content">
+            <div class="info-box biz">
+                <strong>🏢 企業版使用說明:</strong><br>
+                1. 選擇產業類型與培訓類型<br>
+                2. 填寫培訓主題與相關資訊<br>
+                3. 點擊「生成培訓提示詞」<br>
+                4. 複製提示詞到 AI 工具獲得完整培訓方案
+            </div>
 
-        <div class="form-group">
-            <label for="objectives">🎯 學習目標（選填）</label>
-            <textarea id="objectives" placeholder="例如：&#10;1. 能理解分數的基本概念&#10;2. 能進行同分母分數的加減運算&#10;3. 能應用於生活情境中"></textarea>
-        </div>
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizIndustry">🏭 產業類型</label>
+                    <select id="bizIndustry">
+                        <option value="科技業">科技業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="醫療業">醫療業</option>
+                        <option value="餐飲業">餐飲業</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label for="requirements">📌 特殊需求（選填）</label>
-            <textarea id="requirements" placeholder="例如：&#10;- 班上有特殊生需要額外輔助&#10;- 需要融入資訊科技&#10;- 希望包含戶外活動"></textarea>
-        </div>
+                <div class="form-group">
+                    <label for="bizType">📋 培訓類型</label>
+                    <select id="bizType">
+                        <option value="新人訓練">新人訓練</option>
+                        <option value="技能培訓">技能培訓</option>
+                        <option value="管理培訓">管理培訓</option>
+                        <option value="銷售培訓">銷售培訓</option>
+                        <option value="安全培訓">安全培訓</option>
+                    </select>
+                </div>
 
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成教案提示詞</button>
+                <div class="form-group">
+                    <label for="bizDuration">⏱️ 培訓時長</label>
+                    <select id="bizDuration">
+                        <option value="半天（4小時）">半天（4小時）</option>
+                        <option value="一天（8小時）">一天（8小時）</option>
+                        <option value="兩天（16小時）">兩天（16小時）</option>
+                        <option value="一週（40小時）">一週（40小時）</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bizTopic">📝 培訓主題</label>
+                <input type="text" id="bizTopic" placeholder="例如：客戶服務溝通技巧、產品知識培訓、團隊領導力">
+            </div>
+
+            <div class="form-group">
+                <label for="bizObjectives">🎯 學習目標（選填）</label>
+                <textarea id="bizObjectives" placeholder="例如：&#10;1. 掌握有效的客戶溝通技巧&#10;2. 能處理客戶抱怨與衝突&#10;3. 提升客戶滿意度"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="bizRequirements">📌 特殊需求（選填）</label>
+                <textarea id="bizRequirements" placeholder="例如：&#10;- 需要實作演練環節&#10;- 希望包含案例分析&#10;- 需要評估測驗"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateBizPrompt()">🚀 生成培訓提示詞</button>
+        </div>
 
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
@@ -310,6 +440,14 @@
     </div>
 
     <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
         const templates = {
             math: {
                 subject: '數學',
@@ -349,7 +487,6 @@
             document.getElementById('topic').value = template.topic;
             document.getElementById('objectives').value = template.objectives;
 
-            // 找到對應年級
             const gradeSelect = document.getElementById('grade');
             for(let i = 0; i < gradeSelect.options.length; i++) {
                 if(gradeSelect.options[i].value === template.grade) {
@@ -359,7 +496,7 @@
             }
         }
 
-        function generatePrompt() {
+        function generateEduPrompt() {
             const subject = document.getElementById('subject').value;
             const grade = document.getElementById('grade').value;
             const duration = document.getElementById('duration').value;
@@ -400,8 +537,57 @@
 6. 板書設計或重點摘要
 7. 延伸活動或回家作業
 
-請使用繁體中文，格式清楚易讀。`;
+請使用繁體中文，格式清楚易讀，並根據${grade}的學習特性調整內容深度與教學方式。`;
 
+            displayResult(prompt);
+        }
+
+        function generateBizPrompt() {
+            const industry = document.getElementById('bizIndustry').value;
+            const bizType = document.getElementById('bizType').value;
+            const duration = document.getElementById('bizDuration').value;
+            const topic = document.getElementById('bizTopic').value.trim();
+            const objectives = document.getElementById('bizObjectives').value.trim();
+            const requirements = document.getElementById('bizRequirements').value.trim();
+
+            if (!topic) {
+                alert('請輸入培訓主題！');
+                return;
+            }
+
+            let prompt = `請幫我設計一份完整的企業培訓教案，資訊如下：
+
+【基本資訊】
+- 產業類型：${industry}
+- 培訓類型：${bizType}
+- 培訓時長：${duration}
+- 培訓主題：${topic}`;
+
+            if (objectives) {
+                prompt += `\n\n【學習目標】\n${objectives}`;
+            }
+
+            if (requirements) {
+                prompt += `\n\n【特殊需求】\n${requirements}`;
+            }
+
+            prompt += `\n
+【請包含以下內容】
+1. 培訓目標（知識面、技能面、態度面）
+2. 目標學員（職位、背景、先備知識）
+3. 培訓準備（場地、設備、教材）
+4. 課程大綱與時間分配
+5. 教學方法（講授、討論、演練、案例分析等）
+6. 實作活動或演練設計
+7. 評量方式（測驗、實作評估、回饋表單）
+8. 課後追蹤與應用建議
+
+請使用繁體中文，格式清楚易讀，並符合${industry}的實務需求與${bizType}的培訓重點。`;
+
+            displayResult(prompt);
+        }
+
+        function displayResult(prompt) {
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });

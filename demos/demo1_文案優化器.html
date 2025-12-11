@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文案優化器 - Demo</title>
+    <title>文案優化器 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -39,7 +39,50 @@
             text-align: center;
             color: #666;
             font-size: 18px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -54,8 +97,7 @@
             margin-bottom: 10px;
         }
 
-        textarea,
-        select {
+        textarea, select {
             width: 100%;
             padding: 15px;
             font-size: 16px;
@@ -65,8 +107,7 @@
             transition: border-color 0.3s;
         }
 
-        textarea:focus,
-        select:focus {
+        textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -102,10 +143,6 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
 
-        .generate-btn:active {
-            transform: translateY(0);
-        }
-
         .result-section {
             margin-top: 40px;
             padding: 30px;
@@ -118,18 +155,6 @@
         .result-section.show {
             display: block;
             animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .result-title {
@@ -177,6 +202,18 @@
             color: #0d47a1;
         }
 
+        .info-box.edu {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #1b5e20;
+        }
+
+        .info-box.biz {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
+        }
+
         .example-section {
             margin-top: 30px;
             padding: 20px;
@@ -202,47 +239,129 @@
 <body>
     <div class="container">
         <h1>📝 文案優化器</h1>
-        <p class="subtitle">將你的文字草稿優化成專業文案</p>
+        <p class="subtitle">將你的文字草稿優化成專業文案 - 教育 × 企業雙軌版</p>
 
-        <div class="info-box">
-            <strong>💡 使用說明:</strong><br>
-            1. 在下方輸入你的原始文案(可以是草稿或重點)<br>
-            2. 選擇文案類型與語氣風格<br>
-            3. 點擊「生成提示詞」按鈕<br>
-            4. 複製生成的提示詞,貼到 Google Antigravity 中使用
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('edu')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('biz')">🏢 企業版</button>
         </div>
 
-        <div class="form-group">
-            <label for="originalText">📄 原始文案內容</label>
-            <textarea id="originalText" placeholder="例如:下週三要去動物園,早上8點出發,下午3點回來,要帶水壺和帽子,費用300元"></textarea>
-        </div>
-
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="docType">📋 文案類型</label>
-                <select id="docType">
-                    <option value="家長通知">家長通知</option>
-                    <option value="聯絡簿">聯絡簿</option>
-                    <option value="課程介紹">課程介紹</option>
-                    <option value="活動文宣">活動文宣</option>
-                    <option value="Email">Email</option>
-                    <option value="會議記錄">會議記錄</option>
-                </select>
+        <!-- 教育版內容 -->
+        <div id="edu-content" class="tab-content active">
+            <div class="info-box edu">
+                <strong>🎓 教育版使用說明:</strong><br>
+                1. 輸入原始文案（可以是草稿或重點）<br>
+                2. 選擇教育階段與文案類型<br>
+                3. 點擊「生成提示詞」按鈕<br>
+                4. 複製提示詞到 AI 工具中使用
             </div>
 
             <div class="form-group">
-                <label for="tone">🎭 語氣風格</label>
-                <select id="tone">
+                <label for="eduOriginalText">📄 原始文案內容</label>
+                <textarea id="eduOriginalText" placeholder="例如：下週三要去動物園，早上8點出發，下午3點回來，要帶水壺和帽子，費用300元"></textarea>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduLevel">🏫 教育階段</label>
+                    <select id="eduLevel">
+                        <option value="國小">國小</option>
+                        <option value="國中">國中</option>
+                        <option value="高中">高中</option>
+                        <option value="高職">高職</option>
+                        <option value="大學">大學</option>
+                        <option value="研究所">研究所</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduDocType">📋 文案類型</label>
+                    <select id="eduDocType">
+                        <option value="家長通知">家長通知</option>
+                        <option value="聯絡簿">聯絡簿</option>
+                        <option value="課程介紹">課程介紹</option>
+                        <option value="活動文宣">活動文宣</option>
+                        <option value="Email">Email</option>
+                        <option value="會議記錄">會議記錄</option>
+                        <option value="學校公告">學校公告</option>
+                        <option value="招生簡章">招生簡章</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="eduTone">🎭 語氣風格</label>
+                <select id="eduTone">
                     <option value="親切但專業">親切但專業</option>
                     <option value="正式專業">正式專業</option>
                     <option value="活潑友善">活潑友善</option>
                     <option value="簡潔明確">簡潔明確</option>
                 </select>
             </div>
+
+            <button class="generate-btn" onclick="generateEduPrompt()">🚀 生成提示詞</button>
         </div>
 
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成提示詞</button>
+        <!-- 企業版內容 -->
+        <div id="biz-content" class="tab-content">
+            <div class="info-box biz">
+                <strong>🏢 企業版使用說明:</strong><br>
+                1. 輸入原始文案（可以是草稿或重點）<br>
+                2. 選擇產業類型與文案類型<br>
+                3. 點擊「生成提示詞」按鈕<br>
+                4. 複製提示詞到 AI 工具中使用
+            </div>
 
+            <div class="form-group">
+                <label for="bizOriginalText">📄 原始文案內容</label>
+                <textarea id="bizOriginalText" placeholder="例如：下週五要舉辦年度促銷活動，全館商品8折，滿5000送500，活動期間10天"></textarea>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizIndustry">🏭 產業類型</label>
+                    <select id="bizIndustry">
+                        <option value="科技業">科技業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="醫療業">醫療業</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizDocType">📋 文案類型</label>
+                    <select id="bizDocType">
+                        <option value="行銷文案">行銷文案</option>
+                        <option value="產品說明">產品說明</option>
+                        <option value="公司公告">公司公告</option>
+                        <option value="新聞稿">新聞稿</option>
+                        <option value="Email">Email</option>
+                        <option value="會議記錄">會議記錄</option>
+                        <option value="提案簡報">提案簡報</option>
+                        <option value="社群貼文">社群貼文</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bizTone">🎭 語氣風格</label>
+                <select id="bizTone">
+                    <option value="專業權威">專業權威</option>
+                    <option value="親切友善">親切友善</option>
+                    <option value="活潑創意">活潑創意</option>
+                    <option value="簡潔有力">簡潔有力</option>
+                    <option value="正式商務">正式商務</option>
+                </select>
+            </div>
+
+            <button class="generate-btn" onclick="generateBizPrompt()">🚀 生成提示詞</button>
+        </div>
+
+        <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -252,115 +371,93 @@
                 <div class="example-title">📌 下一步:</div>
                 <div class="example-text">
                     1. 點擊上方「複製提示詞」按鈕<br>
-                    2. 開啟 Google Antigravity<br>
+                    2. 開啟 AI 工具 (如 ChatGPT、Gemini、Claude)<br>
                     3. 將提示詞貼上並送出<br>
                     4. 查看 AI 生成的優化結果<br>
-                    5. 如需調整,可以繼續對話要求修改
+                    5. 如需調整，可以繼續對話要求修改
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function generatePrompt() {
-            const originalText = document.getElementById('originalText').value.trim();
-            const docType = document.getElementById('docType').value;
-            const tone = document.getElementById('tone').value;
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById('resultSection').classList.remove('show');
+        }
 
-            if (!originalText) {
-                alert('請先輸入原始文案內容!');
-                return;
-            }
+        function getEduLevelContext(level) {
+            const contexts = {
+                '國小': '適合國小學童理解，用詞簡單明瞭',
+                '國中': '適合青少年理解，可使用較正式的用語',
+                '高中': '適合高中生理解，用語可以更成熟專業',
+                '高職': '適合技職學生，可結合實務應用語境',
+                '大學': '適合大學生，用語專業學術',
+                '研究所': '適合研究生，用語可以更學術專業'
+            };
+            return contexts[level] || '';
+        }
+
+        function generateEduPrompt() {
+            const originalText = document.getElementById('eduOriginalText').value.trim();
+            const eduLevel = document.getElementById('eduLevel').value;
+            const docType = document.getElementById('eduDocType').value;
+            const tone = document.getElementById('eduTone').value;
+
+            if (!originalText) { alert('請先輸入原始文案內容！'); return; }
 
             let prompt = '';
+            const levelContext = getEduLevelContext(eduLevel);
 
-            // 根據文案類型生成不同的提示詞
-            switch (docType) {
-                case '家長通知':
-                    prompt = `請幫我將以下內容優化成正式的家長通知,語氣要${tone}:
+            const templates = {
+                '家長通知': '請幫我將以下內容優化成正式的{level}家長通知，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 結構清晰，適當分段呈現\n3. 包含所有重要資訊（時間、地點、攜帶物品、費用等）\n4. 加上適當的問候語與結尾\n5. 語氣{tone}，符合{level}家長的期待\n6. {context}',
+                '聯絡簿': '請幫我將以下內容優化成{level}聯絡簿的每日記錄，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 簡潔扼要，不超過 150 字\n3. 語氣{tone}\n4. 重點清楚\n5. {context}',
+                '課程介紹': '請幫我將以下內容優化成{level}課程介紹文案，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 結構化呈現（課程目標、內容大綱、評量方式等）\n3. 語氣{tone}\n4. 吸引人且專業\n5. 符合{level}學生的學習特點\n6. {context}',
+                '活動文宣': '請幫我將以下內容優化成{level}活動宣傳文案，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 開頭要吸引人\n3. 語氣{tone}\n4. 包含明確的行動呼籲\n5. {context}',
+                'Email': '請幫我將以下內容優化成{level}教育場域的 Email 格式，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 包含適當的稱謂與結尾\n3. 語氣{tone}\n4. 結構清晰，分段呈現\n5. 主旨明確\n6. {context}',
+                '會議記錄': '請幫我將以下內容整理成{level}學校的正式會議記錄，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 包含會議基本資訊（時間、地點、出席人員）\n3. 討論事項條列清楚\n4. 決議事項明確\n5. 語氣{tone}',
+                '學校公告': '請幫我將以下內容優化成{level}學校公告，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 標題醒目\n3. 內容條理分明\n4. 語氣{tone}\n5. {context}',
+                '招生簡章': '請幫我將以下內容優化成{level}招生簡章，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 包含學校特色、課程介紹、報名資訊\n3. 語氣{tone}\n4. 吸引目標學生與家長\n5. {context}'
+            };
 
-${originalText}
-
-要求:
-1. 使用繁體中文
-2. 結構清晰,適當分段呈現
-3. 包含所有重要資訊(時間、地點、攜帶物品、費用等)
-4. 加上適當的問候語與結尾
-5. 語氣${tone}
-6. 如有需要,可以使用項目符號或編號列表`;
-                    break;
-
-                case '聯絡簿':
-                    prompt = `請幫我將以下內容優化成聯絡簿的每日記錄,語氣要${tone}:
-
-${originalText}
-
-要求:
-1. 使用繁體中文
-2. 簡潔扼要,不超過 150 字
-3. 語氣${tone}
-4. 重點清楚
-5. 如有需要提醒家長協助的部分,請委婉說明`;
-                    break;
-
-                case '課程介紹':
-                    prompt = `請幫我將以下內容優化成課程介紹文案,語氣要${tone}:
-
-${originalText}
-
-要求:
-1. 使用繁體中文
-2. 結構化呈現(課程目標、內容大綱、評量方式等)
-3. 語氣${tone}
-4. 吸引人且專業
-5. 清楚說明學習成果`;
-                    break;
-
-                case '活動文宣':
-                    prompt = `請幫我將以下內容優化成活動宣傳文案,語氣要${tone}:
-
-${originalText}
-
-要求:
-1. 使用繁體中文
-2. 開頭要吸引人
-3. 語氣${tone}
-4. 包含明確的行動呼籲(Call to Action)
-5. 強調活動亮點與參加價值`;
-                    break;
-
-                case 'Email':
-                    prompt = `請幫我將以下內容優化成 Email 格式,語氣要${tone}:
-
-${originalText}
-
-要求:
-1. 使用繁體中文
-2. 包含適當的稱謂與結尾
-3. 語氣${tone}
-4. 結構清晰,分段呈現
-5. 主旨明確`;
-                    break;
-
-                case '會議記錄':
-                    prompt = `請幫我將以下內容整理成正式的會議記錄,語氣要${tone}:
-
-${originalText}
-
-要求:
-1. 使用繁體中文
-2. 包含會議基本資訊(時間、地點、出席人員)
-3. 討論事項條列清楚
-4. 決議事項明確
-5. 語氣${tone}`;
-                    break;
+            if (templates[docType]) {
+                prompt = templates[docType].replace(/{level}/g, eduLevel).replace(/{tone}/g, tone).replace(/{text}/g, originalText).replace(/{context}/g, levelContext);
             }
+            displayResult(prompt);
+        }
 
-            // 顯示結果
+        function generateBizPrompt() {
+            const originalText = document.getElementById('bizOriginalText').value.trim();
+            const industry = document.getElementById('bizIndustry').value;
+            const docType = document.getElementById('bizDocType').value;
+            const tone = document.getElementById('bizTone').value;
+
+            if (!originalText) { alert('請先輸入原始文案內容！'); return; }
+
+            let prompt = '';
+            const templates = {
+                '行銷文案': '請幫我將以下內容優化成{ind}的行銷文案，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 開頭吸引人，引起目標客群興趣\n3. 突出產品/服務的核心價值\n4. 包含明確的行動呼籲 (CTA)\n5. 語氣{tone}\n6. 符合{ind}的行業特色',
+                '產品說明': '請幫我將以下內容優化成{ind}的產品說明文案，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 清楚說明產品特色與規格\n3. 強調產品優勢與使用價值\n4. 語氣{tone}\n5. 符合{ind}的專業用語',
+                '公司公告': '請幫我將以下內容優化成{ind}的公司公告，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 標題清楚明確\n3. 內容結構分明\n4. 語氣{tone}\n5. 符合企業形象',
+                '新聞稿': '請幫我將以下內容優化成{ind}的新聞稿，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 採用倒金字塔結構\n3. 標題吸引人\n4. 包含 5W1H 要素\n5. 語氣{tone}\n6. 符合媒體發布格式',
+                'Email': '請幫我將以下內容優化成{ind}的商務 Email，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 包含專業的稱謂與結尾\n3. 主旨明確\n4. 語氣{tone}\n5. 符合商務禮儀',
+                '會議記錄': '請幫我將以下內容整理成{ind}的正式會議記錄，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 包含會議資訊（時間、地點、與會人員）\n3. 討論事項與決議條列清楚\n4. 待辦事項與負責人明確\n5. 語氣{tone}',
+                '提案簡報': '請幫我將以下內容優化成{ind}的提案簡報大綱，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 結構清晰（背景、目標、方案、效益、時程）\n3. 重點突出\n4. 語氣{tone}\n5. 適合簡報呈現的條列式格式',
+                '社群貼文': '請幫我將以下內容優化成{ind}的社群媒體貼文，語氣要{tone}：\n\n{text}\n\n要求：\n1. 使用繁體中文\n2. 開頭吸引眼球\n3. 內容簡潔有力\n4. 適當加入 emoji 增加互動感\n5. 包含行動呼籲\n6. 語氣{tone}\n7. 建議適合的 hashtag'
+            };
+
+            if (templates[docType]) {
+                prompt = templates[docType].replace(/{ind}/g, industry).replace(/{tone}/g, tone).replace(/{text}/g, originalText);
+            }
+            displayResult(prompt);
+        }
+
+        function displayResult(prompt) {
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
-
-            // 滾動到結果區域
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
@@ -369,23 +466,11 @@ ${originalText}
             navigator.clipboard.writeText(promptText).then(() => {
                 const btn = event.target;
                 const originalText = btn.textContent;
-                btn.textContent = '✅ 已複製!';
+                btn.textContent = '✅ 已複製！';
                 btn.style.background = '#218838';
-
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '#28a745';
-                }, 2000);
-            }).catch(err => {
-                alert('複製失敗,請手動選取文字複製');
-            });
+                setTimeout(() => { btn.textContent = originalText; btn.style.background = '#28a745'; }, 2000);
+            }).catch(err => { alert('複製失敗，請手動選取文字複製'); });
         }
-
-        // 範例填充功能(可選)
-        window.addEventListener('load', () => {
-            // 可以在這裡添加範例文案的快速填充功能
-        });
     </script>
 </body>
-
 </html>

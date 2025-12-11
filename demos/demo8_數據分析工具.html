@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學習數據分析與視覺化 - Demo</title>
+    <title>數據分析助手 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -40,6 +40,44 @@
             color: #666;
             font-size: 18px;
             margin-bottom: 40px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
         }
 
         .form-group {
@@ -243,19 +281,27 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📊 學習數據分析與視覺化</h1>
-        <p class="subtitle">把成績數據變成有意義的分析報告</p>
+        <h1>📊 數據分析助手 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">一個工具，雙重應用：教育數據分析 + 企業商業分析</p>
 
         <div class="info-box">
-            <strong>💡 功能說明：</strong>輸入學生成績數據，AI 幫你分析趨勢、找出需要關注的學生，並產生視覺化建議。
+            <strong>💡 功能說明：</strong>切換教育版或企業版，輸入相應數據，AI 幫你產生專業分析報告與視覺化建議。
         </div>
 
-        <div class="form-group">
-            <label>
-                📈 輸入成績數據
-                <button class="sample-btn" onclick="fillSample()">填入範例數據</button>
-            </label>
-            <textarea id="data" placeholder="格式範例（每行一位學生）：
+        <!-- Tab 切換按鈕 -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('education')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('business')">🏢 企業版</button>
+        </div>
+
+        <!-- 教育版內容 -->
+        <div id="education" class="tab-content active">
+            <div class="form-group">
+                <label>
+                    📈 輸入數據
+                    <button class="sample-btn" onclick="fillSampleEdu()">填入範例數據</button>
+                </label>
+                <textarea id="dataEdu" placeholder="格式範例（每行一位學生）：
 學生姓名, 國語, 數學, 自然, 社會
 
 例如：
@@ -263,67 +309,162 @@
 李小華, 92, 95, 88, 91
 張小美, 78, 65, 72, 80
 ..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>📊 分析類型（可複選）</label>
-            <div class="analysis-types">
-                <div class="analysis-card selected" onclick="toggleAnalysis(this, '成績統計')">
-                    <div class="analysis-icon">📉</div>
-                    <div class="analysis-name">成績統計</div>
-                </div>
-                <div class="analysis-card selected" onclick="toggleAnalysis(this, '學生排名')">
-                    <div class="analysis-icon">🏆</div>
-                    <div class="analysis-name">學生排名</div>
-                </div>
-                <div class="analysis-card" onclick="toggleAnalysis(this, '弱科分析')">
-                    <div class="analysis-icon">⚠️</div>
-                    <div class="analysis-name">弱科分析</div>
-                </div>
-                <div class="analysis-card" onclick="toggleAnalysis(this, '進步追蹤')">
-                    <div class="analysis-icon">📈</div>
-                    <div class="analysis-name">進步追蹤</div>
-                </div>
-                <div class="analysis-card" onclick="toggleAnalysis(this, '分組建議')">
-                    <div class="analysis-icon">👥</div>
-                    <div class="analysis-name">分組建議</div>
-                </div>
-                <div class="analysis-card" onclick="toggleAnalysis(this, '視覺化圖表')">
-                    <div class="analysis-icon">📊</div>
-                    <div class="analysis-name">視覺化圖表</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="output">📋 輸出格式</label>
-                <select id="output">
-                    <option value="詳細報告">詳細報告（含所有分析）</option>
-                    <option value="摘要報告">摘要報告（重點整理）</option>
-                    <option value="Excel建議">Excel 公式建議</option>
-                    <option value="家長通知">家長通知版（簡化）</option>
-                </select>
             </div>
 
             <div class="form-group">
-                <label for="focus">🎯 特別關注</label>
-                <select id="focus">
-                    <option value="全班概況">全班概況</option>
-                    <option value="需補救學生">需補救學生</option>
-                    <option value="資優學生">資優學生</option>
-                    <option value="科目差異">科目差異大的學生</option>
-                </select>
+                <label>📊 分析類型（可複選）</label>
+                <div class="analysis-types">
+                    <div class="analysis-card selected" onclick="toggleAnalysis('edu', this, '成績分析')">
+                        <div class="analysis-icon">📉</div>
+                        <div class="analysis-name">成績分析</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '班級數據')">
+                        <div class="analysis-icon">👥</div>
+                        <div class="analysis-name">班級數據</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '學習進度追蹤')">
+                        <div class="analysis-icon">📈</div>
+                        <div class="analysis-name">學習進度追蹤</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '問卷結果分析')">
+                        <div class="analysis-icon">📋</div>
+                        <div class="analysis-name">問卷結果分析</div>
+                    </div>
+                </div>
             </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="gradeEdu">🎓 年級/班級</label>
+                    <select id="gradeEdu">
+                        <option value="國小三年級">國小三年級</option>
+                        <option value="國小四年級">國小四年級</option>
+                        <option value="國小五年級">國小五年級</option>
+                        <option value="國小六年級">國小六年級</option>
+                        <option value="國中一年級">國中一年級</option>
+                        <option value="國中二年級">國中二年級</option>
+                        <option value="國中三年級">國中三年級</option>
+                        <option value="高中一年級">高中一年級</option>
+                        <option value="高中二年級">高中二年級</option>
+                        <option value="高中三年級">高中三年級</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="outputEdu">📋 輸出格式</label>
+                    <select id="outputEdu">
+                        <option value="詳細報告">詳細報告（含所有分析）</option>
+                        <option value="摘要報告">摘要報告（重點整理）</option>
+                        <option value="Excel建議">Excel 公式建議</option>
+                        <option value="家長通知">家長通知版（簡化）</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="extraEdu">📌 額外需求（選填）</label>
+                <input type="text" id="extraEdu" placeholder="例如：標示及格邊緣的學生、建議補救教學策略">
+            </div>
+
+            <button class="generate-btn" onclick="generatePromptEdu()">🚀 生成教育版分析提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label for="extra">📌 額外需求（選填）</label>
-            <input type="text" id="extra" placeholder="例如：標示及格邊緣的學生、建議補救教學策略">
+        <!-- 企業版內容 -->
+        <div id="business" class="tab-content">
+            <div class="form-group">
+                <label>
+                    📊 輸入企業數據
+                    <button class="sample-btn" onclick="fillSampleBiz()">填入範例數據</button>
+                </label>
+                <textarea id="dataBiz" placeholder="格式範例（可自由調整欄位）：
+
+銷售數據範例：
+日期, 產品, 銷售額, 數量, 區域
+
+財務數據範例：
+月份, 收入, 支出, 利潤, 成長率
+
+客戶數據範例：
+客戶ID, 購買次數, 消費金額, 滿意度
+
+..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>📊 分析類型（可複選）</label>
+                <div class="analysis-types">
+                    <div class="analysis-card selected" onclick="toggleAnalysis('biz', this, '銷售數據')">
+                        <div class="analysis-icon">💰</div>
+                        <div class="analysis-name">銷售數據</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '市場分析')">
+                        <div class="analysis-icon">📈</div>
+                        <div class="analysis-name">市場分析</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, 'KPI追蹤')">
+                        <div class="analysis-icon">🎯</div>
+                        <div class="analysis-name">KPI追蹤</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '財務報表')">
+                        <div class="analysis-icon">💼</div>
+                        <div class="analysis-name">財務報表</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '客戶分析')">
+                        <div class="analysis-icon">👥</div>
+                        <div class="analysis-name">客戶分析</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="industryBiz">🏢 產業類型</label>
+                    <select id="industryBiz">
+                        <option value="零售業">零售業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="科技業">科技業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="電商">電商</option>
+                        <option value="教育培訓">教育培訓</option>
+                        <option value="醫療保健">醫療保健</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="periodBiz">📅 數據週期</label>
+                    <select id="periodBiz">
+                        <option value="日報">日報</option>
+                        <option value="週報">週報</option>
+                        <option value="月報">月報</option>
+                        <option value="季報">季報</option>
+                        <option value="年報">年報</option>
+                        <option value="自訂期間">自訂期間</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="outputBiz">📋 輸出格式</label>
+                    <select id="outputBiz">
+                        <option value="管理層報告">管理層報告（策略導向）</option>
+                        <option value="數據儀表板">數據儀表板（視覺化）</option>
+                        <option value="詳細分析">詳細分析（完整數據）</option>
+                        <option value="執行摘要">執行摘要（簡報用）</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="extraBiz">📌 額外需求（選填）</label>
+                <input type="text" id="extraBiz" placeholder="例如：重點關注成長趨勢、比較同期數據、預測下季表現">
+            </div>
+
+            <button class="generate-btn" onclick="generatePromptBiz()">🚀 生成企業版分析提示詞</button>
         </div>
 
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成數據分析提示詞</button>
-
+        <!-- 結果顯示區 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -331,26 +472,54 @@
 
             <div class="tip-box">
                 <strong>💡 使用建議：</strong><br>
-                • 將數據和提示詞一起貼到 Antigravity<br>
+                • 將數據和提示詞一起貼到 Antigravity 或其他 AI 工具<br>
                 • AI 可以產生分析結果，也可以建議 Excel 圖表製作方式<br>
-                • 如需保護學生隱私，可使用代號取代真實姓名
+                • 教育版：如需保護學生隱私，可使用代號取代真實姓名<br>
+                • 企業版：可要求 AI 提供可執行的商業建議與行動方案
             </div>
         </div>
     </div>
 
     <script>
-        let selectedAnalysis = ['成績統計', '學生排名'];
+        let currentTab = 'education';
+        let selectedAnalysisEdu = ['成績分析'];
+        let selectedAnalysisBiz = ['銷售數據'];
 
-        function toggleAnalysis(card, type) {
+        function switchTab(tab) {
+            currentTab = tab;
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tab).classList.add('active');
+
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function toggleAnalysis(type, card, analysisName) {
             card.classList.toggle('selected');
-            if (card.classList.contains('selected')) {
-                selectedAnalysis.push(type);
+
+            if (type === 'edu') {
+                if (card.classList.contains('selected')) {
+                    selectedAnalysisEdu.push(analysisName);
+                } else {
+                    selectedAnalysisEdu = selectedAnalysisEdu.filter(t => t !== analysisName);
+                }
             } else {
-                selectedAnalysis = selectedAnalysis.filter(t => t !== type);
+                if (card.classList.contains('selected')) {
+                    selectedAnalysisBiz.push(analysisName);
+                } else {
+                    selectedAnalysisBiz = selectedAnalysisBiz.filter(t => t !== analysisName);
+                }
             }
         }
 
-        function fillSample() {
+        function fillSampleEdu() {
             const sampleData = `學生, 國語, 數學, 自然, 社會
 王小明, 85, 72, 90, 88
 李小華, 92, 95, 88, 91
@@ -367,46 +536,59 @@
 蔡小偉, 87, 92, 85, 82
 謝小君, 73, 68, 75, 70
 楊小豪, 91, 88, 90, 92`;
-
-            document.getElementById('data').value = sampleData;
+            document.getElementById('dataEdu').value = sampleData;
         }
 
-        function generatePrompt() {
-            const data = document.getElementById('data').value.trim();
-            const output = document.getElementById('output').value;
-            const focus = document.getElementById('focus').value;
-            const extra = document.getElementById('extra').value.trim();
+        function fillSampleBiz() {
+            const sampleData = `日期, 產品, 銷售額, 數量, 區域
+2025-01-01, 產品A, 125000, 50, 北區
+2025-01-02, 產品B, 98000, 35, 中區
+2025-01-03, 產品A, 142000, 58, 南區
+2025-01-04, 產品C, 87000, 42, 北區
+2025-01-05, 產品B, 115000, 48, 東區
+2025-01-06, 產品A, 138000, 55, 中區
+2025-01-07, 產品C, 92000, 45, 南區
+2025-01-08, 產品B, 105000, 40, 北區
+2025-01-09, 產品A, 128000, 52, 東區
+2025-01-10, 產品C, 95000, 47, 中區`;
+            document.getElementById('dataBiz').value = sampleData;
+        }
+
+        function generatePromptEdu() {
+            const data = document.getElementById('dataEdu').value.trim();
+            const grade = document.getElementById('gradeEdu').value;
+            const output = document.getElementById('outputEdu').value;
+            const extra = document.getElementById('extraEdu').value.trim();
 
             if (!data) {
-                alert('請輸入成績數據！');
+                alert('請輸入數據！');
                 return;
             }
 
-            if (selectedAnalysis.length === 0) {
+            if (selectedAnalysisEdu.length === 0) {
                 alert('請至少選擇一種分析類型！');
                 return;
             }
 
-            let prompt = `請幫我分析以下學生成績數據：
+            let prompt = `請幫我分析以下教育數據：
 
-【成績數據】
+【基本資訊】
+年級/班級：${grade}
+
+【數據內容】
 ${data}
 
 【分析需求】
-${selectedAnalysis.map(a => `- ${a}`).join('\n')}
+${selectedAnalysisEdu.map(a => `- ${a}`).join('\n')}
 
 【輸出格式】${output}
-【特別關注】${focus}
 
 【請提供以下分析】
 1. 基本統計：平均分、最高分、最低分、及格率
-2. 各科目表現分析
+2. 各科目表現分析與比較
 3. 需要特別關注的學生（含原因說明）
-4. 教學建議與改進方向`;
-
-            if (selectedAnalysis.includes('視覺化圖表')) {
-                prompt += `\n5. 建議製作的圖表類型及 Excel 製作步驟`;
-            }
+4. 教學建議與改進方向
+5. 視覺化建議（建議製作的圖表類型及 Excel 製作步驟）`;
 
             if (extra) {
                 prompt += `\n\n【額外需求】\n${extra}`;
@@ -418,6 +600,60 @@ ${selectedAnalysis.map(a => `- ${a}`).join('\n')}
 - 數據解讀要客觀
 - 建議要具體可行
 - 適合老師用於班級經營參考`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function generatePromptBiz() {
+            const data = document.getElementById('dataBiz').value.trim();
+            const industry = document.getElementById('industryBiz').value;
+            const period = document.getElementById('periodBiz').value;
+            const output = document.getElementById('outputBiz').value;
+            const extra = document.getElementById('extraBiz').value.trim();
+
+            if (!data) {
+                alert('請輸入企業數據！');
+                return;
+            }
+
+            if (selectedAnalysisBiz.length === 0) {
+                alert('請至少選擇一種分析類型！');
+                return;
+            }
+
+            let prompt = `請幫我分析以下企業數據：
+
+【基本資訊】
+產業類型：${industry}
+數據週期：${period}
+
+【數據內容】
+${data}
+
+【分析需求】
+${selectedAnalysisBiz.map(a => `- ${a}`).join('\n')}
+
+【輸出格式】${output}
+
+【請提供以下分析】
+1. 核心指標分析：關鍵數據統計與趨勢
+2. 數據洞察：發現的重要模式與異常
+3. 商業建議：基於數據的可執行策略
+4. 風險提示：需要注意的潛在問題
+5. 視覺化建議：建議製作的圖表類型及工具使用方式`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            prompt += `\n
+【注意事項】
+- 使用繁體中文
+- 分析要深入且具商業價值
+- 建議要可執行且符合產業特性
+- 適合商業決策參考`;
 
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');

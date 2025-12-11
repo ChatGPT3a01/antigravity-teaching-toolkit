@@ -1,10 +1,9 @@
-<!DOCTYPE html>
+﻿<\!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教學視覺素材提示詞產生器 - Demo</title>
+    <title>視覺素材提示詞 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -39,7 +38,50 @@
             text-align: center;
             color: #666;
             font-size: 18px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .style-grid {
@@ -106,6 +148,11 @@
             border-color: #667eea;
         }
 
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -167,11 +214,6 @@
         .result-section.show {
             display: block;
             animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .result-title {
@@ -239,6 +281,18 @@
             color: #0d47a1;
         }
 
+        .info-box.edu {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #1b5e20;
+        }
+
+        .info-box.biz {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
+        }
+
         .back-btn {
             display: inline-block;
             background: rgba(102, 126, 234, 0.1);
@@ -270,94 +324,197 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>🎨 教學視覺素材提示詞產生器</h1>
-        <p class="subtitle">生成專業的 AI 繪圖提示詞，快速製作教學插圖</p>
+        <h1>🎨 視覺素材提示詞 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">生成專業的 AI 繪圖提示詞，快速製作教學插圖與企業視覺素材</p>
 
-        <div class="info-box">
-            <strong>💡 這是什麼？</strong><br>
-            產生可用於 AI 繪圖工具（如 Midjourney、DALL-E、Stable Diffusion、Ideogram）的提示詞，幫你快速製作教學插圖。
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('edu')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('biz')">🏢 企業版</button>
         </div>
 
-        <div class="form-group">
-            <label>🖼️ 選擇圖片風格</label>
-            <div class="style-grid">
-                <div class="style-card selected" onclick="selectStyle(this, 'cute')">
-                    <div class="style-icon">🥰</div>
-                    <div class="style-name">可愛卡通</div>
-                </div>
-                <div class="style-card" onclick="selectStyle(this, 'simple')">
-                    <div class="style-icon">✏️</div>
-                    <div class="style-name">簡筆畫</div>
-                </div>
-                <div class="style-card" onclick="selectStyle(this, 'flat')">
-                    <div class="style-icon">🎯</div>
-                    <div class="style-name">扁平設計</div>
-                </div>
-                <div class="style-card" onclick="selectStyle(this, 'realistic')">
-                    <div class="style-icon">📷</div>
-                    <div class="style-name">寫實風格</div>
-                </div>
-                <div class="style-card" onclick="selectStyle(this, 'watercolor')">
-                    <div class="style-icon">🎨</div>
-                    <div class="style-name">水彩風格</div>
-                </div>
-                <div class="style-card" onclick="selectStyle(this, 'infographic')">
-                    <div class="style-icon">📊</div>
-                    <div class="style-name">資訊圖表</div>
-                </div>
-            </div>
-            <input type="hidden" id="imageStyle" value="cute">
-        </div>
-
-        <div class="form-group">
-            <label for="topic">📝 圖片主題/內容描述</label>
-            <textarea id="topic" placeholder="詳細描述你需要的圖片內容，例如：&#10;&#10;• 一棵正在進行光合作用的植物，陽光照射，箭頭標示二氧化碳進入和氧氣釋出&#10;• 小朋友們在操場玩躲避球的場景&#10;• 台灣地圖，標示主要的山脈和河流" rows="4"></textarea>
-        </div>
-
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="purpose">📚 使用目的</label>
-                <select id="purpose">
-                    <option value="教學簡報">教學簡報</option>
-                    <option value="學習單">學習單</option>
-                    <option value="海報">海報/公告</option>
-                    <option value="繪本">繪本/故事書</option>
-                    <option value="遊戲卡">遊戲卡片</option>
-                </select>
+        <!-- 教育版內容 -->
+        <div id="edu-content" class="tab-content active">
+            <div class="info-box edu">
+                <strong>💡 教育版說明：</strong><br>
+                產生可用於 AI 繪圖工具（如 Midjourney、DALL-E、Stable Diffusion、Ideogram）的提示詞，幫你快速製作教學插圖。
             </div>
 
             <div class="form-group">
-                <label for="target">👶 適合對象</label>
-                <select id="target">
-                    <option value="幼兒園">幼兒園</option>
-                    <option value="國小低年級">國小低年級</option>
-                    <option value="國小中高年級" selected>國小中高年級</option>
-                    <option value="國中">國中</option>
-                    <option value="通用">通用</option>
-                </select>
+                <label>🖼️ 選擇圖片風格</label>
+                <div class="style-grid">
+                    <div class="style-card selected" onclick="selectStyle(this, 'cute', 'edu')">
+                        <div class="style-icon">🥰</div>
+                        <div class="style-name">可愛卡通</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'simple', 'edu')">
+                        <div class="style-icon">✏️</div>
+                        <div class="style-name">簡筆畫</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'flat', 'edu')">
+                        <div class="style-icon">🎯</div>
+                        <div class="style-name">扁平設計</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'realistic', 'edu')">
+                        <div class="style-icon">📷</div>
+                        <div class="style-name">寫實風格</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'watercolor', 'edu')">
+                        <div class="style-icon">🎨</div>
+                        <div class="style-name">水彩風格</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'infographic', 'edu')">
+                        <div class="style-icon">📊</div>
+                        <div class="style-name">資訊圖表</div>
+                    </div>
+                </div>
+                <input type="hidden" id="eduImageStyle" value="cute">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>🎨 主要色調</label>
-            <div class="color-palette">
-                <div class="color-option selected" style="background: linear-gradient(135deg, #FF6B6B, #FFE66D);" onclick="selectColor(this, '暖色系（紅、橙、黃）')" title="暖色系"></div>
-                <div class="color-option" style="background: linear-gradient(135deg, #4ECDC4, #44A8B3);" onclick="selectColor(this, '冷色系（藍、綠、青）')" title="冷色系"></div>
-                <div class="color-option" style="background: linear-gradient(135deg, #A8E6CF, #DCEDC1);" onclick="selectColor(this, '清新自然（綠色系）')" title="清新自然"></div>
-                <div class="color-option" style="background: linear-gradient(135deg, #FFB6C1, #DDA0DD);" onclick="selectColor(this, '粉嫩可愛（粉色系）')" title="粉嫩可愛"></div>
-                <div class="color-option" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="selectColor(this, '科技感（紫藍色系）')" title="科技感"></div>
-                <div class="color-option" style="background: linear-gradient(135deg, #f5f5f5, #e0e0e0);" onclick="selectColor(this, '簡約黑白灰')" title="簡約黑白"></div>
+            <div class="form-group">
+                <label for="eduTopic">📝 圖片主題/內容描述</label>
+                <textarea id="eduTopic" placeholder="詳細描述你需要的圖片內容，例如：&#10;&#10;• 一棵正在進行光合作用的植物，陽光照射，箭頭標示二氧化碳進入和氧氣釋出&#10;• 小朋友們在操場玩躲避球的場景&#10;• 台灣地圖，標示主要的山脈和河流" rows="4"></textarea>
             </div>
-            <input type="hidden" id="colorScheme" value="暖色系（紅、橙、黃）">
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduGrade">🏫 適用年級</label>
+                    <select id="eduGrade">
+                        <option value="幼兒園">幼兒園</option>
+                        <option value="國小低年級">國小低年級</option>
+                        <option value="國小中年級" selected>國小中年級</option>
+                        <option value="國小高年級">國小高年級</option>
+                        <option value="國中">國中</option>
+                        <option value="高中職">高中職</option>
+                        <option value="大學">大學</option>
+                        <option value="研究所">研究所</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduMaterialType">📚 教材類型</label>
+                    <select id="eduMaterialType">
+                        <option value="投影片插圖">投影片插圖</option>
+                        <option value="學習單配圖">學習單配圖</option>
+                        <option value="海報設計">海報設計</option>
+                        <option value="獎狀設計">獎狀設計</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🎨 主要色調</label>
+                <div class="color-palette">
+                    <div class="color-option selected" style="background: linear-gradient(135deg, #FF6B6B, #FFE66D);" onclick="selectColor(this, '暖色系（紅、橙、黃）', 'edu')" title="暖色系"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #4ECDC4, #44A8B3);" onclick="selectColor(this, '冷色系（藍、綠、青）', 'edu')" title="冷色系"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #A8E6CF, #DCEDC1);" onclick="selectColor(this, '清新自然（綠色系）', 'edu')" title="清新自然"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #FFB6C1, #DDA0DD);" onclick="selectColor(this, '粉嫩可愛（粉色系）', 'edu')" title="粉嫩可愛"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="selectColor(this, '科技感（紫藍色系）', 'edu')" title="科技感"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #f5f5f5, #e0e0e0);" onclick="selectColor(this, '簡約黑白灰', 'edu')" title="簡約黑白"></div>
+                </div>
+                <input type="hidden" id="eduColorScheme" value="暖色系（紅、橙、黃）">
+            </div>
+
+            <div class="form-group">
+                <label for="eduExtra">📌 額外要求（選填）</label>
+                <input type="text" id="eduExtra" placeholder="例如：白色背景、沒有文字、高解析度、正方形比例">
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt('edu')">🚀 生成提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label for="extra">📌 額外要求（選填）</label>
-            <input type="text" id="extra" placeholder="例如：白色背景、沒有文字、高解析度、正方形比例">
+        <!-- 企業版內容 -->
+        <div id="biz-content" class="tab-content">
+            <div class="info-box biz">
+                <strong>💡 企業版說明：</strong><br>
+                產生專業的企業視覺素材提示詞，適用於產品宣傳、社群行銷、簡報設計等商業用途。
+            </div>
+
+            <div class="form-group">
+                <label>🖼️ 選擇圖片風格</label>
+                <div class="style-grid">
+                    <div class="style-card selected" onclick="selectStyle(this, 'professional', 'biz')">
+                        <div class="style-icon">💼</div>
+                        <div class="style-name">專業風格</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'lively', 'biz')">
+                        <div class="style-icon">🎉</div>
+                        <div class="style-name">活潑風格</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'minimal', 'biz')">
+                        <div class="style-icon">⚪</div>
+                        <div class="style-name">簡約風格</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'tech', 'biz')">
+                        <div class="style-icon">🚀</div>
+                        <div class="style-name">科技感</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'elegant', 'biz')">
+                        <div class="style-icon">✨</div>
+                        <div class="style-name">優雅精緻</div>
+                    </div>
+                    <div class="style-card" onclick="selectStyle(this, 'creative', 'biz')">
+                        <div class="style-icon">🎨</div>
+                        <div class="style-name">創意藝術</div>
+                    </div>
+                </div>
+                <input type="hidden" id="bizImageStyle" value="professional">
+            </div>
+
+            <div class="form-group">
+                <label for="bizTopic">📝 圖片主題/內容描述</label>
+                <textarea id="bizTopic" placeholder="詳細描述你需要的圖片內容，例如：&#10;&#10;• 團隊合作的商務場景，展現專業與活力&#10;• 科技產品的使用情境，強調創新與便利性&#10;• 永續環保的企業形象視覺" rows="4"></textarea>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizIndustry">🏭 產業類型</label>
+                    <select id="bizIndustry">
+                        <option value="科技業">科技業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="醫療業">醫療業</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="教育業">教育業</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizPurpose">📋 素材用途</label>
+                    <select id="bizPurpose">
+                        <option value="產品宣傳">產品宣傳</option>
+                        <option value="社群貼文">社群貼文</option>
+                        <option value="簡報配圖">簡報配圖</option>
+                        <option value="網站Banner">網站Banner</option>
+                        <option value="活動海報">活動海報</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🎨 主要色調</label>
+                <div class="color-palette">
+                    <div class="color-option selected" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="selectColor(this, '專業藍紫色系', 'biz')" title="專業藍紫"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #f093fb, #f5576c);" onclick="selectColor(this, '活力粉紅色系', 'biz')" title="活力粉紅"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectColor(this, '科技藍青色系', 'biz')" title="科技藍青"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #43e97b, #38f9d7);" onclick="selectColor(this, '清新綠色系', 'biz')" title="清新綠"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #fa709a, #fee140);" onclick="selectColor(this, '溫暖橙黃色系', 'biz')" title="溫暖橙黃"></div>
+                    <div class="color-option" style="background: linear-gradient(135deg, #30cfd0, #330867);" onclick="selectColor(this, '沉穩深色系', 'biz')" title="沉穩深色"></div>
+                </div>
+                <input type="hidden" id="bizColorScheme" value="專業藍紫色系">
+            </div>
+
+            <div class="form-group">
+                <label for="bizExtra">📌 額外要求（選填）</label>
+                <input type="text" id="bizExtra" placeholder="例如：包含品牌標誌位置、特定元素、高解析度、16:9比例">
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt('biz')">🚀 生成提示詞</button>
         </div>
 
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成提示詞</button>
-
+        <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 中文提示詞</div>
             <div class="prompt-box" id="promptOutputCN"></div>
@@ -380,7 +537,8 @@
     </div>
 
     <script>
-        const styleInfo = {
+        // 教育版風格資訊
+        const eduStyleInfo = {
             cute: { cn: '可愛卡通風格，圓潤線條，大眼睛角色', en: 'cute cartoon style, rounded lines, chibi characters, kawaii' },
             simple: { cn: '簡筆畫風格，線條簡潔，黑白線稿', en: 'simple line drawing, minimalist sketch, clean lines' },
             flat: { cn: '扁平設計風格，幾何形狀，現代簡約', en: 'flat design, geometric shapes, modern minimalist, vector style' },
@@ -389,51 +547,97 @@
             infographic: { cn: '資訊圖表風格，清晰標示，教育性', en: 'infographic style, clear labels, educational diagram' }
         };
 
-        const targetAge = {
-            '幼兒園': 'for preschool children',
-            '國小低年級': 'for elementary school students ages 6-8',
-            '國小中高年級': 'for elementary school students ages 9-12',
-            '國中': 'for middle school students',
-            '通用': 'for educational purposes'
+        // 企業版風格資訊
+        const bizStyleInfo = {
+            professional: { cn: '專業商務風格，正式穩重，高品質', en: 'professional business style, formal, high-quality, corporate' },
+            lively: { cn: '活潑生動風格，充滿活力，吸引眼球', en: 'lively and vibrant style, energetic, eye-catching, dynamic' },
+            minimal: { cn: '簡約現代風格，留白設計，極簡主義', en: 'minimalist modern style, clean design, simple and elegant' },
+            tech: { cn: '科技未來風格，數位感，創新前衛', en: 'futuristic tech style, digital, innovative, cutting-edge' },
+            elegant: { cn: '優雅精緻風格，高端大氣，奢華質感', en: 'elegant and refined style, luxurious, sophisticated, premium' },
+            creative: { cn: '創意藝術風格，獨特設計，藝術性強', en: 'creative artistic style, unique design, artistic and imaginative' }
         };
 
-        let selectedStyle = 'cute';
-        let selectedColor = '暖色系（紅、橙、黃）';
+        // 年級對應英文描述
+        const gradeInfo = {
+            '幼兒園': 'for preschool children',
+            '國小低年級': 'for elementary school students ages 6-8',
+            '國小中年級': 'for elementary school students ages 9-10',
+            '國小高年級': 'for elementary school students ages 11-12',
+            '國中': 'for middle school students',
+            '高中職': 'for high school students',
+            '大學': 'for college students',
+            '研究所': 'for graduate students'
+        };
 
-        function selectStyle(card, style) {
-            document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+        let eduSelectedStyle = 'cute';
+        let eduSelectedColor = '暖色系（紅、橙、黃）';
+        let bizSelectedStyle = 'professional';
+        let bizSelectedColor = '專業藍紫色系';
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function selectStyle(card, style, version) {
+            const parentGrid = card.parentElement;
+            parentGrid.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            selectedStyle = style;
-            document.getElementById('imageStyle').value = style;
+
+            if (version === 'edu') {
+                eduSelectedStyle = style;
+                document.getElementById('eduImageStyle').value = style;
+            } else {
+                bizSelectedStyle = style;
+                document.getElementById('bizImageStyle').value = style;
+            }
         }
 
-        function selectColor(element, color) {
-            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+        function selectColor(element, color, version) {
+            const parentPalette = element.parentElement;
+            parentPalette.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             element.classList.add('selected');
-            selectedColor = color;
-            document.getElementById('colorScheme').value = color;
+
+            if (version === 'edu') {
+                eduSelectedColor = color;
+                document.getElementById('eduColorScheme').value = color;
+            } else {
+                bizSelectedColor = color;
+                document.getElementById('bizColorScheme').value = color;
+            }
         }
 
-        function generatePrompt() {
-            const topic = document.getElementById('topic').value.trim();
-            const purpose = document.getElementById('purpose').value;
-            const target = document.getElementById('target').value;
-            const extra = document.getElementById('extra').value.trim();
+        function generatePrompt(version) {
+            if (version === 'edu') {
+                generateEduPrompt();
+            } else {
+                generateBizPrompt();
+            }
+        }
+
+        function generateEduPrompt() {
+            const topic = document.getElementById('eduTopic').value.trim();
+            const grade = document.getElementById('eduGrade').value;
+            const materialType = document.getElementById('eduMaterialType').value;
+            const extra = document.getElementById('eduExtra').value.trim();
 
             if (!topic) {
                 alert('請輸入圖片主題描述！');
                 return;
             }
 
-            const style = styleInfo[selectedStyle];
+            const style = eduStyleInfo[eduSelectedStyle];
 
             // 中文提示詞
             let promptCN = `【教學插圖】${topic}
 
 風格：${style.cn}
-色調：${selectedColor}
-用途：${purpose}
-對象：${target}學生適用
+色調：${eduSelectedColor}
+適用年級：${grade}
+教材類型：${materialType}
 特點：清晰易懂、教育性強、適合投影展示`;
 
             if (extra) {
@@ -444,8 +648,9 @@
             let promptEN = `Educational illustration: ${topic}
 
 Style: ${style.en}
-Color scheme: ${selectedColor.replace('（', ' (').replace('）', ')')}
-Purpose: ${purpose} ${targetAge[target]}
+Color scheme: ${eduSelectedColor.replace('（', ' (').replace('）', ')')}
+Grade level: ${gradeInfo[grade]}
+Material type: ${materialType}
 Features: clear, educational, easy to understand, suitable for classroom presentation`;
 
             if (extra) {
@@ -453,8 +658,57 @@ Features: clear, educational, easy to understand, suitable for classroom present
             }
 
             // 加入常用的質量詞
-            promptEN += `\n\n--v 6 --ar 16:9 --style raw`;
+            promptEN += `\n\n--v 6 --ar 16:9 --style raw --q 2`;
 
+            displayResult(promptCN, promptEN);
+        }
+
+        function generateBizPrompt() {
+            const topic = document.getElementById('bizTopic').value.trim();
+            const industry = document.getElementById('bizIndustry').value;
+            const purpose = document.getElementById('bizPurpose').value;
+            const extra = document.getElementById('bizExtra').value.trim();
+
+            if (!topic) {
+                alert('請輸入圖片主題描述！');
+                return;
+            }
+
+            const style = bizStyleInfo[bizSelectedStyle];
+
+            // 中文提示詞
+            let promptCN = `【企業視覺素材】${topic}
+
+風格：${style.cn}
+色調：${bizSelectedColor}
+產業類型：${industry}
+素材用途：${purpose}
+特點：專業質感、符合商業需求、高解析度`;
+
+            if (extra) {
+                promptCN += `\n額外要求：${extra}`;
+            }
+
+            // 英文提示詞
+            let promptEN = `Business visual material: ${topic}
+
+Style: ${style.en}
+Color scheme: ${bizSelectedColor}
+Industry: ${industry}
+Purpose: ${purpose}
+Features: professional quality, business-ready, high resolution`;
+
+            if (extra) {
+                promptEN += `\nAdditional: ${extra}`;
+            }
+
+            // 加入常用的質量詞
+            promptEN += `\n\n--v 6 --ar 16:9 --style raw --q 2`;
+
+            displayResult(promptCN, promptEN);
+        }
+
+        function displayResult(promptCN, promptEN) {
             document.getElementById('promptOutputCN').textContent = promptCN;
             document.getElementById('promptOutputEN').textContent = promptEN;
             document.getElementById('resultSection').classList.add('show');
@@ -479,5 +733,4 @@ Features: clear, educational, easy to understand, suitable for classroom present
         }
     </script>
 </body>
-
 </html>

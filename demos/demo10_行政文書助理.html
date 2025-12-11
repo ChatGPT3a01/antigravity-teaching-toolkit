@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>行政文書自動化助理 - Demo</title>
+    <title>智慧文書助理 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -42,6 +42,79 @@
             margin-bottom: 40px;
         }
 
+        .back-btn {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        /* Tab 切換按鈕 */
+        .mode-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .mode-tab {
+            flex: 1;
+            max-width: 300px;
+            background: #f0f0f0;
+            border: 3px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .mode-tab:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #0d47a1;
+        }
+
+        /* 內容區域 */
+        .mode-content {
+            display: none;
+        }
+
+        .mode-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .doc-types {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -60,6 +133,7 @@
 
         .doc-card:hover {
             border-color: #667eea;
+            transform: translateY(-2px);
         }
 
         .doc-card.selected {
@@ -147,11 +221,6 @@
             animation: fadeIn 0.5s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .result-title {
             font-size: 24px;
             color: #667eea;
@@ -187,30 +256,6 @@
             background: #218838;
         }
 
-        .info-box {
-            background: #e3f2fd;
-            border-left: 5px solid #2196f3;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            color: #0d47a1;
-        }
-
-        .back-btn {
-            display: inline-block;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-bottom: 30px;
-        }
-
-        .back-btn:hover {
-            background: rgba(102, 126, 234, 0.2);
-        }
-
         .template-hint {
             background: #fff3cd;
             border-radius: 8px;
@@ -231,78 +276,189 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📄 行政文書自動化助理</h1>
-        <p class="subtitle">快速生成各種行政文書、公告、計畫書</p>
+        <h1>📄 智慧文書助理 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">教育文書、商業書信，一站搞定</p>
 
-        <div class="info-box">
-            <strong>💡 節省時間：</strong>將重點資訊輸入，AI 幫你整理成正式的行政文書格式。
-        </div>
-
-        <div class="form-group">
-            <label>📋 選擇文書類型</label>
-            <div class="doc-types">
-                <div class="doc-card selected" onclick="selectDoc(this, 'meeting')">
-                    <div class="doc-icon">📝</div>
-                    <div class="doc-name">會議記錄</div>
-                </div>
-                <div class="doc-card" onclick="selectDoc(this, 'plan')">
-                    <div class="doc-icon">📊</div>
-                    <div class="doc-name">活動計畫</div>
-                </div>
-                <div class="doc-card" onclick="selectDoc(this, 'announce')">
-                    <div class="doc-icon">📢</div>
-                    <div class="doc-name">公告通知</div>
-                </div>
-                <div class="doc-card" onclick="selectDoc(this, 'report')">
-                    <div class="doc-icon">📑</div>
-                    <div class="doc-name">成果報告</div>
-                </div>
-                <div class="doc-card" onclick="selectDoc(this, 'apply')">
-                    <div class="doc-icon">📨</div>
-                    <div class="doc-name">申請公文</div>
-                </div>
-                <div class="doc-card" onclick="selectDoc(this, 'letter')">
-                    <div class="doc-icon">✉️</div>
-                    <div class="doc-name">感謝函</div>
-                </div>
+        <!-- Tab 切換按鈕 -->
+        <div class="mode-tabs">
+            <div class="mode-tab active" onclick="switchMode('education')">
+                🎓 教育版
             </div>
-            <input type="hidden" id="docType" value="meeting">
+            <div class="mode-tab" onclick="switchMode('business')">
+                🏢 企業版
+            </div>
         </div>
 
-        <div class="template-hint" id="templateHint"></div>
-
-        <div class="form-group">
-            <label for="content">📝 輸入重點內容/草稿</label>
-            <textarea id="content" placeholder="輸入你的重點資訊，例如：
-
-會議記錄：今天開會討論下學期校外教學，決定去科博館，預算每人500元，需要6台遊覽車...
-
-活動計畫：想辦一個閱讀週活動，4月第二週，有說故事比賽、好書交換、作家講座..."></textarea>
-        </div>
-
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="school">🏫 學校/單位名稱</label>
-                <input type="text" id="school" placeholder="例如：○○國民小學">
+        <!-- 教育版內容 -->
+        <div id="educationMode" class="mode-content active">
+            <div class="info-box">
+                <strong>💡 教育版：</strong>快速生成各種教育行政文書、公文、計畫書與報告。
             </div>
 
             <div class="form-group">
-                <label for="tone">🎭 正式程度</label>
-                <select id="tone">
-                    <option value="正式公文">正式公文</option>
-                    <option value="一般行政" selected>一般行政</option>
-                    <option value="內部簡易">內部簡易</option>
-                </select>
+                <label>📋 選擇文書類型</label>
+                <div class="doc-types">
+                    <div class="doc-card selected" onclick="selectDoc(this, 'edu_official', 'education')">
+                        <div class="doc-icon">📨</div>
+                        <div class="doc-name">公文撰寫</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'edu_plan', 'education')">
+                        <div class="doc-icon">📊</div>
+                        <div class="doc-name">計畫書</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'edu_report', 'education')">
+                        <div class="doc-icon">📑</div>
+                        <div class="doc-name">成果報告</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'edu_recommendation', 'education')">
+                        <div class="doc-icon">✍️</div>
+                        <div class="doc-name">推薦信</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'edu_meeting', 'education')">
+                        <div class="doc-icon">📝</div>
+                        <div class="doc-name">會議紀錄</div>
+                    </div>
+                </div>
             </div>
+
+            <div class="template-hint" id="eduTemplateHint"></div>
+
+            <div class="form-group">
+                <label for="eduContent">📝 輸入重點內容/草稿</label>
+                <textarea id="eduContent" placeholder="輸入你的重點資訊，例如：
+
+公文撰寫：申請辦理校外教學，預計前往科博館，時間4月15日，參加對象五年級學生...
+
+計畫書：辦理閱讀週活動，4月第二週，有說故事比賽、好書交換、作家講座..."></textarea>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduSchool">🏫 學校/單位名稱</label>
+                    <input type="text" id="eduSchool" placeholder="例如：○○國民小學">
+                </div>
+
+                <div class="form-group">
+                    <label for="eduPurpose">🎯 用途場景</label>
+                    <select id="eduPurpose">
+                        <option value="對外發文">對外發文</option>
+                        <option value="對上呈報">對上呈報</option>
+                        <option value="內部通知">內部通知</option>
+                        <option value="家長溝通">家長溝通</option>
+                        <option value="學生活動">學生活動</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduTone">🎭 正式程度</label>
+                    <select id="eduTone">
+                        <option value="正式公文">正式公文</option>
+                        <option value="一般行政" selected>一般行政</option>
+                        <option value="內部簡易">內部簡易</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="eduExtra">📌 額外需求（選填）</label>
+                <input type="text" id="eduExtra" placeholder="例如：需要包含經費明細表、需要附上時程表">
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt('education')">🚀 生成教育文書提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label for="extra">📌 額外需求（選填）</label>
-            <input type="text" id="extra" placeholder="例如：需要包含經費明細表、需要附上時程表">
+        <!-- 企業版內容 -->
+        <div id="businessMode" class="mode-content">
+            <div class="info-box">
+                <strong>💡 企業版：</strong>快速生成商業書信、合約摘要、會議紀錄與工作報告。
+            </div>
+
+            <div class="form-group">
+                <label>📋 選擇文書類型</label>
+                <div class="doc-types">
+                    <div class="doc-card selected" onclick="selectDoc(this, 'biz_letter', 'business')">
+                        <div class="doc-icon">✉️</div>
+                        <div class="doc-name">商業書信</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'biz_contract', 'business')">
+                        <div class="doc-icon">📜</div>
+                        <div class="doc-name">合約摘要</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'biz_meeting', 'business')">
+                        <div class="doc-icon">📝</div>
+                        <div class="doc-name">會議紀錄</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'biz_presentation', 'business')">
+                        <div class="doc-icon">📊</div>
+                        <div class="doc-name">簡報大綱</div>
+                    </div>
+                    <div class="doc-card" onclick="selectDoc(this, 'biz_report', 'business')">
+                        <div class="doc-icon">📑</div>
+                        <div class="doc-name">工作報告</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-hint" id="bizTemplateHint"></div>
+
+            <div class="form-group">
+                <label for="bizContent">📝 輸入重點內容/草稿</label>
+                <textarea id="bizContent" placeholder="輸入你的重點資訊，例如：
+
+商業書信：向客戶說明新產品上市時間延後，因為供應鏈問題，預計延後兩週...
+
+會議紀錄：討論Q2行銷策略，決定加強社群媒體投放，預算增加30%..."></textarea>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizCompany">🏢 公司/單位名稱</label>
+                    <input type="text" id="bizCompany" placeholder="例如：○○股份有限公司">
+                </div>
+
+                <div class="form-group">
+                    <label for="bizIndustry">🏭 產業類型</label>
+                    <select id="bizIndustry">
+                        <option value="科技業">科技業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="醫療業">醫療業</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizRecipient">👥 對象/收件人</label>
+                    <select id="bizRecipient">
+                        <option value="客戶">客戶</option>
+                        <option value="主管">主管</option>
+                        <option value="同事">同事</option>
+                        <option value="供應商">供應商</option>
+                        <option value="合作夥伴">合作夥伴</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizTone">🎭 語氣風格</label>
+                    <select id="bizTone">
+                        <option value="正式專業">正式專業</option>
+                        <option value="友善親切" selected>友善親切</option>
+                        <option value="簡潔有力">簡潔有力</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bizExtra">📌 額外需求（選填）</label>
+                <input type="text" id="bizExtra" placeholder="例如：需要包含數據圖表、需要附上時間軸">
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt('business')">🚀 生成企業文書提示詞</button>
         </div>
 
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成文書提示詞</button>
-
+        <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -311,24 +467,22 @@
     </div>
 
     <script>
-        const docTemplates = {
-            meeting: {
-                name: '會議記錄',
-                hint: '請包含：會議時間、地點、出席人員、討論事項、決議事項等',
-                format: `會議記錄格式：
-- 會議名稱
-- 時間/地點
-- 主席/記錄
-- 出席人員
-- 討論事項（依序編號）
-- 決議事項
-- 臨時動議
-- 散會時間`
+        // 教育版文書模板
+        const eduTemplates = {
+            edu_official: {
+                name: '公文撰寫',
+                hint: '請包含：受文者、主旨、說明、擬辦、附件等',
+                format: `公文格式：
+- 受文者
+- 主旨（簡要說明來文目的）
+- 說明（詳細說明，分點敘述）
+- 擬辦（請求事項）
+- 附件`
             },
-            plan: {
-                name: '活動計畫',
-                hint: '請包含：活動目的、時間、地點、參加對象、活動流程、經費預算等',
-                format: `活動計畫格式：
+            edu_plan: {
+                name: '計畫書',
+                hint: '請包含：計畫名稱、依據、目的、時間地點、活動內容、經費預算等',
+                format: `計畫書格式：
 - 計畫名稱
 - 依據
 - 目的
@@ -340,16 +494,7 @@
 - 預期效益
 - 本計畫經核准後實施`
             },
-            announce: {
-                name: '公告通知',
-                hint: '請包含：公告事由、相關規定或說明、注意事項等',
-                format: `公告格式：
-- 主旨
-- 說明（分點敘述）
-- 注意事項
-- 聯絡方式`
-            },
-            report: {
+            edu_report: {
                 name: '成果報告',
                 hint: '請包含：活動緣起、執行過程、成果說明、檢討與建議等',
                 format: `成果報告格式：
@@ -362,67 +507,183 @@
 - 檢討與建議
 - 附件（照片說明）`
             },
-            apply: {
-                name: '申請公文',
-                hint: '請包含：申請事由、申請內容、相關說明等',
-                format: `公文格式：
-- 受文者
-- 主旨（簡要說明來文目的）
-- 說明（詳細說明）
-- 擬辦（請求事項）
-- 附件`
-            },
-            letter: {
-                name: '感謝函',
-                hint: '請包含：感謝對象、感謝事由、具體事蹟說明等',
-                format: `感謝函格式：
+            edu_recommendation: {
+                name: '推薦信',
+                hint: '請包含：被推薦者基本資料、推薦理由、具體事蹟、個人特質等',
+                format: `推薦信格式：
 - 受文者稱謂
-- 感謝事由
-- 具體描述貢獻/協助
-- 祝福語
-- 發文單位/日期`
+- 推薦目的/申請項目
+- 被推薦者基本資料
+- 認識經過
+- 具體優秀表現與事蹟
+- 個人特質與能力
+- 推薦結論
+- 推薦人資訊與簽名`
+            },
+            edu_meeting: {
+                name: '會議紀錄',
+                hint: '請包含：會議時間、地點、出席人員、討論事項、決議事項等',
+                format: `會議紀錄格式：
+- 會議名稱
+- 時間/地點
+- 主席/記錄
+- 出席人員
+- 討論事項（依序編號）
+- 決議事項
+- 臨時動議
+- 散會時間`
             }
         };
 
-        let selectedDocType = 'meeting';
+        // 企業版文書模板
+        const bizTemplates = {
+            biz_letter: {
+                name: '商業書信',
+                hint: '請包含：收件人、事由、內容說明、期待回應等',
+                format: `商業書信格式：
+- 收件人稱謂
+- 問候語
+- 主要事由
+- 詳細說明（分段敘述）
+- 預期行動/回應
+- 結尾問候
+- 發信人資訊`
+            },
+            biz_contract: {
+                name: '合約摘要',
+                hint: '請包含：合約標的、雙方權利義務、重要條款、期限等',
+                format: `合約摘要格式：
+- 合約名稱與編號
+- 合約雙方
+- 合約標的
+- 合約期間
+- 重要條款摘要
+- 雙方權利義務
+- 付款條件
+- 違約處理
+- 其他注意事項`
+            },
+            biz_meeting: {
+                name: '會議紀錄',
+                hint: '請包含：會議時間、出席者、討論議題、決議事項、行動項目等',
+                format: `會議紀錄格式：
+- 會議主題
+- 日期時間/地點
+- 出席人員
+- 會議議程
+- 討論內容與決議（分項說明）
+- 行動項目（負責人與期限）
+- 下次會議時間`
+            },
+            biz_presentation: {
+                name: '簡報大綱',
+                hint: '請包含：簡報目的、目標對象、主要議題、架構流程等',
+                format: `簡報大綱格式：
+- 簡報標題與目的
+- 目標聽眾
+- 時間長度
+- 開場（引言）
+- 主要內容（3-5個重點）
+- 數據/案例支持
+- 結論與呼籲行動
+- Q&A 準備`
+            },
+            biz_report: {
+                name: '工作報告',
+                hint: '請包含：報告期間、工作摘要、成果數據、問題與對策等',
+                format: `工作報告格式：
+- 報告標題
+- 報告期間
+- 工作摘要
+- 主要成果（量化數據）
+- 重要專案進度
+- 遭遇問題與解決方案
+- 下期工作計畫
+- 需要支援事項`
+            }
+        };
 
-        function selectDoc(card, type) {
-            document.querySelectorAll('.doc-card').forEach(c => c.classList.remove('selected'));
+        let currentMode = 'education';
+        let selectedDocType = 'edu_official';
+
+        // 切換模式
+        function switchMode(mode) {
+            currentMode = mode;
+
+            // 更新 Tab 樣式
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 切換內容區域
+            document.querySelectorAll('.mode-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(mode + 'Mode').classList.add('active');
+
+            // 隱藏結果區域
+            document.getElementById('resultSection').classList.remove('show');
+
+            // 重設選擇的文書類型
+            if (mode === 'education') {
+                selectedDocType = 'edu_official';
+                showHint('edu_official', 'education');
+            } else {
+                selectedDocType = 'biz_letter';
+                showHint('biz_letter', 'business');
+            }
+        }
+
+        // 選擇文書類型
+        function selectDoc(card, type, mode) {
+            const modePrefix = mode === 'education' ? 'edu' : 'biz';
+            document.querySelectorAll(`#${mode}Mode .doc-card`).forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
             selectedDocType = type;
-            document.getElementById('docType').value = type;
+            showHint(type, mode);
+        }
 
-            // 顯示提示
-            const hint = document.getElementById('templateHint');
-            hint.innerHTML = `<strong>💡 ${docTemplates[type].name}提示：</strong><br>${docTemplates[type].hint}`;
+        // 顯示提示
+        function showHint(type, mode) {
+            const templates = mode === 'education' ? eduTemplates : bizTemplates;
+            const hintId = mode === 'education' ? 'eduTemplateHint' : 'bizTemplateHint';
+            const hint = document.getElementById(hintId);
+            hint.innerHTML = `<strong>💡 ${templates[type].name}提示：</strong><br>${templates[type].hint}`;
             hint.classList.add('show');
         }
 
-        function generatePrompt() {
-            const content = document.getElementById('content').value.trim();
-            const school = document.getElementById('school').value.trim();
-            const tone = document.getElementById('tone').value;
-            const extra = document.getElementById('extra').value.trim();
-            const template = docTemplates[selectedDocType];
+        // 生成提示詞
+        function generatePrompt(mode) {
+            let content, orgName, tone, extra, template;
 
-            if (!content) {
-                alert('請輸入重點內容！');
-                return;
-            }
+            if (mode === 'education') {
+                content = document.getElementById('eduContent').value.trim();
+                orgName = document.getElementById('eduSchool').value.trim();
+                const purpose = document.getElementById('eduPurpose').value;
+                tone = document.getElementById('eduTone').value;
+                extra = document.getElementById('eduExtra').value.trim();
+                template = eduTemplates[selectedDocType];
 
-            let prompt = `請幫我將以下內容整理成正式的「${template.name}」：
+                if (!content) {
+                    alert('請輸入重點內容！');
+                    return;
+                }
+
+                let prompt = `請幫我將以下內容整理成正式的「${template.name}」：
 
 【原始內容】
 ${content}
 
 【文書類型】${template.name}
+【用途場景】${purpose}
 【正式程度】${tone}`;
 
-            if (school) {
-                prompt += `\n【發文單位】${school}`;
-            }
+                if (orgName) {
+                    prompt += `\n【發文單位】${orgName}`;
+                }
 
-            prompt += `
+                prompt += `
 
 【格式要求】
 ${template.format}
@@ -435,15 +696,66 @@ ${template.format}
 - 適當使用編號或項目符號
 - 日期格式使用民國年`;
 
-            if (extra) {
-                prompt += `\n\n【額外需求】\n${extra}`;
+                if (extra) {
+                    prompt += `\n\n【額外需求】\n${extra}`;
+                }
+
+                document.getElementById('promptOutput').textContent = prompt;
+
+            } else {
+                // 企業版
+                content = document.getElementById('bizContent').value.trim();
+                orgName = document.getElementById('bizCompany').value.trim();
+                const industry = document.getElementById('bizIndustry').value;
+                const recipient = document.getElementById('bizRecipient').value;
+                tone = document.getElementById('bizTone').value;
+                extra = document.getElementById('bizExtra').value.trim();
+                template = bizTemplates[selectedDocType];
+
+                if (!content) {
+                    alert('請輸入重點內容！');
+                    return;
+                }
+
+                let prompt = `請幫我將以下內容整理成正式的「${template.name}」：
+
+【原始內容】
+${content}
+
+【文書類型】${template.name}
+【產業類型】${industry}
+【對象/收件人】${recipient}
+【語氣風格】${tone}`;
+
+                if (orgName) {
+                    prompt += `\n【公司名稱】${orgName}`;
+                }
+
+                prompt += `
+
+【格式要求】
+${template.format}
+
+【注意事項】
+- 使用繁體中文
+- 語氣專業且符合商業禮儀
+- 內容結構清晰、邏輯嚴謹
+- 用詞精準、避免模糊表述
+- 適度使用標題與分段
+- 符合產業特性與對象身份`;
+
+                if (extra) {
+                    prompt += `\n\n【額外需求】\n${extra}`;
+                }
+
+                document.getElementById('promptOutput').textContent = prompt;
             }
 
-            document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
+        // 複製提示詞
         function copyPrompt() {
             const promptText = document.getElementById('promptOutput').textContent;
             navigator.clipboard.writeText(promptText).then(() => {
@@ -455,9 +767,8 @@ ${template.format}
             });
         }
 
-        // 初始顯示提示
-        document.getElementById('templateHint').innerHTML = `<strong>💡 ${docTemplates.meeting.name}提示：</strong><br>${docTemplates.meeting.hint}`;
-        document.getElementById('templateHint').classList.add('show');
+        // 初始化顯示教育版第一個選項的提示
+        showHint('edu_official', 'education');
     </script>
 </body>
 

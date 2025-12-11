@@ -1,10 +1,11 @@
+﻿
 <!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>互動式課堂活動產生器 - Demo</title>
+    <title>互動活動產生器 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -40,6 +41,47 @@
             color: #666;
             font-size: 18px;
             margin-bottom: 40px;
+        }
+
+        /* Tab 切換樣式 */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            max-width: 300px;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: 700;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
         }
 
         .activity-types {
@@ -209,7 +251,6 @@
             background: rgba(102, 126, 234, 0.2);
         }
 
-        /* 即時預覽 */
         .preview-section {
             margin-top: 30px;
             padding: 25px;
@@ -243,105 +284,185 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>🎮 互動式課堂活動產生器</h1>
-        <p class="subtitle">讓每堂課都充滿樂趣與學習動力</p>
+        <h1>🎮 互動活動產生器 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">適用於教室與會議室的活動設計專家</p>
 
         <div class="info-box">
-            <strong>🎯 使用情境：</strong>想要讓課堂更活潑？選擇活動類型，AI 幫你設計完整的活動流程！
+            <strong>🎯 使用情境：</strong>無論是課堂教學或企業培訓，選擇活動類型，AI 幫你設計完整的活動流程！
         </div>
 
-        <div class="form-group">
-            <label>🎪 選擇活動類型</label>
-            <div class="activity-types">
-                <div class="activity-card selected" onclick="selectActivity(this, 'quiz')">
-                    <div class="activity-icon">❓</div>
-                    <div class="activity-name">搶答競賽</div>
-                </div>
-                <div class="activity-card" onclick="selectActivity(this, 'group')">
-                    <div class="activity-icon">👥</div>
-                    <div class="activity-name">小組合作</div>
-                </div>
-                <div class="activity-card" onclick="selectActivity(this, 'game')">
-                    <div class="activity-icon">🎲</div>
-                    <div class="activity-name">桌遊教學</div>
-                </div>
-                <div class="activity-card" onclick="selectActivity(this, 'roleplay')">
-                    <div class="activity-icon">🎭</div>
-                    <div class="activity-name">角色扮演</div>
-                </div>
-                <div class="activity-card" onclick="selectActivity(this, 'escape')">
-                    <div class="activity-icon">🔐</div>
-                    <div class="activity-name">密室逃脫</div>
-                </div>
-                <div class="activity-card" onclick="selectActivity(this, 'station')">
-                    <div class="activity-icon">🎯</div>
-                    <div class="activity-name">闖關活動</div>
-                </div>
-            </div>
-            <input type="hidden" id="activityType" value="quiz">
+        <!-- Tab 切換按鈕 -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('education')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('business')">🏢 企業版</button>
         </div>
 
-        <div class="options-grid">
+        <!-- 教育版內容 -->
+        <div id="educationTab" class="tab-content active">
             <div class="form-group">
-                <label for="subject">📘 科目</label>
-                <select id="subject">
-                    <option value="國語">國語</option>
-                    <option value="數學">數學</option>
-                    <option value="自然">自然</option>
-                    <option value="社會">社會</option>
-                    <option value="英語">英語</option>
-                    <option value="綜合活動">綜合活動</option>
-                </select>
+                <label>🎪 選擇活動類型</label>
+                <div class="activity-types">
+                    <div class="activity-card selected" onclick="selectActivity(this, 'quiz', 'education')">
+                        <div class="activity-icon">❓</div>
+                        <div class="activity-name">搶答競賽</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'group', 'education')">
+                        <div class="activity-icon">👥</div>
+                        <div class="activity-name">小組合作</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'game', 'education')">
+                        <div class="activity-icon">🎲</div>
+                        <div class="activity-name">桌遊教學</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'roleplay', 'education')">
+                        <div class="activity-icon">🎭</div>
+                        <div class="activity-name">角色扮演</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'escape', 'education')">
+                        <div class="activity-icon">🔐</div>
+                        <div class="activity-name">密室逃脫</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'station', 'education')">
+                        <div class="activity-icon">🎯</div>
+                        <div class="activity-name">闖關活動</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduSubject">📘 科目</label>
+                    <select id="eduSubject">
+                        <option value="國語">國語</option>
+                        <option value="數學">數學</option>
+                        <option value="自然">自然</option>
+                        <option value="社會">社會</option>
+                        <option value="英語">英語</option>
+                        <option value="綜合活動">綜合活動</option>
+                        <option value="藝術">藝術</option>
+                        <option value="體育">體育</option>
+                        <option value="資訊">資訊</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduGrade">🎓 年級</label>
+                    <select id="eduGrade">
+                        <option value="國小低年級（1-2年級）">國小低年級（1-2年級）</option>
+                        <option value="國小中年級（3-4年級）">國小中年級（3-4年級）</option>
+                        <option value="國小高年級（5-6年級）">國小高年級（5-6年級）</option>
+                        <option value="國中（7-9年級）">國中（7-9年級）</option>
+                        <option value="高中（10-12年級）">高中（10-12年級）</option>
+                        <option value="大學">大學</option>
+                        <option value="研究所">研究所</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduDuration">⏱️ 活動時長</label>
+                    <select id="eduDuration">
+                        <option value="10分鐘">10分鐘（暖身）</option>
+                        <option value="20分鐘">20分鐘（半堂課）</option>
+                        <option value="40分鐘" selected>40分鐘（一堂課）</option>
+                        <option value="80分鐘">80分鐘（兩堂課）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduStudents">👨‍🎓 學生人數</label>
+                    <select id="eduStudents">
+                        <option value="10-15人">10-15人</option>
+                        <option value="16-25人">16-25人</option>
+                        <option value="26-35人" selected>26-35人</option>
+                        <option value="36人以上">36人以上</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="grade">🎓 年級</label>
-                <select id="grade">
-                    <option value="國小低年級（1-2年級）">國小低年級</option>
-                    <option value="國小中年級（3-4年級）">國小中年級</option>
-                    <option value="國小高年級（5-6年級）">國小高年級</option>
-                    <option value="國中">國中</option>
-                </select>
+                <label for="eduTopic">📝 教學主題/單元</label>
+                <input type="text" id="eduTopic" placeholder="例如：分數的乘除、台灣歷史、生態系統">
             </div>
 
             <div class="form-group">
-                <label for="duration">⏱️ 活動時長</label>
-                <select id="duration">
-                    <option value="10分鐘">10分鐘（暖身）</option>
-                    <option value="20分鐘">20分鐘（半堂課）</option>
-                    <option value="40分鐘" selected>40分鐘（一堂課）</option>
-                    <option value="80分鐘">80分鐘（兩堂課）</option>
-                </select>
+                <label for="eduGoals">🎯 活動目標（選填）</label>
+                <textarea id="eduGoals" rows="4" placeholder="例如：&#10;- 複習本週教學內容&#10;- 培養團隊合作能力&#10;- 提升學生學習興趣"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt('education')">🚀 生成教育版活動設計提示詞</button>
+        </div>
+
+        <!-- 企業版內容 -->
+        <div id="businessTab" class="tab-content">
+            <div class="form-group">
+                <label>💼 選擇活動類型</label>
+                <div class="activity-types">
+                    <div class="activity-card selected" onclick="selectActivity(this, 'teambuilding', 'business')">
+                        <div class="activity-icon">🤝</div>
+                        <div class="activity-name">團隊建設</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'icebreaker', 'business')">
+                        <div class="activity-icon">❄️</div>
+                        <div class="activity-name">破冰活動</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'brainstorm', 'business')">
+                        <div class="activity-icon">💡</div>
+                        <div class="activity-name">腦力激盪</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'workshop', 'business')">
+                        <div class="activity-icon">🛠️</div>
+                        <div class="activity-name">工作坊</div>
+                    </div>
+                    <div class="activity-card" onclick="selectActivity(this, 'annual', 'business')">
+                        <div class="activity-icon">🎉</div>
+                        <div class="activity-name">年會活動</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizParticipants">👥 參與人數</label>
+                    <select id="bizParticipants">
+                        <option value="10-20人">10-20人（小型團隊）</option>
+                        <option value="21-50人">21-50人（中型團隊）</option>
+                        <option value="51-100人" selected>51-100人（大型團隊）</option>
+                        <option value="100人以上">100人以上（全公司）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizDuration">⏱️ 活動時長</label>
+                    <select id="bizDuration">
+                        <option value="30分鐘">30分鐘（快速破冰）</option>
+                        <option value="1小時">1小時（會議開場）</option>
+                        <option value="2小時" selected>2小時（半日工作坊）</option>
+                        <option value="4小時">4小時（全日工作坊）</option>
+                        <option value="1天">1天（團隊建設）</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="students">👨‍🎓 學生人數</label>
-                <select id="students">
-                    <option value="10-15人">10-15人</option>
-                    <option value="16-25人">16-25人</option>
-                    <option value="26-35人" selected>26-35人</option>
-                    <option value="36人以上">36人以上</option>
-                </select>
+                <label for="bizPurpose">🎯 活動目的</label>
+                <textarea id="bizPurpose" rows="4" placeholder="例如：&#10;- 增進跨部門溝通與協作&#10;- 激發創新思維與創意發想&#10;- 提升團隊凝聚力與士氣&#10;- 新人融入與團隊認識"></textarea>
             </div>
+
+            <div class="form-group">
+                <label for="bizTheme">📝 主題/情境（選填）</label>
+                <input type="text" id="bizTheme" placeholder="例如：產品創新發想、年度策略規劃、新團隊破冰">
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt('business')">🚀 生成企業版活動設計提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label for="topic">📝 教學主題/單元</label>
-            <input type="text" id="topic" placeholder="例如：分數的乘除、台灣歷史、生態系統">
-        </div>
-
-        <div class="form-group">
-            <label for="goals">🎯 活動目標（選填）</label>
-            <textarea id="goals" placeholder="例如：&#10;- 複習本週教學內容&#10;- 培養團隊合作能力&#10;- 提升學生學習興趣"></textarea>
-        </div>
-
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成活動設計提示詞</button>
-
+        <!-- 即時預覽 -->
         <div class="preview-section" id="previewSection">
             <div class="preview-title">📋 活動類型說明</div>
             <div class="preview-content" id="previewContent"></div>
         </div>
 
+        <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -350,7 +471,8 @@
     </div>
 
     <script>
-        const activityDescriptions = {
+        // 教育版活動描述
+        const educationActivities = {
             quiz: {
                 name: '搶答競賽',
                 desc: '適合複習課程內容，讓學生分組搶答，增加競爭樂趣。可搭配計分板和獎勵制度。',
@@ -383,94 +505,63 @@
             }
         };
 
-        let selectedActivity = 'quiz';
+        // 企業版活動描述
+        const businessActivities = {
+            teambuilding: {
+                name: '團隊建設',
+                desc: '透過協作任務增進團隊默契與信任，強化團隊凝聚力。',
+                includes: ['活動目標', '團隊分組', '挑戰任務', '反思討論', '成功指標']
+            },
+            icebreaker: {
+                name: '破冰活動',
+                desc: '快速打破陌生感，讓參與者放鬆並建立初步連結。',
+                includes: ['自我介紹形式', '互動遊戲', '氛圍營造', '時間控制']
+            },
+            brainstorm: {
+                name: '腦力激盪',
+                desc: '激發創意思維，收集多元想法與創新解決方案。',
+                includes: ['問題定義', '發想技巧', '點子整理', '投票機制', '行動方案']
+            },
+            workshop: {
+                name: '工作坊',
+                desc: '深度學習與實作，讓參與者獲得具體技能或產出。',
+                includes: ['學習目標', '教學流程', '實作練習', '分組討論', '成果展示']
+            },
+            annual: {
+                name: '年會活動',
+                desc: '大型聚會活動，結合娛樂與團隊精神，營造歡樂氛圍。',
+                includes: ['活動流程', '遊戲設計', '獎品規劃', '主持串場', '氣氛營造']
+            }
+        };
 
-        function selectActivity(card, type) {
-            document.querySelectorAll('.activity-card').forEach(c => c.classList.remove('selected'));
+        let currentTab = 'education';
+        let selectedActivity = { education: 'quiz', business: 'teambuilding' };
+
+        // Tab 切換功能
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // 更新 Tab 按鈕樣式
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 更新內容顯示
+            document.getElementById('educationTab').classList.remove('active');
+            document.getElementById('businessTab').classList.remove('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+            
+            // 更新預覽
+            showPreview(selectedActivity[tab], tab);
+            
+            // 隱藏結果
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        // 選擇活動類型
+        function selectActivity(card, type, tab) {
+            const tabElement = document.getElementById(tab + 'Tab');
+            tabElement.querySelectorAll('.activity-card').forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            selectedActivity = type;
-            document.getElementById('activityType').value = type;
-            showPreview(type);
+            selectedActivity[tab] = type;
+            showPreview(type, tab);
         }
-
-        function showPreview(type) {
-            const info = activityDescriptions[type];
-            const preview = document.getElementById('previewSection');
-            const content = document.getElementById('previewContent');
-
-            content.innerHTML = `
-                <strong>${info.name}</strong><br><br>
-                ${info.desc}<br><br>
-                <strong>活動設計將包含：</strong>
-                <ul style="margin-top: 10px;">
-                    ${info.includes.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-            preview.classList.add('show');
-        }
-
-        function generatePrompt() {
-            const subject = document.getElementById('subject').value;
-            const grade = document.getElementById('grade').value;
-            const duration = document.getElementById('duration').value;
-            const students = document.getElementById('students').value;
-            const topic = document.getElementById('topic').value.trim();
-            const goals = document.getElementById('goals').value.trim();
-            const activityInfo = activityDescriptions[selectedActivity];
-
-            if (!topic) {
-                alert('請輸入教學主題！');
-                return;
-            }
-
-            let prompt = `請幫我設計一個「${activityInfo.name}」課堂活動，資訊如下：
-
-【基本資訊】
-- 科目：${subject}
-- 年級：${grade}
-- 主題：${topic}
-- 活動時長：${duration}
-- 學生人數：${students}
-- 活動類型：${activityInfo.name}`;
-
-            if (goals) {
-                prompt += `\n\n【活動目標】\n${goals}`;
-            }
-
-            prompt += `\n
-【請包含以下內容】
-1. 活動名稱（吸引人的標題）
-2. 活動目標（2-3點）
-3. 所需材料與準備
-4. 活動流程（含時間分配）
-   - 暖身/說明規則
-   - 主要活動
-   - 總結/頒獎
-5. ${activityInfo.includes.join('\n5. ')}
-6. 注意事項與教學小技巧
-7. 備案（如果時間不夠或太多的調整方式）
-
-請使用繁體中文，內容要具體可執行，讓老師可以直接按照流程操作。`;
-
-            document.getElementById('promptOutput').textContent = prompt;
-            document.getElementById('resultSection').classList.add('show');
-            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function copyPrompt() {
-            const promptText = document.getElementById('promptOutput').textContent;
-            navigator.clipboard.writeText(promptText).then(() => {
-                const btn = event.target;
-                btn.textContent = '✅ 已複製！';
-                setTimeout(() => {
-                    btn.textContent = '📋 複製提示詞';
-                }, 2000);
-            });
-        }
-
-        // 初始顯示預覽
-        showPreview('quiz');
-    </script>
-</body>
-
-</html>

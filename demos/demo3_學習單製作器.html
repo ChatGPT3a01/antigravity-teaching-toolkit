@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>差異化學習單製作器 - Demo</title>
+    <title>學習單/評量表製作器 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -40,6 +40,48 @@
             color: #666;
             font-size: 18px;
             margin-bottom: 40px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -160,11 +202,6 @@
             animation: fadeIn 0.5s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .result-title {
             font-size: 24px;
             color: #667eea;
@@ -258,102 +295,179 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📝 差異化學習單製作器</h1>
-        <p class="subtitle">一份主題，三種難度，照顧每位學生的學習需求</p>
+        <h1>📝 學習單/評量表製作器 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">支援教育學習單與企業評量表，一站式解決方案</p>
 
-        <div class="info-box">
-            <strong>💡 什麼是差異化學習單？</strong><br>
-            針對同一個教學主題，設計基礎、進階、挑戰三種難度版本，讓不同程度的學生都能獲得適合的練習。
+        <!-- Tab 切換按鈕 -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('edu')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('biz')">🏢 企業版</button>
         </div>
 
-        <div class="options-grid">
+        <!-- 教育版內容 -->
+        <div id="eduTab" class="tab-content active">
+            <div class="info-box">
+                <strong>💡 什麼是差異化學習單？</strong><br>
+                針對同一個教學主題，設計基礎、進階、挑戰三種難度版本，讓不同程度的學生都能獲得適合的練習。
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="edu-subject">📘 科目</label>
+                    <select id="edu-subject">
+                        <option value="國語">國語</option>
+                        <option value="數學">數學</option>
+                        <option value="自然">自然</option>
+                        <option value="社會">社會</option>
+                        <option value="英語">英語</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edu-grade">🎓 年級</label>
+                    <select id="edu-grade">
+                        <option value="國小一年級">國小一年級</option>
+                        <option value="國小二年級">國小二年級</option>
+                        <option value="國小三年級">國小三年級</option>
+                        <option value="國小四年級">國小四年級</option>
+                        <option value="國小五年級">國小五年級</option>
+                        <option value="國小六年級">國小六年級</option>
+                        <option value="國中一年級">國中一年級</option>
+                        <option value="國中二年級">國中二年級</option>
+                        <option value="國中三年級">國中三年級</option>
+                        <option value="高中一年級">高中一年級</option>
+                        <option value="高中二年級">高中二年級</option>
+                        <option value="高中三年級">高中三年級</option>
+                        <option value="高職一年級">高職一年級</option>
+                        <option value="高職二年級">高職二年級</option>
+                        <option value="高職三年級">高職三年級</option>
+                        <option value="大學">大學</option>
+                        <option value="研究所">研究所</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label for="subject">📘 科目</label>
-                <select id="subject">
-                    <option value="國語">國語</option>
-                    <option value="數學">數學</option>
-                    <option value="自然">自然</option>
-                    <option value="社會">社會</option>
-                    <option value="英語">英語</option>
+                <label for="edu-topic">📝 學習單主題</label>
+                <input type="text" id="edu-topic" placeholder="例如：分數的加減、成語運用、植物的構造">
+            </div>
+
+            <div class="form-group">
+                <label>🎯 選擇要生成的版本（可複選）</label>
+                <div class="level-selector">
+                    <div class="level-card basic selected" onclick="toggleLevel(this, 'edu-basic')">
+                        <div class="level-icon">🟢</div>
+                        <div class="level-title">基礎版</div>
+                        <div class="level-desc">圖示輔助、步驟清楚<br>適合需要額外支持的學生</div>
+                        <input type="checkbox" id="level-edu-basic" checked style="display:none;">
+                    </div>
+                    <div class="level-card intermediate selected" onclick="toggleLevel(this, 'edu-intermediate')">
+                        <div class="level-icon">🟡</div>
+                        <div class="level-title">進階版</div>
+                        <div class="level-desc">混合題型、應用情境<br>適合一般程度學生</div>
+                        <input type="checkbox" id="level-edu-intermediate" checked style="display:none;">
+                    </div>
+                    <div class="level-card advanced selected" onclick="toggleLevel(this, 'edu-advanced')">
+                        <div class="level-icon">🔴</div>
+                        <div class="level-title">挑戰版</div>
+                        <div class="level-desc">複雜應用、開放思考<br>適合資優或學習快速的學生</div>
+                        <input type="checkbox" id="level-edu-advanced" checked style="display:none;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📋 題型選擇（可複選）</label>
+                <div class="checkbox-group" id="edu-question-types">
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="選擇題" checked> 選擇題
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="填空題" checked> 填空題
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="配合題"> 配合題
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="簡答題" checked> 簡答題
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="應用題"> 應用題
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="繪圖題"> 繪圖題
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="edu-extra">📌 額外需求（選填）</label>
+                <textarea id="edu-extra" placeholder="例如：&#10;- 希望包含生活情境題&#10;- 基礎版要有範例引導&#10;- 挑戰版包含延伸思考題"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateEduPrompt()">🚀 生成學習單提示詞</button>
+        </div>
+
+        <!-- 企業版內容 -->
+        <div id="bizTab" class="tab-content">
+            <div class="info-box">
+                <strong>💼 企業評量表製作器</strong><br>
+                協助企業快速產生績效評估表、培訓測驗、技能檢核等專業評量工具。
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="biz-industry">🏭 產業類型</label>
+                    <select id="biz-industry">
+                        <option value="科技業">科技業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="醫療保健業">醫療保健業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="教育訓練業">教育訓練業</option>
+                        <option value="營建業">營建業</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="biz-type">📊 評量類型</label>
+                    <select id="biz-type">
+                        <option value="績效評估表">績效評估表</option>
+                        <option value="培訓前測">培訓前測</option>
+                        <option value="培訓後測">培訓後測</option>
+                        <option value="技能檢核表">技能檢核表</option>
+                        <option value="自評問卷">自評問卷</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="biz-target">👥 評量對象</label>
+                <select id="biz-target">
+                    <option value="新進員工">新進員工</option>
+                    <option value="一般員工">一般員工</option>
+                    <option value="主管">主管</option>
+                    <option value="全體員工">全體員工</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="grade">🎓 年級</label>
-                <select id="grade">
-                    <option value="國小一年級">國小一年級</option>
-                    <option value="國小二年級">國小二年級</option>
-                    <option value="國小三年級">國小三年級</option>
-                    <option value="國小四年級">國小四年級</option>
-                    <option value="國小五年級">國小五年級</option>
-                    <option value="國小六年級">國小六年級</option>
-                    <option value="國中一年級">國中一年級</option>
-                    <option value="國中二年級">國中二年級</option>
-                    <option value="國中三年級">國中三年級</option>
-                </select>
+                <label for="biz-topic">📝 評量主題</label>
+                <input type="text" id="biz-topic" placeholder="例如：客戶服務能力、專案管理技能、領導力評估">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="topic">📝 學習單主題</label>
-            <input type="text" id="topic" placeholder="例如：分數的加減、成語運用、植物的構造">
-        </div>
-
-        <div class="form-group">
-            <label>🎯 選擇要生成的版本（可複選）</label>
-            <div class="level-selector">
-                <div class="level-card basic selected" onclick="toggleLevel(this, 'basic')">
-                    <div class="level-icon">🟢</div>
-                    <div class="level-title">基礎版</div>
-                    <div class="level-desc">圖示輔助、步驟清楚<br>適合需要額外支持的學生</div>
-                    <input type="checkbox" id="level-basic" checked style="display:none;">
-                </div>
-                <div class="level-card intermediate selected" onclick="toggleLevel(this, 'intermediate')">
-                    <div class="level-icon">🟡</div>
-                    <div class="level-title">進階版</div>
-                    <div class="level-desc">混合題型、應用情境<br>適合一般程度學生</div>
-                    <input type="checkbox" id="level-intermediate" checked style="display:none;">
-                </div>
-                <div class="level-card advanced selected" onclick="toggleLevel(this, 'advanced')">
-                    <div class="level-icon">🔴</div>
-                    <div class="level-title">挑戰版</div>
-                    <div class="level-desc">複雜應用、開放思考<br>適合資優或學習快速的學生</div>
-                    <input type="checkbox" id="level-advanced" checked style="display:none;">
-                </div>
+            <div class="form-group">
+                <label for="biz-extra">📌 額外需求（選填）</label>
+                <textarea id="biz-extra" placeholder="例如：&#10;- 需要包含量化評分標準（1-5分）&#10;- 希望有具體行為指標&#10;- 需要自評與主管評分欄位"></textarea>
             </div>
+
+            <button class="generate-btn" onclick="generateBizPrompt()">🚀 生成評量表提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label>📋 題型選擇（可複選）</label>
-            <div class="checkbox-group">
-                <label class="checkbox-item">
-                    <input type="checkbox" value="選擇題" checked> 選擇題
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="填空題" checked> 填空題
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="配合題"> 配合題
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="簡答題" checked> 簡答題
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="應用題"> 應用題
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="繪圖題"> 繪圖題
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="extra">📌 額外需求（選填）</label>
-            <textarea id="extra" placeholder="例如：&#10;- 希望包含生活情境題&#10;- 基礎版要有範例引導&#10;- 挑戰版包含延伸思考題"></textarea>
-        </div>
-
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成學習單提示詞</button>
-
+        <!-- 結果顯示區 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -362,25 +476,41 @@
     </div>
 
     <script>
+        // Tab 切換函數
+        function switchTab(tab) {
+            // 更新按鈕狀態
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // 更新內容顯示
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+
+            // 隱藏結果區
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        // 切換難度版本
         function toggleLevel(card, level) {
             card.classList.toggle('selected');
             document.getElementById('level-' + level).checked = card.classList.contains('selected');
         }
 
-        function generatePrompt() {
-            const subject = document.getElementById('subject').value;
-            const grade = document.getElementById('grade').value;
-            const topic = document.getElementById('topic').value.trim();
-            const extra = document.getElementById('extra').value.trim();
+        // 生成教育版提示詞
+        function generateEduPrompt() {
+            const subject = document.getElementById('edu-subject').value;
+            const grade = document.getElementById('edu-grade').value;
+            const topic = document.getElementById('edu-topic').value.trim();
+            const extra = document.getElementById('edu-extra').value.trim();
 
             if (!topic) {
                 alert('請輸入學習單主題！');
                 return;
             }
 
-            const basic = document.getElementById('level-basic').checked;
-            const intermediate = document.getElementById('level-intermediate').checked;
-            const advanced = document.getElementById('level-advanced').checked;
+            const basic = document.getElementById('level-edu-basic').checked;
+            const intermediate = document.getElementById('level-edu-intermediate').checked;
+            const advanced = document.getElementById('level-edu-advanced').checked;
 
             if (!basic && !intermediate && !advanced) {
                 alert('請至少選擇一個版本！');
@@ -389,7 +519,7 @@
 
             // 取得選中的題型
             const questionTypes = [];
-            document.querySelectorAll('.checkbox-group input:checked').forEach(cb => {
+            document.querySelectorAll('#edu-question-types input:checked').forEach(cb => {
                 questionTypes.push(cb.value);
             });
 
@@ -447,11 +577,82 @@
                 prompt += `\n\n【額外需求】\n${extra}`;
             }
 
+            displayResult(prompt);
+        }
+
+        // 生成企業版提示詞
+        function generateBizPrompt() {
+            const industry = document.getElementById('biz-industry').value;
+            const type = document.getElementById('biz-type').value;
+            const target = document.getElementById('biz-target').value;
+            const topic = document.getElementById('biz-topic').value.trim();
+            const extra = document.getElementById('biz-extra').value.trim();
+
+            if (!topic) {
+                alert('請輸入評量主題！');
+                return;
+            }
+
+            let prompt = `請幫我設計企業評量表，資訊如下：
+
+【基本資訊】
+- 產業類型：${industry}
+- 評量類型：${type}
+- 評量對象：${target}
+- 評量主題：${topic}
+
+【設計要求】
+`;
+
+            if (type === '績效評估表') {
+                prompt += `1. 包含多個評量面向（例如：工作品質、工作效率、團隊合作、溝通能力等）
+2. 每個面向提供具體的評分標準（建議 1-5 分或 1-10 分）
+3. 包含具體行為指標或範例
+4. 提供自評、主管評分、綜合評語等欄位
+5. 總結建議與改善方向`;
+            } else if (type === '培訓前測' || type === '培訓後測') {
+                prompt += `1. 包含選擇題、是非題、簡答題等題型
+2. 題目涵蓋培訓主題的核心知識與技能
+3. 約 10-15 題，難度適中
+4. 提供標準答案與評分標準
+5. 可加入實務情境題`;
+            } else if (type === '技能檢核表') {
+                prompt += `1. 列出該主題相關的具體技能項目
+2. 每項技能提供檢核標準（例如：熟練/尚可/需加強）
+3. 可包含觀察要點或行為指標
+4. 提供檢核者簽名欄位
+5. 建議改善或訓練方向`;
+            } else if (type === '自評問卷') {
+                prompt += `1. 設計反思性問題，協助員工自我檢視
+2. 包含量化評分與開放式問答
+3. 涵蓋技能、態度、學習需求等面向
+4. 約 8-12 個問題
+5. 問題設計需具體且易於理解`;
+            }
+
+            prompt += `
+
+【格式要求】
+- 使用繁體中文
+- 格式清楚，方便列印使用
+- 包含標題、說明、評量項目、評分欄位等
+- 如適用，提供使用說明`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            displayResult(prompt);
+        }
+
+        // 顯示結果
+        function displayResult(prompt) {
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
+        // 複製提示詞
         function copyPrompt() {
             const promptText = document.getElementById('promptOutput').textContent;
             navigator.clipboard.writeText(promptText).then(() => {

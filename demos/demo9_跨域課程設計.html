@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>è·¨åŸŸå°ˆæ¡ˆèª²ç¨‹è¨­è¨ˆå™¨ - Demo</title>
+    <title>H/ƒ- - Y² × mÙÌH</title>
     <style>
         * {
             margin: 0;
@@ -39,7 +39,50 @@
             text-align: center;
             color: #666;
             font-size: 18px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -174,11 +217,6 @@
             animation: fadeIn 0.5s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .result-title {
             font-size: 24px;
             color: #667eea;
@@ -223,6 +261,12 @@
             color: #1b5e20;
         }
 
+        .info-box.biz {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
+        }
+
         .back-btn {
             display: inline-block;
             background: rgba(102, 126, 234, 0.1);
@@ -242,116 +286,239 @@
 
 <body>
     <div class="container">
-        <a href="../index.html" class="back-btn">â† å›åˆ°é¦–é </a>
+        <a href="../index.html" class="back-btn"> Ş0–</a>
 
-        <h1>ğŸ“ è·¨åŸŸå°ˆæ¡ˆèª²ç¨‹è¨­è¨ˆå™¨</h1>
-        <p class="subtitle">æ•´åˆå¤šå­¸ç§‘çš„ PBL å°ˆæ¡ˆå¼å­¸ç¿’èª²ç¨‹</p>
+        <h1><¯ H/ƒ-</h1>
+        <p class="subtitle">Y² × mÙÌH</p>
 
-        <div class="info-box">
-            <strong>ğŸŒŸ ä»€éº¼æ˜¯è·¨åŸŸèª²ç¨‹ï¼Ÿ</strong><br>
-            å°‡ä¸åŒå­¸ç§‘çš„çŸ¥è­˜æ•´åˆåœ¨ä¸€å€‹å°ˆæ¡ˆä¸»é¡Œä¸­ï¼Œè®“å­¸ç”Ÿåœ¨è§£æ±ºçœŸå¯¦å•é¡Œçš„éç¨‹ä¸­å­¸ç¿’å¤šé ˜åŸŸçŸ¥è­˜ã€‚
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('edu')"><“ Y²H</button>
+            <button class="tab-btn" onclick="switchTab('biz')"><â mH</button>
         </div>
 
-        <div class="form-group">
-            <label>ğŸ“š é¸æ“‡æ•´åˆçš„å­¸ç§‘ï¼ˆè‡³å°‘é¸ 2 å€‹ï¼‰</label>
-            <div class="subject-tags">
-                <span class="subject-tag chinese selected" onclick="toggleSubject(this, 'åœ‹èª')">åœ‹èª</span>
-                <span class="subject-tag math selected" onclick="toggleSubject(this, 'æ•¸å­¸')">æ•¸å­¸</span>
-                <span class="subject-tag science" onclick="toggleSubject(this, 'è‡ªç„¶')">è‡ªç„¶</span>
-                <span class="subject-tag social" onclick="toggleSubject(this, 'ç¤¾æœƒ')">ç¤¾æœƒ</span>
-                <span class="subject-tag english" onclick="toggleSubject(this, 'è‹±èª')">è‹±èª</span>
-                <span class="subject-tag art" onclick="toggleSubject(this, 'è—è¡“')">è—è¡“</span>
-                <span class="subject-tag tech" onclick="toggleSubject(this, 'ç§‘æŠ€')">ç§‘æŠ€</span>
-                <span class="subject-tag pe" onclick="toggleSubject(this, 'å¥é«”')">å¥é«”</span>
+        <!-- Y²Hg¹ -->
+        <div id="edu-content" class="tab-content active">
+            <div class="info-box">
+                <strong><“ Y²Hª</strong><br>
+                -èßHxÒPBL	²ê;xÒkbmLtxÑåXãzæOL
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>ğŸ¯ å°ˆæ¡ˆä¸»é¡Œæ–¹å‘</label>
-            <div class="theme-cards">
-                <div class="theme-card selected" onclick="selectTheme(this, 'ç’°å¢ƒæ°¸çºŒ')">
-                    <div class="theme-icon">ğŸŒ</div>
-                    <div class="theme-name">ç’°å¢ƒæ°¸çºŒ</div>
-                </div>
-                <div class="theme-card" onclick="selectTheme(this, 'åœ¨åœ°æ–‡åŒ–')">
-                    <div class="theme-icon">ğŸ›ï¸</div>
-                    <div class="theme-name">åœ¨åœ°æ–‡åŒ–</div>
-                </div>
-                <div class="theme-card" onclick="selectTheme(this, 'å¥åº·ç”Ÿæ´»')">
-                    <div class="theme-icon">ğŸ’ª</div>
-                    <div class="theme-name">å¥åº·ç”Ÿæ´»</div>
-                </div>
-                <div class="theme-card" onclick="selectTheme(this, 'ç§‘æŠ€æ‡‰ç”¨')">
-                    <div class="theme-icon">ğŸ¤–</div>
-                    <div class="theme-name">ç§‘æŠ€æ‡‰ç”¨</div>
-                </div>
-                <div class="theme-card" onclick="selectTheme(this, 'ç¤¾æœƒè­°é¡Œ')">
-                    <div class="theme-icon">ğŸ¤</div>
-                    <div class="theme-name">ç¤¾æœƒè­°é¡Œ</div>
-                </div>
-                <div class="theme-card" onclick="selectTheme(this, 'è‡ªè¨‚ä¸»é¡Œ')">
-                    <div class="theme-icon">âœï¸</div>
-                    <div class="theme-name">è‡ªè¨‚ä¸»é¡Œ</div>
-                </div>
-            </div>
-            <input type="hidden" id="themeType" value="ç’°å¢ƒæ°¸çºŒ">
-        </div>
-
-        <div class="form-group" id="customThemeGroup" style="display: none;">
-            <label for="customTheme">ğŸ“ è‡ªè¨‚å°ˆæ¡ˆä¸»é¡Œ</label>
-            <input type="text" id="customTheme" placeholder="ä¾‹å¦‚ï¼šæˆ‘å€‘çš„æ ¡åœ’ã€ç¤¾å€å°æ—…è¡Œã€æœªä¾†åŸå¸‚è¨­è¨ˆ">
-        </div>
-
-        <div class="options-grid">
             <div class="form-group">
-                <label for="grade">ğŸ“ å¹´ç´š</label>
-                <select id="grade">
-                    <option value="åœ‹å°ä½å¹´ç´šï¼ˆ1-2å¹´ç´šï¼‰">åœ‹å°ä½å¹´ç´š</option>
-                    <option value="åœ‹å°ä¸­å¹´ç´šï¼ˆ3-4å¹´ç´šï¼‰">åœ‹å°ä¸­å¹´ç´š</option>
-                    <option value="åœ‹å°é«˜å¹´ç´šï¼ˆ5-6å¹´ç´šï¼‰" selected>åœ‹å°é«˜å¹´ç´š</option>
-                    <option value="åœ‹ä¸­">åœ‹ä¸­</option>
+                <label>=Ú xÇt„xÑóx 2 	</label>
+                <div class="subject-tags" id="eduSubjects">
+                    <span class="subject-tag chinese selected" onclick="toggleSubject(this, '')"></span>
+                    <span class="subject-tag math selected" onclick="toggleSubject(this, 'xx')">xx</span>
+                    <span class="subject-tag science" onclick="toggleSubject(this, 'ê6')">ê6</span>
+                    <span class="subject-tag social" onclick="toggleSubject(this, '>')">></span>
+                    <span class="subject-tag english" onclick="toggleSubject(this, 'ñ')">ñ</span>
+                    <span class="subject-tag art" onclick="toggleSubject(this, 'İS')">İS</span>
+                    <span class="subject-tag tech" onclick="toggleSubject(this, 'Ñ€')">Ñ€</span>
+                    <span class="subject-tag pe" onclick="toggleSubject(this, 'eÔ')">eÔ</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><¯ H;L¹</label>
+                <div class="theme-cards" id="eduThemes">
+                    <div class="theme-card selected" onclick="selectTheme(this, '°ƒ8Œ')">
+                        <div class="theme-icon"><</div>
+                        <div class="theme-name">°ƒ8Œ</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, '(0‡')">
+                        <div class="theme-icon"><Û</div>
+                        <div class="theme-name">(0‡</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, 'e·;')">
+                        <div class="theme-icon">=ª</div>
+                        <div class="theme-name">e·;</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, 'Ñ€É(')">
+                        <div class="theme-icon">></div>
+                        <div class="theme-name">Ñ€É(</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, '>pL')">
+                        <div class="theme-icon">></div>
+                        <div class="theme-name">>pL</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, 'ê;L')">
+                        <div class="theme-icon"></div>
+                        <div class="theme-name">ê;L</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="eduCustomThemeGroup" style="display: none;">
+                <label for="eduCustomTheme">=İ êH;L</label>
+                <input type="text" id="eduCustomTheme" placeholder="‹‚„!>@ÅL*†Î-">
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduGrade"><“ t/x6</label>
+                    <select id="eduGrade">
+                        <option value="Nt1-2t	">Nt1-2t	</option>
+                        <option value="-t3-4t	">-t3-4t	</option>
+                        <option value="Øt5-6t	" selected>Øt5-6t	</option>
+                        <option value="-">-</option>
+                        <option value="Ø-">Ø-</option>
+                        <option value="Øw">Øw</option>
+                        <option value="'x">'x</option>
+                        <option value="v@">v@</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduProjectType">=Ë L^‹</label>
+                    <select id="eduProjectType">
+                        <option value="PBLL" selected>PBLL</option>
+                        <option value="èß²">èß²</option>
+                        <option value="ê;xÒk">ê;xÒk</option>
+                        <option value="bmL">bmL</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduDuration">ñ ²Bw</label>
+                    <select id="eduDuration">
+                        <option value="114-6À²	">114-6À²	</option>
+                        <option value="218-12À²	" selected>218-12À²	</option>
+                        <option value="116-20À²	">1</option>
+                        <option value=" xH"> xH</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduOutput">=Ë œUş</label>
+                    <select id="eduOutput">
+                        <option value="w1U½">w1U½</option>
+                        <option value="ã-1J" selected>ã-1J</option>
+                        <option value="æ\\Á">æ\\Á</option>
+                        <option value="qGı\">qGı\</option>
+                        <option value="œU">œU</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="eduGoals"><¯ ²îxk	</label>
+                <textarea id="eduGoals" rows="3" placeholder="‹‚&#10;- ù
+xãzOL„ı›&#10;- xÒŠ\&#10;- #P²,åX;É("></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateEduPrompt()">=€ Y²HĞ:^</button>
+        </div>
+
+        <!-- mHg¹ -->
+        <div id="biz-content" class="tab-content">
+            <div class="info-box biz">
+                <strong><â mHª</strong><br>
+                -HƒøFmĞHL·ƒ;Õƒ OKR îi(¼."m—!
+            </div>
+
+            <div class="form-group">
+                <label for="bizProjectType">=Ê ƒ^‹</label>
+                <select id="bizProjectType">
+                    <option value="Hƒø" selected>Hƒø</option>
+                    <option value="FmĞH">FmĞH</option>
+                    <option value="L·ƒ">L·ƒ</option>
+                    <option value=";Õƒ">;Õƒ</option>
+                    <option value="OKRî-š">OKRî-š</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="duration">â±ï¸ èª²ç¨‹æ™‚é•·</label>
-                <select id="duration">
-                    <option value="1é€±ï¼ˆ4-6ç¯€èª²ï¼‰">1é€±ï¼ˆ4-6ç¯€èª²ï¼‰</option>
-                    <option value="2é€±ï¼ˆ8-12ç¯€èª²ï¼‰" selected>2é€±ï¼ˆ8-12ç¯€èª²ï¼‰</option>
-                    <option value="1å€‹æœˆï¼ˆ16-20ç¯€èª²ï¼‰">1å€‹æœˆ</option>
-                    <option value="ä¸€å­¸æœŸå°ˆæ¡ˆ">ä¸€å­¸æœŸå°ˆæ¡ˆ</option>
-                </select>
+                <label for="bizTheme"><¯ ƒ;L/H1</label>
+                <input type="text" id="bizTheme" placeholder="‹‚Q4ÁLbaĞGk°"Á
+ƒt¦>Y;Õ">
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizIndustry"><í "m^‹</label>
+                    <select id="bizIndustry">
+                        <option value="Ñ€m" selected>Ñ€m</option>
+                        <option value="Ñm">Ñm</option>
+                        <option value="ö.m">ö.m</option>
+                        <option value="ı m">ı m</option>
+                        <option value="Ùm">Ùm</option>
+                        <option value="«Bm">«Bm</option>
+                        <option value="òm">òm</option>
+                        <option value="Y²m">Y²m</option>
+                        <option value="‡um">‡um</option>
+                        <option value="vÖ">vÖ</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizBudget">=° —!</label>
+                    <select id="bizBudget">
+                        <option value="‹10,å	">‹10,å	</option>
+                        <option value="-‹10-50,	" selected>-‹10-50,	</option>
+                        <option value="'‹50-200,	">'‹50-200,	</option>
+                        <option value="…'‹200,å
+	">…'‹200,å
+	</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizDuration">ñ ÷L</label>
+                    <select id="bizDuration">
+                        <option value="í1g	">í1g	</option>
+                        <option value="-1-3	" selected>-1-3	</option>
+                        <option value="w3-6	">w3-6	</option>
+                        <option value="t¦H6å
+	">t¦H6å
+	</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizTarget"><¯ î×></label>
+                    <input type="text" id="bizTarget" placeholder="‹‚25-35rıs'-m;B2B¢6">
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="output">ğŸ“‹ æˆæœå±•ç¾</label>
-                <select id="output">
-                    <option value="æµ·å ±å±•è¦½">æµ·å ±å±•è¦½</option>
-                    <option value="å£é ­å ±å‘Š" selected>å£é ­å ±å‘Š</option>
-                    <option value="å¯¦ä½œä½œå“">å¯¦ä½œä½œå“</option>
-                    <option value="å½±ç‰‡è£½ä½œ">å½±ç‰‡è£½ä½œ</option>
-                    <option value="ç¶œåˆå±•æ¼”">ç¶œåˆå±•æ¼”</option>
-                </select>
+                <label for="bizGoals"><¯ Hîxk	</label>
+                <textarea id="bizGoals" rows="3" placeholder="‹‚&#10;- ĞGÁLå¦ 30%&#10;-  °¢6 500 º&#10;- ß6w 20%"></textarea>
             </div>
+
+            <div class="form-group">
+                <label for="bizContext">=İ Ìoªxk	</label>
+                <textarea id="bizContext" rows="3" placeholder="!ğHÌoşÁ B"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateBizPrompt()">=€ mHĞ:^</button>
         </div>
 
-        <div class="form-group">
-            <label for="goals">ğŸ¯ èª²ç¨‹ç›®æ¨™ï¼ˆé¸å¡«ï¼‰</label>
-            <textarea id="goals" rows="3" placeholder="ä¾‹å¦‚ï¼š&#10;- åŸ¹é¤Šå­¸ç”Ÿè§£æ±ºå•é¡Œçš„èƒ½åŠ›&#10;- å­¸ç¿’åœ˜éšŠåˆä½œèˆ‡æºé€š&#10;- é€£çµèª²æœ¬çŸ¥è­˜èˆ‡ç”Ÿæ´»æ‡‰ç”¨"></textarea>
-        </div>
-
-        <button class="generate-btn" onclick="generatePrompt()">ğŸš€ ç”Ÿæˆè·¨åŸŸèª²ç¨‹è¨­è¨ˆæç¤ºè©</button>
-
+        <!-- Pœ@ß -->
         <div class="result-section" id="resultSection">
-            <div class="result-title">âœ¨ ç”Ÿæˆçš„æç¤ºè©</div>
+            <div class="result-title">( „Ğ:^</div>
             <div class="prompt-box" id="promptOutput"></div>
-            <button class="copy-btn" onclick="copyPrompt()">ğŸ“‹ è¤‡è£½æç¤ºè©</button>
+            <button class="copy-btn" onclick="copyPrompt()">=Ë ıĞ:^</button>
         </div>
     </div>
 
     <script>
-        let selectedSubjects = ['åœ‹èª', 'æ•¸å­¸'];
-        let selectedTheme = 'ç’°å¢ƒæ°¸çºŒ';
+        let selectedSubjects = ['', 'xx'];
+        let selectedTheme = '°ƒ8Œ';
+        let currentTab = 'edu';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById('resultSection').classList.remove('show');
+
+            // ÍnxÇ
+            if (tab === 'edu') {
+                selectedSubjects = ['', 'xx'];
+                selectedTheme = '°ƒ8Œ';
+            }
+        }
 
         function toggleSubject(tag, subject) {
             tag.classList.toggle('selected');
@@ -363,94 +530,318 @@
         }
 
         function selectTheme(card, theme) {
-            document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+            const parent = card.parentElement;
+            parent.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
             selectedTheme = theme;
-            document.getElementById('themeType').value = theme;
 
-            // é¡¯ç¤º/éš±è—è‡ªè¨‚ä¸»é¡Œè¼¸å…¥æ¡†
-            document.getElementById('customThemeGroup').style.display =
-                theme === 'è‡ªè¨‚ä¸»é¡Œ' ? 'block' : 'none';
+            // o:/±Ïê;L8eF
+            const customGroup = document.getElementById('eduCustomThemeGroup');
+            if (customGroup) {
+                customGroup.style.display = theme === 'ê;L' ? 'block' : 'none';
+            }
         }
 
-        function generatePrompt() {
-            const grade = document.getElementById('grade').value;
-            const duration = document.getElementById('duration').value;
-            const output = document.getElementById('output').value;
-            const goals = document.getElementById('goals').value.trim();
-            const customTheme = document.getElementById('customTheme').value.trim();
+        function generateEduPrompt() {
+            const grade = document.getElementById('eduGrade').value;
+            const projectType = document.getElementById('eduProjectType').value;
+            const duration = document.getElementById('eduDuration').value;
+            const output = document.getElementById('eduOutput').value;
+            const goals = document.getElementById('eduGoals').value.trim();
+            const customTheme = document.getElementById('eduCustomTheme').value.trim();
 
             if (selectedSubjects.length < 2) {
-                alert('è«‹è‡³å°‘é¸æ“‡ 2 å€‹æ•´åˆå­¸ç§‘ï¼');
+                alert('ËóxÇ 2 txÑ');
                 return;
             }
 
             let theme = selectedTheme;
-            if (selectedTheme === 'è‡ªè¨‚ä¸»é¡Œ') {
+            if (selectedTheme === 'ê;L') {
                 if (!customTheme) {
-                    alert('è«‹è¼¸å…¥è‡ªè¨‚å°ˆæ¡ˆä¸»é¡Œï¼');
+                    alert('Ë8eêH;L');
                     return;
                 }
                 theme = customTheme;
             }
 
-            let prompt = `è«‹å¹«æˆ‘è¨­è¨ˆä¸€å€‹è·¨é ˜åŸŸå°ˆæ¡ˆå¼å­¸ç¿’ï¼ˆPBLï¼‰èª²ç¨‹ï¼š
+            let prompt = `Ëk- ${projectType}
 
-ã€åŸºæœ¬è³‡è¨Šã€‘
-- å¹´ç´šï¼š${grade}
-- å°ˆæ¡ˆä¸»é¡Œï¼š${theme}
-- èª²ç¨‹æ™‚é•·ï¼š${duration}
-- æˆæœå±•ç¾ï¼š${output}
+ú,Ç
+
+- t/x6${grade}
+- L^‹${projectType}
+- H;L${theme}
+- ²Bw${duration}
+- œUş${output}
 
-ã€æ•´åˆå­¸ç§‘ã€‘
+txÑ
 ${selectedSubjects.map(s => `- ${s}`).join('\n')}
 
-ã€è¨­è¨ˆéœ€æ±‚ã€‘
-è«‹æä¾›å®Œæ•´çš„èª²ç¨‹è¨­è¨ˆï¼ŒåŒ…å«ï¼š
+- B
+ËĞ›Œt„²-+
 
-1. å°ˆæ¡ˆåç¨±ï¼ˆå¸å¼•å­¸ç”Ÿçš„æ¨™é¡Œï¼‰
+1. H18x„L	
 
-2. èª²ç¨‹ç°¡ä»‹
-   - æ ¸å¿ƒå•é¡Œï¼ˆDriving Questionï¼‰
-   - å­¸ç¿’ç›®æ¨™ï¼ˆå„å­¸ç§‘çš„é€£çµé»ï¼‰
+2. ²!Ë
+   - 8ÃOLDriving Question	
+   - xÒîxÑ„#PŞ	
 
-3. å„å­¸ç§‘æ•´åˆèªªæ˜
-   - æ¯å€‹å­¸ç§‘åœ¨å°ˆæ¡ˆä¸­æ‰®æ¼”çš„è§’è‰²
-   - å…·é«”çš„å­¸ç¿’å…§å®¹èˆ‡èƒ½åŠ›æŒ‡æ¨™
+3. xÑtª
+   - ÏxÑ(H-n„Òr
+   - wÔ„xÒg¹ı›
 
-4. èª²ç¨‹æµç¨‹ï¼ˆé€±/ç¯€æ¬¡è¦åŠƒï¼‰
-   - å¼•èµ·å‹•æ©Ÿ
-   - æ¢ç´¢éšæ®µ
-   - è£½ä½œéšæ®µ
-   - ç™¼è¡¨éšæ®µ
-   - åæ€éšæ®µ
+4. ²A1/À!ƒ	
+   - wÕ_
+   - ¢"µ
+   - ı\µ
+   - |hµ
+   - Íµ
 
-5. å­¸ç¿’æ´»å‹•è¨­è¨ˆ
-   - å€‹äººä»»å‹™
-   - å°çµ„ä»»å‹™
-   - å…¨ç­æ´»å‹•
+5. xÒ;Õ-
+   - ºûÙ
+   - DûÙ
+   - hí;Õ
 
-6. è©•é‡æ–¹å¼
-   - å½¢æˆæ€§è©•é‡
-   - ç¸½çµæ€§è©•é‡
-   - è©•é‡è¦æº–ï¼ˆRubricï¼‰
+6. UÏ¹
+   - b'UÏ
+   - =P'UÏ
+   - UÏ–Rubric	
 
-7. æ‰€éœ€è³‡æºèˆ‡ææ–™
+7. @ ÇP™
 
-8. æ•™å¸«å‚™èª²å»ºè­°`;
+8. Y+™²úp`;
 
             if (goals) {
-                prompt += `\n\nã€èª²ç¨‹ç›®æ¨™ã€‘\n${goals}`;
+                prompt += `\n\n²î\n${goals}`;
             }
 
             prompt += `\n
-ã€æ³¨æ„äº‹é …ã€‘
-- ä½¿ç”¨ç¹é«”ä¸­æ–‡
-- æ´»å‹•è¨­è¨ˆè¦å…·é«”å¯åŸ·è¡Œ
-- è€ƒé‡å­¸ç”Ÿå¹´é½¡ç‰¹æ€§
-- å¼·èª¿å­¸ç”Ÿä¸­å¿ƒçš„å­¸ç¿’
-- é‡è¦–è·¨å­¸ç§‘çš„è‡ªç„¶é€£çµ`;
+è‹
+- (AÔ-‡
+- ;Õ-wÔï÷L
+- Ïxtay'
+- 7¿x-Ã„xÒ
+- Í–èxÑ„ê6#P`;
 
+            displayResult(prompt);
+        }
+
+        function generateBizPrompt() {
+            const projectType = document.getElementById('bizProjectType').value;
+            const theme = document.getElementById('bizTheme').value.trim();
+            const industry = document.getElementById('bizIndustry').value;
+            const budget = document.getElementById('bizBudget').value;
+            const duration = document.getElementById('bizDuration').value;
+            const target = document.getElementById('bizTarget').value.trim();
+            const goals = document.getElementById('bizGoals').value.trim();
+            const context = document.getElementById('bizContext').value.trim();
+
+            if (!theme) {
+                alert('Ë8eƒ;L/H1');
+                return;
+            }
+
+            let prompt = `Ëk°ë ı${projectType}
+
+ú,Ç
+
+- ƒ^‹${projectType}
+- H1${theme}
+- "m^‹${industry}
+- —!${budget}
+- ÷L${duration}`;
+
+            if (target) {
+                prompt += `\n- î×>${target}`;
+            }
+
+            if (context) {
+                prompt += `\n\nÌoª\n${context}`;
+            }
+
+            if (goals) {
+                prompt += `\n\nHî\n${goals}`;
+            }
+
+            const templates = {
+                'Hƒø': `
+
+ƒg¹B
+
+1. ÷LX
+   - HÌoÕ_
+   - 8Ãîœ
+   - Üu®Ş
+
+2. 4
+   - î4‚Á
+   - ö-
+   - SWOT 
+
+3. Hƒ
+   - ÷LVe
+   - å\îBy	
+   - º›Mn
+
+4. —ƒ
+   - s0—h
+   - ,HÊ
+
+5. ¨ª¡
+   - [(¨ªX%
+   - ÉVe
+
+6. HÊU0
+   - KPI -š
+   - Hıd_6`,
+
+                'FmĞH': `
+
+ĞHg¹B
+
+1. ĞHX
+   - ãz„OL
+   - Ğ›„ãz¹H
+   - hyù<;5
+
+2. 4_
+   - 4!¨â
+   - î¢¤
+   - ÛŞ B
+
+3. ãz¹H
+   - "Á/Ùª
+   - ö-*â
+   - Fm!
+
+4. ÷Lk
+   - |UÍ
+   - Ì‘-š
+   - Ç B
+
+5. ¡Ùƒ
+   - •Ç B
+   - 6Ê,
+   - •Ç1l
+
+6. ŠË9
+   - 8ÃŠ
+   - gO/\%4`,
+
+                'L·ƒ': `
+
+ƒg¹B
+
+1. L·X
+   - L·î
+   - î4
+   - 8Ã
+o
+
+2. 4
+   - ˆ»ß
+   - öÁ
+   - 4šM
+
+3. L·Ve
+   - 4P Ve"Áù<ï¨ã	
+   - tL·³­k
+   - xML·Ve
+
+4. ÷Lk
+   - ;ÕBh
+   - ’Ôƒ
+   - u‚õ
+
+5. —M
+   - »(0
+   - ROI 0
+
+6. HU0
+   - KPI -š
+   - ıd_6`,
+
+                ';Õƒ': `
+
+ƒg¹B
+
+1. ;Õ‚ğ
+   - ;Õ;Lî„
+   - îa
+   - HÊ
+
+2. ;Õ-
+   - ;ÕARundown	
+   - g¹ƒ
+   - ’Õ°À-
+
+3. ÷L0À
+   - 40ƒ
+   - º›Mn
+   - -™ B
+
+4. £³¨ã
+   - £³¡S
+   - 1_6
+   -  P-
+
+5. —ƒ
+   - »(0
+   - 6/sa
+
+6. ¨ª¡
+   - ™Hk
+   - É%U
+
+7. HU0
+   - ÿ¦¿å
+   - œ`,
+
+                'OKRî-š': `
+
+OKR g¹B
+
+1. î-šObjectives	
+   - 3-5 Üuî
+   - wÔ	0'ïT
+   - DTVe#P
+
+2. ÜuPœKey Results	
+   - Ïî-š 3-5 ÜuPœ
+   - ïÏ	BP
+   - SMART ŸG
+
+3. LÕ¹HInitiatives	
+   - T KR „wÔLÕ
+   -  ¬ºB
+   - Ç B
+
+4. ıd_6
+   - ¢8;‡
+   - 2¦Ş1¹
+   - ¿t_6
+
+5. J2o
+   - 
+d OKR J
+   - èè€T\
+   - º OKR #P`
+            };
+
+            prompt += templates[projectType] || '';
+
+            prompt += `\n
+è‹
+- (AÔ-‡
+- g¹wÔï÷L
+- &${industry}y'
+- Ï—P6
+- Í–æÙïL'`;
+
+            displayResult(prompt);
+        }
+
+        function displayResult(prompt) {
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -460,9 +851,9 @@ ${selectedSubjects.map(s => `- ${s}`).join('\n')}
             const promptText = document.getElementById('promptOutput').textContent;
             navigator.clipboard.writeText(promptText).then(() => {
                 const btn = event.target;
-                btn.textContent = 'âœ… å·²è¤‡è£½ï¼';
+                btn.textContent = ' òı';
                 setTimeout(() => {
-                    btn.textContent = 'ğŸ“‹ è¤‡è£½æç¤ºè©';
+                    btn.textContent = '=Ë ıĞ:^';
                 }, 2000);
             });
         }

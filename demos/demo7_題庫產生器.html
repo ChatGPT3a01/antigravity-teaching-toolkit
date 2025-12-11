@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多元評量題庫產生器 - Demo</title>
+    <title>題庫/測驗產生器 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -39,7 +39,50 @@
             text-align: center;
             color: #666;
             font-size: 18px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -121,12 +164,13 @@
             font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
         .generate-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
 
         .result-section {
@@ -141,11 +185,6 @@
         .result-section.show {
             display: block;
             animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .result-title {
@@ -177,6 +216,7 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
+            transition: background 0.3s;
         }
 
         .copy-btn:hover {
@@ -190,6 +230,18 @@
             border-radius: 8px;
             margin-bottom: 30px;
             color: #0d47a1;
+        }
+
+        .info-box.edu {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #1b5e20;
+        }
+
+        .info-box.biz {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
         }
 
         .back-btn {
@@ -206,35 +258,6 @@
         .back-btn:hover {
             background: rgba(102, 126, 234, 0.2);
         }
-
-        .bloom-levels {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .bloom-tag {
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 2px solid;
-        }
-
-        .bloom-tag.remember { background: #e3f2fd; border-color: #2196f3; color: #1565c0; }
-        .bloom-tag.understand { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
-        .bloom-tag.apply { background: #fff3e0; border-color: #ff9800; color: #e65100; }
-        .bloom-tag.analyze { background: #fce4ec; border-color: #e91e63; color: #c2185b; }
-        .bloom-tag.evaluate { background: #f3e5f5; border-color: #9c27b0; color: #7b1fa2; }
-        .bloom-tag.create { background: #ffebee; border-color: #f44336; color: #c62828; }
-
-        .bloom-tag.selected {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        }
     </style>
 </head>
 
@@ -242,118 +265,215 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📋 多元評量題庫產生器</h1>
-        <p class="subtitle">快速產生各種題型的評量試題，含答案與解析</p>
+        <h1>📋 題庫/測驗產生器</h1>
+        <p class="subtitle">教育 × 企業雙軌版 - 快速產生各種評量試題與測驗</p>
 
-        <div class="info-box">
-            <strong>💡 功能特色：</strong>支援多種題型、可選擇認知層次（布魯姆分類）、自動產生答案與詳解。
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('edu')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('biz')">🏢 企業版</button>
         </div>
 
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="subject">📘 科目</label>
-                <select id="subject">
-                    <option value="國語">國語</option>
-                    <option value="數學">數學</option>
-                    <option value="自然">自然</option>
-                    <option value="社會">社會</option>
-                    <option value="英語">英語</option>
-                    <option value="健康與體育">健康與體育</option>
-                </select>
+        <!-- 教育版內容 -->
+        <div id="edu-content" class="tab-content active">
+            <div class="info-box edu">
+                <strong>🎓 教育版特色：</strong>支援國小到研究所各階段，多種題型、難度等級、含答案與解析。
             </div>
 
-            <div class="form-group">
-                <label for="grade">🎓 年級</label>
-                <select id="grade">
-                    <option value="國小一年級">國小一年級</option>
-                    <option value="國小二年級">國小二年級</option>
-                    <option value="國小三年級">國小三年級</option>
-                    <option value="國小四年級">國小四年級</option>
-                    <option value="國小五年級">國小五年級</option>
-                    <option value="國小六年級">國小六年級</option>
-                    <option value="國中一年級">國中一年級</option>
-                    <option value="國中二年級">國中二年級</option>
-                    <option value="國中三年級">國中三年級</option>
-                </select>
-            </div>
-        </div>
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduSubject">📘 科目</label>
+                    <select id="eduSubject">
+                        <option value="國語">國語</option>
+                        <option value="數學">數學</option>
+                        <option value="自然">自然</option>
+                        <option value="社會">社會</option>
+                        <option value="英語">英語</option>
+                        <option value="健康與體育">健康與體育</option>
+                        <option value="藝術">藝術</option>
+                        <option value="綜合活動">綜合活動</option>
+                        <option value="科技">科技</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label for="topic">📝 評量範圍/單元</label>
-            <input type="text" id="topic" placeholder="例如：第一課到第三課、分數的四則運算、台灣的地理環境">
-        </div>
-
-        <div class="form-group">
-            <label>📊 題型選擇（點選可複選）</label>
-            <div class="question-types">
-                <div class="type-card selected" onclick="toggleType(this, '選擇題')">
-                    <div class="type-icon">🔘</div>
-                    <div class="type-name">選擇題</div>
+                <div class="form-group">
+                    <label for="eduGrade">🎓 教育階段</label>
+                    <select id="eduGrade">
+                        <option value="國小一年級">國小一年級</option>
+                        <option value="國小二年級">國小二年級</option>
+                        <option value="國小三年級">國小三年級</option>
+                        <option value="國小四年級">國小四年級</option>
+                        <option value="國小五年級">國小五年級</option>
+                        <option value="國小六年級">國小六年級</option>
+                        <option value="國中一年級">國中一年級</option>
+                        <option value="國中二年級">國中二年級</option>
+                        <option value="國中三年級">國中三年級</option>
+                        <option value="高中一年級">高中一年級</option>
+                        <option value="高中二年級">高中二年級</option>
+                        <option value="高中三年級">高中三年級</option>
+                        <option value="大學">大學</option>
+                        <option value="研究所">研究所</option>
+                    </select>
                 </div>
-                <div class="type-card selected" onclick="toggleType(this, '是非題')">
-                    <div class="type-icon">⭕</div>
-                    <div class="type-name">是非題</div>
-                </div>
-                <div class="type-card" onclick="toggleType(this, '填空題')">
-                    <div class="type-icon">📝</div>
-                    <div class="type-name">填空題</div>
-                </div>
-                <div class="type-card" onclick="toggleType(this, '配合題')">
-                    <div class="type-icon">🔗</div>
-                    <div class="type-name">配合題</div>
-                </div>
-                <div class="type-card" onclick="toggleType(this, '簡答題')">
-                    <div class="type-icon">💬</div>
-                    <div class="type-name">簡答題</div>
-                </div>
-                <div class="type-card" onclick="toggleType(this, '應用題')">
-                    <div class="type-icon">🧮</div>
-                    <div class="type-name">應用題</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>🧠 認知層次（布魯姆分類法）</label>
-            <div class="bloom-levels">
-                <span class="bloom-tag remember selected" onclick="toggleBloom(this, '記憶')">記憶</span>
-                <span class="bloom-tag understand selected" onclick="toggleBloom(this, '理解')">理解</span>
-                <span class="bloom-tag apply" onclick="toggleBloom(this, '應用')">應用</span>
-                <span class="bloom-tag analyze" onclick="toggleBloom(this, '分析')">分析</span>
-                <span class="bloom-tag evaluate" onclick="toggleBloom(this, '評鑑')">評鑑</span>
-                <span class="bloom-tag create" onclick="toggleBloom(this, '創造')">創造</span>
-            </div>
-        </div>
-
-        <div class="options-grid">
-            <div class="form-group">
-                <label for="count">📋 題目數量</label>
-                <select id="count">
-                    <option value="5">5 題</option>
-                    <option value="10" selected>10 題</option>
-                    <option value="15">15 題</option>
-                    <option value="20">20 題</option>
-                </select>
             </div>
 
             <div class="form-group">
-                <label for="difficulty">📈 整體難度</label>
-                <select id="difficulty">
-                    <option value="簡單">簡單（基礎概念）</option>
-                    <option value="中等" selected>中等（一般程度）</option>
-                    <option value="困難">困難（進階挑戰）</option>
-                    <option value="混合">混合（由易到難）</option>
-                </select>
+                <label for="eduTopic">📝 評量範圍/單元</label>
+                <input type="text" id="eduTopic" placeholder="例如：第一課到第三課、分數的四則運算、台灣的地理環境">
             </div>
+
+            <div class="form-group">
+                <label>📊 題型選擇（點選可複選）</label>
+                <div class="question-types" id="eduQuestionTypes">
+                    <div class="type-card selected" onclick="toggleEduType(this, '選擇題')">
+                        <div class="type-icon">🔘</div>
+                        <div class="type-name">選擇題</div>
+                    </div>
+                    <div class="type-card" onclick="toggleEduType(this, '填空題')">
+                        <div class="type-icon">📝</div>
+                        <div class="type-name">填空題</div>
+                    </div>
+                    <div class="type-card" onclick="toggleEduType(this, '問答題')">
+                        <div class="type-icon">💬</div>
+                        <div class="type-name">問答題</div>
+                    </div>
+                    <div class="type-card" onclick="toggleEduType(this, '素養題')">
+                        <div class="type-icon">🌟</div>
+                        <div class="type-name">素養題</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduCount">📋 題目數量</label>
+                    <select id="eduCount">
+                        <option value="5">5 題</option>
+                        <option value="10" selected>10 題</option>
+                        <option value="15">15 題</option>
+                        <option value="20">20 題</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduDifficulty">📈 難度等級</label>
+                    <select id="eduDifficulty">
+                        <option value="簡單">簡單（基礎概念）</option>
+                        <option value="中等" selected>中等（一般程度）</option>
+                        <option value="困難">困難（進階挑戰）</option>
+                        <option value="混合">混合（由易到難）</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="eduExtra">📌 額外需求（選填）</label>
+                <textarea id="eduExtra" rows="3" placeholder="例如：&#10;- 選擇題要有4個選項&#10;- 包含圖表判讀題&#10;- 避免太相似的題目"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateEduPrompt()">🚀 生成題庫提示詞</button>
         </div>
 
-        <div class="form-group">
-            <label for="extra">📌 額外需求（選填）</label>
-            <textarea id="extra" rows="3" placeholder="例如：&#10;- 選擇題要有4個選項&#10;- 包含圖表判讀題&#10;- 避免太相似的題目"></textarea>
+        <!-- 企業版內容 -->
+        <div id="biz-content" class="tab-content">
+            <div class="info-box biz">
+                <strong>🏢 企業版特色：</strong>支援培訓測驗、認證考試、面試題目、技能檢定等企業應用場景。
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizTestType">📋 測驗類型</label>
+                    <select id="bizTestType">
+                        <option value="培訓測驗">培訓測驗</option>
+                        <option value="認證考試">認證考試</option>
+                        <option value="面試題目">面試題目</option>
+                        <option value="技能檢定">技能檢定</option>
+                        <option value="內部考核">內部考核</option>
+                        <option value="新人訓練">新人訓練</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizIndustry">🏭 產業/領域</label>
+                    <select id="bizIndustry">
+                        <option value="科技業">科技業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="零售業">零售業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="醫療業">醫療業</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="教育業">教育業</option>
+                        <option value="行銷業">行銷業</option>
+                        <option value="人力資源">人力資源</option>
+                        <option value="法務">法務</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bizTopic">📝 測驗主題/範圍</label>
+                <input type="text" id="bizTopic" placeholder="例如：資訊安全基礎、客戶服務技巧、專案管理入門">
+            </div>
+
+            <div class="form-group">
+                <label>📊 題型選擇（點選可複選）</label>
+                <div class="question-types" id="bizQuestionTypes">
+                    <div class="type-card selected" onclick="toggleBizType(this, '選擇題')">
+                        <div class="type-icon">🔘</div>
+                        <div class="type-name">選擇題</div>
+                    </div>
+                    <div class="type-card" onclick="toggleBizType(this, '是非題')">
+                        <div class="type-icon">⭕</div>
+                        <div class="type-name">是非題</div>
+                    </div>
+                    <div class="type-card" onclick="toggleBizType(this, '情境題')">
+                        <div class="type-icon">🎭</div>
+                        <div class="type-name">情境題</div>
+                    </div>
+                    <div class="type-card" onclick="toggleBizType(this, '案例分析')">
+                        <div class="type-icon">📊</div>
+                        <div class="type-name">案例分析</div>
+                    </div>
+                    <div class="type-card" onclick="toggleBizType(this, '簡答題')">
+                        <div class="type-icon">💬</div>
+                        <div class="type-name">簡答題</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="bizCount">📋 題目數量</label>
+                    <select id="bizCount">
+                        <option value="5">5 題</option>
+                        <option value="10" selected>10 題</option>
+                        <option value="15">15 題</option>
+                        <option value="20">20 題</option>
+                        <option value="30">30 題</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bizDifficulty">📈 難度等級</label>
+                    <select id="bizDifficulty">
+                        <option value="入門">入門（基礎知識）</option>
+                        <option value="中級" selected>中級（實務應用）</option>
+                        <option value="高級">高級（進階專業）</option>
+                        <option value="混合">混合（由淺入深）</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bizExtra">📌 額外需求（選填）</label>
+                <textarea id="bizExtra" rows="3" placeholder="例如：&#10;- 著重實務應用情境&#10;- 需要包含法規相關題目&#10;- 要能測試實際操作能力"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateBizPrompt()">🚀 生成測驗提示詞</button>
         </div>
 
-        <button class="generate-btn" onclick="generatePrompt()">🚀 生成題庫提示詞</button>
-
+        <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -362,80 +482,137 @@
     </div>
 
     <script>
-        let selectedTypes = ['選擇題', '是非題'];
-        let selectedBlooms = ['記憶', '理解'];
+        let selectedEduTypes = ['選擇題'];
+        let selectedBizTypes = ['選擇題'];
 
-        function toggleType(card, type) {
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function toggleEduType(card, type) {
             card.classList.toggle('selected');
             if (card.classList.contains('selected')) {
-                selectedTypes.push(type);
+                selectedEduTypes.push(type);
             } else {
-                selectedTypes = selectedTypes.filter(t => t !== type);
+                selectedEduTypes = selectedEduTypes.filter(t => t !== type);
             }
         }
 
-        function toggleBloom(tag, level) {
-            tag.classList.toggle('selected');
-            if (tag.classList.contains('selected')) {
-                selectedBlooms.push(level);
+        function toggleBizType(card, type) {
+            card.classList.toggle('selected');
+            if (card.classList.contains('selected')) {
+                selectedBizTypes.push(type);
             } else {
-                selectedBlooms = selectedBlooms.filter(b => b !== level);
+                selectedBizTypes = selectedBizTypes.filter(t => t !== type);
             }
         }
 
-        function generatePrompt() {
-            const subject = document.getElementById('subject').value;
-            const grade = document.getElementById('grade').value;
-            const topic = document.getElementById('topic').value.trim();
-            const count = document.getElementById('count').value;
-            const difficulty = document.getElementById('difficulty').value;
-            const extra = document.getElementById('extra').value.trim();
+        function generateEduPrompt() {
+            const subject = document.getElementById('eduSubject').value;
+            const grade = document.getElementById('eduGrade').value;
+            const topic = document.getElementById('eduTopic').value.trim();
+            const count = document.getElementById('eduCount').value;
+            const difficulty = document.getElementById('eduDifficulty').value;
+            const extra = document.getElementById('eduExtra').value.trim();
 
             if (!topic) {
                 alert('請輸入評量範圍！');
                 return;
             }
 
-            if (selectedTypes.length === 0) {
+            if (selectedEduTypes.length === 0) {
                 alert('請至少選擇一種題型！');
                 return;
             }
 
-            let prompt = `請幫我設計一份評量試題，資訊如下：
-
-【基本資訊】
-- 科目：${subject}
-- 年級：${grade}
-- 範圍：${topic}
-- 題數：${count} 題
-- 難度：${difficulty}
-
-【題型要求】
-${selectedTypes.map(t => `- ${t}`).join('\n')}
-
-【認知層次】
-${selectedBlooms.map(b => `- ${b}`).join('\n')}
-
-【輸出格式】
-每題請包含：
-1. 題號
-2. 題目內容
-3. 選項（若為選擇題）
-4. 參考答案
-5. 詳細解析
-6. 對應的認知層次
-
-【注意事項】
-- 使用繁體中文
-- 題目敘述清楚完整
-- 選項要有鑑別度，避免明顯錯誤的選項
-- 解析要詳細，能幫助學生理解
-- 難度分布合理`;
+            let prompt = '請幫我設計一份教育評量試題，資訊如下：\n\n';
+            prompt += '【基本資訊】\n';
+            prompt += '- 科目：' + subject + '\n';
+            prompt += '- 教育階段：' + grade + '\n';
+            prompt += '- 範圍：' + topic + '\n';
+            prompt += '- 題數：' + count + ' 題\n';
+            prompt += '- 難度：' + difficulty + '\n\n';
+            prompt += '【題型要求】\n';
+            prompt += selectedEduTypes.map(t => '- ' + t).join('\n') + '\n\n';
+            prompt += '【輸出格式】\n';
+            prompt += '每題請包含：\n';
+            prompt += '1. 題號\n';
+            prompt += '2. 題目內容\n';
+            prompt += '3. 選項（若為選擇題）\n';
+            prompt += '4. 參考答案\n';
+            prompt += '5. 詳細解析\n';
+            prompt += '6. 評分標準（若為問答題或素養題）\n\n';
+            prompt += '【注意事項】\n';
+            prompt += '- 使用繁體中文\n';
+            prompt += '- 題目敘述清楚完整，適合' + grade + '學生程度\n';
+            prompt += '- 選擇題選項要有鑑別度，避免明顯錯誤的選項\n';
+            prompt += '- 解析要詳細，能幫助學生理解\n';
+            prompt += '- 素養題要結合生活情境，考驗學生應用能力\n';
+            prompt += '- 難度分布合理';
 
             if (extra) {
-                prompt += `\n\n【額外需求】\n${extra}`;
+                prompt += '\n\n【額外需求】\n' + extra;
             }
 
+            displayResult(prompt);
+        }
+
+        function generateBizPrompt() {
+            const testType = document.getElementById('bizTestType').value;
+            const industry = document.getElementById('bizIndustry').value;
+            const topic = document.getElementById('bizTopic').value.trim();
+            const count = document.getElementById('bizCount').value;
+            const difficulty = document.getElementById('bizDifficulty').value;
+            const extra = document.getElementById('bizExtra').value.trim();
+
+            if (!topic) {
+                alert('請輸入測驗主題！');
+                return;
+            }
+
+            if (selectedBizTypes.length === 0) {
+                alert('請至少選擇一種題型！');
+                return;
+            }
+
+            let prompt = '請幫我設計一份企業測驗試題，資訊如下：\n\n';
+            prompt += '【基本資訊】\n';
+            prompt += '- 測驗類型：' + testType + '\n';
+            prompt += '- 產業/領域：' + industry + '\n';
+            prompt += '- 主題：' + topic + '\n';
+            prompt += '- 題數：' + count + ' 題\n';
+            prompt += '- 難度：' + difficulty + '\n\n';
+            prompt += '【題型要求】\n';
+            prompt += selectedBizTypes.map(t => '- ' + t).join('\n') + '\n\n';
+            prompt += '【輸出格式】\n';
+            prompt += '每題請包含：\n';
+            prompt += '1. 題號\n';
+            prompt += '2. 題目內容\n';
+            prompt += '3. 選項（若為選擇題或是非題）\n';
+            prompt += '4. 參考答案\n';
+            prompt += '5. 詳細解析\n';
+            prompt += '6. 評分標準（若為簡答題或案例分析）\n\n';
+            prompt += '【注意事項】\n';
+            prompt += '- 使用繁體中文\n';
+            prompt += '- 題目要符合' + industry + '的實際應用場景\n';
+            prompt += '- 著重實務能力與專業知識的測試\n';
+            prompt += '- 情境題要貼近真實工作情境\n';
+            prompt += '- 案例分析題要包含完整的情境描述\n';
+            prompt += '- 解析要說明正確做法與錯誤選項的問題所在\n';
+            prompt += '- 難度符合' + testType + '的標準';
+
+            if (extra) {
+                prompt += '\n\n【額外需求】\n' + extra;
+            }
+
+            displayResult(prompt);
+        }
+
+        function displayResult(prompt) {
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>程式教育輔助系統 - Demo</title>
+    <title>程式/技術助手 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -42,12 +41,54 @@
             margin-bottom: 40px;
         }
 
+        .mode-switcher {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            padding: 15px 35px;
+            border: 3px solid #e0e0e0;
+            background: white;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .mode-content {
+            display: none;
+        }
+
+        .mode-content.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
         .tab-container {
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
             border-bottom: 2px solid #e0e0e0;
             padding-bottom: 10px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -80,8 +121,8 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -112,7 +153,7 @@
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 140px;
             font-family: 'Consolas', 'Monaco', monospace;
         }
 
@@ -216,7 +257,7 @@
 
         .lang-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             gap: 12px;
             margin-bottom: 20px;
         }
@@ -224,7 +265,7 @@
         .lang-card {
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 15px;
+            padding: 15px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -245,7 +286,7 @@
         }
 
         .lang-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
         }
     </style>
@@ -255,154 +296,263 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>💻 程式教育輔助系統</h1>
-        <p class="subtitle">AI 幫你解釋程式碼、除錯、設計練習題</p>
+        <h1>💻 程式/技術助手 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">教學與開發，一站搞定</p>
 
-        <div class="tab-container">
-            <button class="tab-btn active" onclick="switchTab('explain')">📖 程式解說</button>
-            <button class="tab-btn" onclick="switchTab('debug')">🔧 程式除錯</button>
-            <button class="tab-btn" onclick="switchTab('exercise')">✏️ 練習題設計</button>
+        <!-- 模式切換 -->
+        <div class="mode-switcher">
+            <button class="mode-btn active" onclick="switchMode('education')">
+                <span>🎓</span> 教育版
+            </button>
+            <button class="mode-btn" onclick="switchMode('enterprise')">
+                <span>🏢</span> 企業版
+            </button>
         </div>
 
-        <!-- Tab 1: 程式解說 -->
-        <div id="tab-explain" class="tab-content active">
-            <div class="info-box">
-                <strong>💡 功能說明：</strong>將程式碼轉換成學生易懂的說明，包含逐行解析與類比說明。
+        <!-- ========== 教育版 ========== -->
+        <div id="mode-education" class="mode-content active">
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('edu', 'explain')">📖 程式解說</button>
+                <button class="tab-btn" onclick="switchTab('edu', 'debug')">🔧 程式除錯</button>
+                <button class="tab-btn" onclick="switchTab('edu', 'exercise')">✏️ 練習題設計</button>
             </div>
 
-            <div class="form-group">
-                <label>🖥️ 程式語言</label>
-                <div class="lang-cards">
-                    <div class="lang-card selected" onclick="selectLang(this, 'Scratch')">
-                        <div class="lang-icon">🐱</div>
-                        <div class="lang-name">Scratch</div>
+            <!-- Tab 1: 程式解說 -->
+            <div id="tab-edu-explain" class="tab-content active">
+                <div class="info-box">
+                    <strong>💡 功能說明：</strong>將程式碼轉換成學生易懂的說明，包含逐行解析與類比說明。
+                </div>
+
+                <div class="options-grid">
+                    <div class="form-group">
+                        <label for="edu-grade-explain">🎓 年級</label>
+                        <select id="edu-grade-explain">
+                            <option value="國小">國小</option>
+                            <option value="國中">國中</option>
+                            <option value="高中">高中</option>
+                            <option value="高職">高職</option>
+                            <option value="大學">大學</option>
+                            <option value="研究所">研究所</option>
+                        </select>
                     </div>
-                    <div class="lang-card" onclick="selectLang(this, 'Python')">
-                        <div class="lang-icon">🐍</div>
-                        <div class="lang-name">Python</div>
-                    </div>
-                    <div class="lang-card" onclick="selectLang(this, 'JavaScript')">
-                        <div class="lang-icon">📜</div>
-                        <div class="lang-name">JavaScript</div>
-                    </div>
-                    <div class="lang-card" onclick="selectLang(this, 'C語言')">
-                        <div class="lang-icon">⚙️</div>
-                        <div class="lang-name">C 語言</div>
+                    <div class="form-group">
+                        <label for="edu-difficulty-explain">📊 難度等級</label>
+                        <select id="edu-difficulty-explain">
+                            <option value="入門">入門</option>
+                            <option value="基礎">基礎</option>
+                            <option value="進階">進階</option>
+                        </select>
                     </div>
                 </div>
-                <input type="hidden" id="language" value="Scratch">
-            </div>
 
-            <div class="form-group">
-                <label for="code1">📝 貼上程式碼</label>
-                <textarea id="code1" placeholder="# 範例 Python 程式碼
+                <div class="form-group">
+                    <label>🖥️ 程式語言</label>
+                    <div class="lang-cards">
+                        <div class="lang-card selected" onclick="selectLang(this, 'edu-explain', 'Scratch')">
+                            <div class="lang-icon">🐱</div>
+                            <div class="lang-name">Scratch</div>
+                        </div>
+                        <div class="lang-card" onclick="selectLang(this, 'edu-explain', 'Python')">
+                            <div class="lang-icon">🐍</div>
+                            <div class="lang-name">Python</div>
+                        </div>
+                        <div class="lang-card" onclick="selectLang(this, 'edu-explain', 'JavaScript')">
+                            <div class="lang-icon">📜</div>
+                            <div class="lang-name">JavaScript</div>
+                        </div>
+                        <div class="lang-card" onclick="selectLang(this, 'edu-explain', 'C++')">
+                            <div class="lang-icon">⚙️</div>
+                            <div class="lang-name">C++</div>
+                        </div>
+                        <div class="lang-card" onclick="selectLang(this, 'edu-explain', 'Java')">
+                            <div class="lang-icon">☕</div>
+                            <div class="lang-name">Java</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="lang-edu-explain" value="Scratch">
+                </div>
+
+                <div class="form-group">
+                    <label for="code-edu-explain">📝 貼上程式碼</label>
+                    <textarea id="code-edu-explain" placeholder="# 範例 Python 程式碼
 for i in range(1, 6):
     print('*' * i)"></textarea>
-            </div>
-
-            <div class="options-grid">
-                <div class="form-group">
-                    <label for="level1">🎓 學生程度</label>
-                    <select id="level1">
-                        <option value="完全初學者">完全初學者</option>
-                        <option value="有基礎概念">有基礎概念</option>
-                        <option value="已有經驗">已有經驗</option>
-                    </select>
                 </div>
-                <div class="form-group">
-                    <label for="style1">📋 解說風格</label>
-                    <select id="style1">
-                        <option value="生活類比">生活類比</option>
-                        <option value="逐行解析">逐行解析</option>
-                        <option value="流程圖說明">流程圖說明</option>
-                    </select>
+
+                <button class="generate-btn" onclick="generateEduExplain()">🚀 生成程式解說提示詞</button>
+            </div>
+
+            <!-- Tab 2: 程式除錯 -->
+            <div id="tab-edu-debug" class="tab-content">
+                <div class="info-box">
+                    <strong>🔧 功能說明：</strong>協助找出程式錯誤，並用學生能理解的方式說明問題與修正方法。
                 </div>
-            </div>
 
-            <button class="generate-btn" onclick="generateExplain()">🚀 生成程式解說提示詞</button>
-        </div>
+                <div class="options-grid">
+                    <div class="form-group">
+                        <label for="edu-grade-debug">🎓 年級</label>
+                        <select id="edu-grade-debug">
+                            <option value="國小">國小</option>
+                            <option value="國中">國中</option>
+                            <option value="高中">高中</option>
+                            <option value="高職">高職</option>
+                            <option value="大學">大學</option>
+                            <option value="研究所">研究所</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edu-lang-debug">🖥️ 程式語言</label>
+                        <select id="edu-lang-debug">
+                            <option value="Scratch">Scratch</option>
+                            <option value="Python">Python</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="C++">C++</option>
+                            <option value="Java">Java</option>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- Tab 2: 程式除錯 -->
-        <div id="tab-debug" class="tab-content">
-            <div class="info-box">
-                <strong>🔧 功能說明：</strong>協助找出程式錯誤，並用學生能理解的方式說明問題與修正方法。
-            </div>
-
-            <div class="form-group">
-                <label for="code2">📝 貼上有問題的程式碼</label>
-                <textarea id="code2" placeholder="# 範例：有錯誤的程式碼
+                <div class="form-group">
+                    <label for="code-edu-debug">📝 貼上有問題的程式碼</label>
+                    <textarea id="code-edu-debug" placeholder="# 範例：有錯誤的程式碼
 for i in range(10)
     print(i)"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="error">⚠️ 錯誤訊息（選填）</label>
-                <input type="text" id="error" placeholder="例如：SyntaxError: invalid syntax">
-            </div>
-
-            <div class="form-group">
-                <label for="expected">🎯 預期結果（選填）</label>
-                <input type="text" id="expected" placeholder="例如：印出 1 到 10 的數字">
-            </div>
-
-            <button class="generate-btn" onclick="generateDebug()">🚀 生成除錯提示詞</button>
-        </div>
-
-        <!-- Tab 3: 練習題設計 -->
-        <div id="tab-exercise" class="tab-content">
-            <div class="info-box">
-                <strong>✏️ 功能說明：</strong>根據教學主題，生成程式練習題目與參考解答。
-            </div>
-
-            <div class="options-grid">
-                <div class="form-group">
-                    <label for="lang3">🖥️ 程式語言</label>
-                    <select id="lang3">
-                        <option value="Scratch">Scratch</option>
-                        <option value="Python">Python</option>
-                        <option value="JavaScript">JavaScript</option>
-                    </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="concept">📚 教學主題</label>
-                    <select id="concept">
-                        <option value="變數與資料型態">變數與資料型態</option>
-                        <option value="條件判斷 if-else">條件判斷 if-else</option>
-                        <option value="迴圈 for/while">迴圈 for/while</option>
-                        <option value="函式">函式</option>
-                        <option value="串列/陣列">串列/陣列</option>
-                        <option value="綜合練習">綜合練習</option>
-                    </select>
+                    <label for="error-edu-debug">⚠️ 錯誤訊息（選填）</label>
+                    <input type="text" id="error-edu-debug" placeholder="例如：SyntaxError: invalid syntax">
                 </div>
+
+                <div class="form-group">
+                    <label for="expected-edu-debug">🎯 預期結果（選填）</label>
+                    <input type="text" id="expected-edu-debug" placeholder="例如：印出 1 到 10 的數字">
+                </div>
+
+                <button class="generate-btn" onclick="generateEduDebug()">🚀 生成除錯提示詞</button>
             </div>
 
-            <div class="options-grid">
-                <div class="form-group">
-                    <label for="difficulty">📊 難度</label>
-                    <select id="difficulty">
-                        <option value="基礎">基礎（概念理解）</option>
-                        <option value="進階">進階（應用練習）</option>
-                        <option value="挑戰">挑戰（綜合思考）</option>
-                    </select>
+            <!-- Tab 3: 練習題設計 -->
+            <div id="tab-edu-exercise" class="tab-content">
+                <div class="info-box">
+                    <strong>✏️ 功能說明：</strong>根據教學主題，生成程式練習題目與參考解答。
                 </div>
+
+                <div class="options-grid">
+                    <div class="form-group">
+                        <label for="edu-grade-exercise">🎓 年級</label>
+                        <select id="edu-grade-exercise">
+                            <option value="國小">國小</option>
+                            <option value="國中">國中</option>
+                            <option value="高中">高中</option>
+                            <option value="高職">高職</option>
+                            <option value="大學">大學</option>
+                            <option value="研究所">研究所</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edu-lang-exercise">🖥️ 程式語言</label>
+                        <select id="edu-lang-exercise">
+                            <option value="Scratch">Scratch</option>
+                            <option value="Python">Python</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="C++">C++</option>
+                            <option value="Java">Java</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="options-grid">
+                    <div class="form-group">
+                        <label for="edu-function-exercise">🎯 功能類型</label>
+                        <select id="edu-function-exercise">
+                            <option value="程式解說">程式解說</option>
+                            <option value="程式除錯">程式除錯</option>
+                            <option value="練習題設計">練習題設計</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edu-difficulty-exercise">📊 難度等級</label>
+                        <select id="edu-difficulty-exercise">
+                            <option value="入門">入門</option>
+                            <option value="基礎">基礎</option>
+                            <option value="進階">進階</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="count">📋 題目數量</label>
-                    <select id="count">
+                    <label for="edu-count-exercise">📋 題目數量</label>
+                    <select id="edu-count-exercise">
                         <option value="3">3 題</option>
                         <option value="5">5 題</option>
                         <option value="10">10 題</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="edu-theme-exercise">🎨 情境主題（選填）</label>
+                    <input type="text" id="edu-theme-exercise" placeholder="例如：遊戲設計、數學計算、生活應用">
+                </div>
+
+                <button class="generate-btn" onclick="generateEduExercise()">🚀 生成練習題提示詞</button>
+            </div>
+        </div>
+
+        <!-- ========== 企業版 ========== -->
+        <div id="mode-enterprise" class="mode-content">
+            <div class="info-box">
+                <strong>🏢 企業版：</strong>專業開發者的技術助手，涵蓋程式碼審查、技術文件、API 設計等多種需求。
             </div>
 
             <div class="form-group">
-                <label for="theme">🎨 情境主題（選填）</label>
-                <input type="text" id="theme" placeholder="例如：遊戲設計、數學計算、生活應用">
+                <label for="ent-tech-type">🔧 技術類型</label>
+                <select id="ent-tech-type">
+                    <option value="程式碼審查">程式碼審查 (Code Review)</option>
+                    <option value="技術文件">技術文件 (Documentation)</option>
+                    <option value="API設計">API 設計 (API Design)</option>
+                    <option value="自動化腳本">自動化腳本 (Automation)</option>
+                    <option value="資料庫查詢">資料庫查詢 (SQL Query)</option>
+                </select>
             </div>
 
-            <button class="generate-btn" onclick="generateExercise()">🚀 生成練習題提示詞</button>
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="ent-lang">🖥️ 程式語言</label>
+                    <select id="ent-lang">
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="Java">Java</option>
+                        <option value="C#">C#</option>
+                        <option value="SQL">SQL</option>
+                        <option value="Go">Go</option>
+                        <option value="TypeScript">TypeScript</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ent-complexity">📊 複雜度</label>
+                    <select id="ent-complexity">
+                        <option value="簡單">簡單</option>
+                        <option value="中等">中等</option>
+                        <option value="複雜">複雜</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ent-code">📝 程式碼或需求描述</label>
+                <textarea id="ent-code" placeholder="貼上程式碼或描述你的技術需求..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="ent-requirement">🎯 特定要求（選填）</label>
+                <input type="text" id="ent-requirement" placeholder="例如：符合 PEP8、包含單元測試、考慮效能優化">
+            </div>
+
+            <button class="generate-btn" onclick="generateEnterprise()">🚀 生成企業版提示詞</button>
         </div>
 
+        <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
             <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
@@ -411,36 +561,49 @@ for i in range(10)
     </div>
 
     <script>
-        let selectedLanguage = 'Scratch';
+        // 模式切換
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.mode-content').forEach(content => content.classList.remove('active'));
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.closest('.mode-btn').classList.add('active');
+            document.getElementById('mode-' + mode).classList.add('active');
 
             document.getElementById('resultSection').classList.remove('show');
         }
 
-        function selectLang(card, lang) {
-            document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            selectedLanguage = lang;
-            document.getElementById('language').value = lang;
+        // Tab 切換
+        function switchTab(mode, tabName) {
+            const tabPrefix = 'tab-' + mode + '-';
+            document.querySelectorAll('#mode-' + mode + ' .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#mode-' + mode + ' .tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabPrefix + tabName).classList.add('active');
+
+            document.getElementById('resultSection').classList.remove('show');
         }
 
-        function generateExplain() {
-            const code = document.getElementById('code1').value.trim();
-            const level = document.getElementById('level1').value;
-            const style = document.getElementById('style1').value;
+        // 語言選擇
+        function selectLang(card, fieldId, lang) {
+            card.parentElement.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            document.getElementById('lang-' + fieldId).value = lang;
+        }
+
+        // ===== 教育版：程式解說 =====
+        function generateEduExplain() {
+            const grade = document.getElementById('edu-grade-explain').value;
+            const difficulty = document.getElementById('edu-difficulty-explain').value;
+            const lang = document.getElementById('lang-edu-explain').value;
+            const code = document.getElementById('code-edu-explain').value.trim();
 
             if (!code) {
                 alert('請貼上程式碼！');
                 return;
             }
 
-            const prompt = `請幫我解說以下 ${selectedLanguage} 程式碼，讓${level}的學生能夠理解：
+            const prompt = `請幫我解說以下 ${lang} 程式碼，目標對象是${grade}學生（${difficulty}程度）：
 
 \`\`\`
 ${code}
@@ -448,27 +611,31 @@ ${code}
 
 解說要求：
 1. 使用繁體中文
-2. 解說風格：${style}
-3. 先概述這段程式的功能
-4. 逐步解釋每個重要部分
-5. 使用生活化的比喻幫助理解
-6. 指出學生常犯的錯誤
-7. 提供一個延伸練習的建議`;
+2. 先概述這段程式的功能
+3. 逐步解釋每個重要部分
+4. 使用生活化的比喻幫助理解
+5. 符合${grade}學生的理解能力
+6. 難度等級：${difficulty}
+7. 指出學生常犯的錯誤
+8. 提供一個延伸練習的建議`;
 
             showResult(prompt);
         }
 
-        function generateDebug() {
-            const code = document.getElementById('code2').value.trim();
-            const error = document.getElementById('error').value.trim();
-            const expected = document.getElementById('expected').value.trim();
+        // ===== 教育版：程式除錯 =====
+        function generateEduDebug() {
+            const grade = document.getElementById('edu-grade-debug').value;
+            const lang = document.getElementById('edu-lang-debug').value;
+            const code = document.getElementById('code-edu-debug').value.trim();
+            const error = document.getElementById('error-edu-debug').value.trim();
+            const expected = document.getElementById('expected-edu-debug').value.trim();
 
             if (!code) {
                 alert('請貼上有問題的程式碼！');
                 return;
             }
 
-            let prompt = `請幫我找出以下程式碼的問題，並用學生能理解的方式說明：
+            let prompt = `請幫我找出以下 ${lang} 程式碼的問題，並用${grade}學生能理解的方式說明：
 
 \`\`\`
 ${code}
@@ -490,24 +657,27 @@ ${code}
 4. 修正後的完整程式碼
 5. 預防建議：如何避免類似的錯誤
 
-使用繁體中文，語氣親切易懂。`;
+使用繁體中文，語氣親切易懂，適合${grade}學生閱讀。`;
 
             showResult(prompt);
         }
 
-        function generateExercise() {
-            const lang = document.getElementById('lang3').value;
-            const concept = document.getElementById('concept').value;
-            const difficulty = document.getElementById('difficulty').value;
-            const count = document.getElementById('count').value;
-            const theme = document.getElementById('theme').value.trim();
+        // ===== 教育版：練習題設計 =====
+        function generateEduExercise() {
+            const grade = document.getElementById('edu-grade-exercise').value;
+            const lang = document.getElementById('edu-lang-exercise').value;
+            const funcType = document.getElementById('edu-function-exercise').value;
+            const difficulty = document.getElementById('edu-difficulty-exercise').value;
+            const count = document.getElementById('edu-count-exercise').value;
+            const theme = document.getElementById('edu-theme-exercise').value.trim();
 
-            let prompt = `請幫我設計 ${count} 道 ${lang} 程式練習題：
+            let prompt = `請幫我設計 ${count} 道適合${grade}學生的 ${lang} 程式練習題：
 
 【設計要求】
-- 主題：${concept}
-- 難度：${difficulty}
-- 程式語言：${lang}`;
+- 年級：${grade}
+- 程式語言：${lang}
+- 功能類型：${funcType}
+- 難度等級：${difficulty}`;
 
             if (theme) {
                 prompt += `\n- 情境主題：${theme}`;
@@ -526,19 +696,95 @@ ${code}
 【注意事項】
 - 使用繁體中文
 - 題目由淺入深排列
-- 題目要有趣、貼近學生生活
+- 題目要有趣、貼近${grade}學生生活
 - 難度符合「${difficulty}」程度
 - 適合學生自學使用`;
 
             showResult(prompt);
         }
 
+        // ===== 企業版 =====
+        function generateEnterprise() {
+            const techType = document.getElementById('ent-tech-type').value;
+            const lang = document.getElementById('ent-lang').value;
+            const complexity = document.getElementById('ent-complexity').value;
+            const code = document.getElementById('ent-code').value.trim();
+            const requirement = document.getElementById('ent-requirement').value.trim();
+
+            if (!code) {
+                alert('請貼上程式碼或描述需求！');
+                return;
+            }
+
+            let prompt = `請協助處理以下${techType}需求：
+
+【技術資訊】
+- 技術類型：${techType}
+- 程式語言：${lang}
+- 複雜度：${complexity}
+
+【程式碼/需求描述】
+\`\`\`
+${code}
+\`\`\``;
+
+            if (requirement) {
+                prompt += `\n\n【特定要求】\n${requirement}`;
+            }
+
+            // 根據技術類型添加不同的要求
+            prompt += `\n\n【輸出要求】`;
+
+            if (techType === '程式碼審查') {
+                prompt += `
+1. 程式碼品質評估（可讀性、可維護性、效能）
+2. 潛在問題與風險
+3. 最佳實踐建議
+4. 重構建議（如有需要）
+5. 安全性檢查`;
+            } else if (techType === '技術文件') {
+                prompt += `
+1. 完整的技術文件
+2. 使用說明與範例
+3. API 或函式說明
+4. 注意事項與限制
+5. 常見問題 FAQ`;
+            } else if (techType === 'API設計') {
+                prompt += `
+1. RESTful API 設計
+2. 端點定義與參數
+3. 請求/回應格式
+4. 錯誤處理機制
+5. 範例程式碼`;
+            } else if (techType === '自動化腳本') {
+                prompt += `
+1. 完整的自動化腳本
+2. 錯誤處理機制
+3. 日誌記錄
+4. 使用說明
+5. 排程建議（如適用）`;
+            } else if (techType === '資料庫查詢') {
+                prompt += `
+1. 優化的 SQL 查詢
+2. 效能分析
+3. 索引建議
+4. 查詢說明
+5. 替代方案（如有）`;
+            }
+
+            prompt += `\n\n使用繁體中文，並提供專業、完整的技術解決方案。`;
+
+            showResult(prompt);
+        }
+
+        // 顯示結果
         function showResult(prompt) {
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
+        // 複製提示詞
         function copyPrompt() {
             const promptText = document.getElementById('promptOutput').textContent;
             navigator.clipboard.writeText(promptText).then(() => {
