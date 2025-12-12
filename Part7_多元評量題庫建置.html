@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>📋 Part 7 - 多元評量題庫建置</title>
+    <title>Part 7 - 多元評量題庫建置（含閱讀測驗出題 SOP）</title>
     <style>
         * {
             margin: 0;
@@ -80,7 +80,7 @@
             background: rgba(255, 255, 255, 0.98);
             border-radius: 24px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            padding: 60px;
+            padding: 50px;
             max-width: 1400px;
             width: 95%;
             max-height: 88vh;
@@ -89,21 +89,26 @@
 
         h1 {
             color: #667eea;
-            font-size: 56px;
+            font-size: 48px;
             margin-bottom: 24px;
             text-align: center
         }
 
         h2 {
             color: #764ba2;
-            font-size: 38px;
-            margin-bottom: 35px;
+            font-size: 34px;
+            margin-bottom: 30px;
             border-bottom: 3px solid #667eea;
             padding-bottom: 12px
         }
 
-        p,
-        li {
+        h3 {
+            color: #667eea;
+            font-size: 24px;
+            margin: 20px 0 15px 0;
+        }
+
+        p, li {
             font-size: 20px;
             line-height: 1.8;
             color: #444;
@@ -112,15 +117,40 @@
 
         .concept-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             margin-top: 30px
         }
 
         .concept-card {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             padding: 25px;
-            border-radius: 15px
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .concept-card h3 {
+            margin-top: 0;
+            color: #764ba2;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .step-card h3 {
+            color: white;
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .step-card p {
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 0;
         }
 
         pre {
@@ -129,7 +159,51 @@
             padding: 25px;
             border-radius: 12px;
             margin: 25px 0;
-            font-size: 16px
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .highlight {
+            color: #e06c75;
+        }
+
+        .highlight-orange {
+            color: #d19a66;
+        }
+
+        .highlight-green {
+            color: #98c379;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        ul {
+            padding-left: 30px;
         }
 
         .nav-arrow {
@@ -164,11 +238,14 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: 8px;
             z-index: 4000;
             padding: 10px 25px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 30px
+            border-radius: 30px;
+            flex-wrap: wrap;
+            max-width: 90%;
+            justify-content: center;
         }
 
         .dot {
@@ -183,75 +260,442 @@
             background: #667eea;
             transform: scale(1.3)
         }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="nav-bar">
-        <div class="nav-title">📋 Part 7 - 多元評量題庫建置</div>
+        <div class="nav-title">Part 7 - 多元評量題庫建置</div>
         <div>
-            <a href="https://www.youtube.com/@Liang-yt02" target="_blank" class="nav-btn">🎥 YouTube</a>
-            <a href="https://www.facebook.com/groups/2754139931432955" target="_blank" class="nav-btn">📘 FB社團</a>
-            <a href="index.html" class="nav-btn">🏠 回首頁</a>
+            <a href="https://www.youtube.com/@Liang-yt02" target="_blank" class="nav-btn">YouTube</a>
+            <a href="https://www.facebook.com/groups/2754139931432955" target="_blank" class="nav-btn">FB社團</a>
+            <a href="index.html" class="nav-btn">回首頁</a>
         </div>
     </div>
     <div class="slide-container">
+        <!-- Slide 1: 封面 -->
         <div class="slide active">
             <div class="content-card" style="text-align:center">
                 <h1>Part 7: 多元評量題庫建置</h1>
-                <h2 style="border:none;font-size:28px;color:#666">自動生成選擇題、填空題、情境題</h2>
+                <h2 style="border:none;font-size:28px;color:#666">讓 AI 幫你出閱讀測驗！</h2>
+                <p style="font-size:22px;margin-top:30px;">自動生成選擇題、填空題、情境題<br>含完整閱讀測驗出題 SOP</p>
+                <p style="font-size:18px;color:#888;margin-top:40px;">教學內容改編自 teacherlaw2022（教師不會的法律）</p>
             </div>
         </div>
+
+        <!-- Slide 2: 學習目標 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🎯 學習目標</h2>
+                <h2>學習目標</h2>
                 <div class="concept-grid">
                     <div class="concept-card">
                         <h3>1. 題目生成</h3>
-                        <p>快速產生各種題型</p>
+                        <p>快速產生各種題型，包含選擇題、填空題、素養題</p>
                     </div>
                     <div class="concept-card">
                         <h3>2. 難度分級</h3>
-                        <p>設計不同難度的題目</p>
+                        <p>設計不同難度的題目，符合布魯姆認知分類</p>
                     </div>
                     <div class="concept-card">
-                        <h3>3. 布魯姆分類</h3>
-                        <p>對應不同認知層次</p>
+                        <h3>3. 閱讀測驗 SOP</h3>
+                        <p>完整的閱讀測驗出題五步驟流程</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>4. 品質把關</h3>
+                        <p>學會審題技巧，確保題目品質</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Slide 3: 教師困境 -->
         <div class="slide">
             <div class="content-card">
-                <h2>📝 提示詞範例</h2>
+                <h2>教師困境：閱讀測驗三大頭痛點</h2>
+                <p style="font-size:22px;margin-bottom:30px;">以前沒有 AI 時，出閱讀測驗最難的就是這三個問題：</p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>文章處理耗時困難</h3>
+                        <p>學生作答時間有限，<span style="color:#e06c75;font-weight:bold;">濃縮文章相當耗時</span>。需要將長篇文章精簡到適合測驗的長度。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>選項設計的困難</h3>
+                        <p>選項需<span style="color:#e06c75;font-weight:bold;">誘答性高</span>、符合課本或文章內容，不能讓學生一眼就看出答案。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>需有鑑別度</h3>
+                        <p>不能只評估學生的基礎記憶，也需測量學生的<span style="color:#e06c75;font-weight:bold;">訊息統整與邏輯推論</span>等閱讀能力。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 出題五步驟 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>用 AI 一步一步慢慢出（出題五步驟）</h2>
+                <div class="step-card">
+                    <h3>Step 1：備料</h3>
+                    <p>準備可信任的文章、書籍或任何資料</p>
+                </div>
+                <div class="step-card">
+                    <h3>Step 2：上傳參考資料</h3>
+                    <p>命題原則、閱讀理解出題技巧、課本</p>
+                </div>
+                <div class="step-card">
+                    <h3>Step 3：產出題目</h3>
+                    <p>如何下指令給 AI</p>
+                </div>
+                <div class="step-card">
+                    <h3>Step 4：審題</h3>
+                    <p>產出答案與解析</p>
+                </div>
+                <div class="step-card">
+                    <h3>Step 5：修正</h3>
+                    <p>人工二次審核，確保品質</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: 備料 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 1 備料：最需要老師專業的部分</h2>
+                <div class="info-box">
+                    <p><strong>這裡需要大量閱讀</strong>，無論是書本、文章、新聞都可以使用。<br>（請記得<span style="color:#1565c0;font-weight:bold;">選用可信賴的文章</span>）</p>
+                </div>
+                <h3>選擇文獻的原則</h3>
+                <ul>
+                    <li>閱讀測驗選用的文獻，最好<span style="color:#e06c75;font-weight:bold;">和課本有高度相關</span></li>
+                    <li>並且是課本知識的延伸、補充</li>
+                    <li>這樣 AI 在命題時，可以<span style="color:#e06c75;font-weight:bold;">結合課本知識及文章內容</span>，產出品質很好的題目</li>
+                </ul>
+                <div class="success-box">
+                    <p><strong>小技巧：圖片轉為文字</strong><br>可直接上傳照片給 AI，讓它轉成文字檔，省去手動打字的時間！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 上傳參考資料 - 命題原則 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 2 上傳參考資料：命題原則</h2>
+                <p>命題原則是檢查出題的<span style="color:#e06c75;font-weight:bold;">信度</span>（確保測驗的一致性與穩定性）</p>
+                <div class="warning-box">
+                    <p>若學校沒有命題原則，<strong>強烈建議使用他校的</strong>，而且<span style="color:#856404;font-weight:bold;">越囉嗦的越好</span>，至少出的題目更適合拿來考！</p>
+                </div>
+                <h3>選擇題編製原則（參考範例）</h3>
+                <ul>
+                    <li>以簡短、清晰、正面、肯定字詞來敘述試題題幹</li>
+                    <li>題幹不使用否定句，若需採用宜強調否定字詞</li>
+                    <li>所有選項語法一致</li>
+                    <li>將各選項共同字詞放在題幹中</li>
+                    <li>每題所列答案數目一致，以四個為宜</li>
+                    <li>沒有「以上皆非」，很少用「以上皆是」的答案</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7: 上傳參考資料 - 閱讀理解出題技巧 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 2 上傳參考資料：閱讀理解出題技巧</h2>
+                <p>閱讀理解，可以參考 <strong>PIRLS</strong> 的閱讀理解定義：<span style="color:#e06c75;font-weight:bold;">提取訊息、推論訊息、詮釋整合、比較評估</span></p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>1. 核心資訊擷取</h3>
+                        <p>直接針對文章中明確提到的<span style="color:#667eea;font-weight:bold;">單一事實來提問</span>。<br><br>這是基礎能力題，測試學生能否從文章中找到明確資訊。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>2. 訊息統整歸納</h3>
+                        <p>詢問文章的核心思想、或<span style="color:#667eea;font-weight:bold;">多項資訊之間的比較</span>。<br><br>這是核心能力題，測試學生能否整合多項資訊。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>3. 邏輯推論與預測</h3>
+                        <p><span style="color:#667eea;font-weight:bold;">從文意推測</span>出未直接寫明的結論。<br><br>這是高階能力題，測試學生的推理能力。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 上傳參考資料 - 課本 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 2 上傳參考資料：課本</h2>
+                <div class="info-box">
+                    <p style="font-size:24px;">閱讀測驗的題幹、選項，一定要<span style="color:#1565c0;font-weight:bold;">緊扣考卷上的文章或課本</span></p>
+                </div>
+                <ul style="font-size:22px;line-height:2;">
+                    <li>上傳課本是最保險的</li>
+                    <li>避免試題內容超出課本範圍</li>
+                    <li>讓 AI 能夠參照課本內容來設計選項</li>
+                    <li>確保答案都能在課本或文章中找到依據</li>
+                </ul>
+                <div class="success-box">
+                    <p><strong>重點整理：</strong>上傳三種參考資料給 AI<br>
+                    1. 命題原則（確保信度）<br>
+                    2. 閱讀理解出題技巧（確保效度）<br>
+                    3. 課本（確保範圍正確）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: 產出題目 - 指令要點 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 3 產出題目：詠唱指令要點</h2>
+                <p>上傳完參考資料後就下指令，可依據試題需求變更：</p>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>設定讀者</h3>
+                        <p>告訴 AI <span style="color:#667eea;font-weight:bold;">閱讀對象</span>（如：國小五年級），要求避免生難字詞。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>精準改寫</h3>
+                        <p>要求 AI 改寫文章內容，<span style="color:#667eea;font-weight:bold;">避免引用課本原文</span>，同時設定字數限制（例如：300字）。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>題目要求</h3>
+                        <p>明確要求 AI 遵循你上傳的<span style="color:#667eea;font-weight:bold;">命題原則、閱讀理解出題技巧、課本</span>來設計題目。四個選項（需用圈碼標示）。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 產出題目 - 指令示範 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 3 產出題目：完整指令示範</h2>
+                <p>記得先上傳文件，再輸入以下指令：</p>
+                <pre>請根據我提供的這篇文章，出一組閱讀測驗。
+
+<span class="highlight">【文章改寫要求】</span>
+- 將文章內容<span class="highlight-orange">濃縮至 300 字左右</span>
+- 給予一個合適的標題
+- 改寫成適合<span class="highlight-orange">國小五年級學生閱讀的程度</span>
+- 必須<span class="highlight-orange">避免生難字詞</span>
+- 文章必須保持主題不離題
+- <span class="highlight-orange">不得引用課本原文</span>，以確保是純粹的改寫版本
+
+<span class="highlight">【題目要求】</span>
+- 閱讀測驗需要 <span class="highlight-green">4 題選擇題</span>
+- 選擇題出題需要符合我上傳的：
+  - 閱讀理解出題技巧
+  - 命題原則
+  - 課本內容
+- 選項都要從文章或課本中出現
+- 選項用 <span class="highlight-green">圈碼標示</span></pre>
+            </div>
+        </div>
+
+        <!-- Slide 11: 審題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 4 審題：產出答案與解析</h2>
+                <p>請 AI 確認閱讀測驗題目的答案，在課本哪一頁可以找，可快速解決審題夥伴們的疑問。</p>
+                <h3>指令示範</h3>
+                <pre>請將這四題給我：
+1. <span class="highlight-green">標準答案</span>
+2. <span class="highlight-green">參考的課本頁數或文章內容</span>
+3. <span class="highlight-green">詳細解析</span>
+
+每個選項都詳細說明並確認答案。</pre>
+                <div class="info-box">
+                    <p><strong>為什麼要這樣做？</strong><br>
+                    讓 AI 提供課本佐證，可以：<br>
+                    - 快速確認答案的正確性<br>
+                    - 方便審題老師查證<br>
+                    - 確保題目有明確依據</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: 題目範例 - 基礎能力題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>題目範例：核心資訊擷取（基礎能力題）</h2>
+                <div class="info-box">
+                    <p style="font-size:18px;"><strong>題目：</strong>根據本文與課本內容，清帝國為防範漢人來臺發生反叛事件，最初頒布的限制人民渡海來臺的禁令中，哪一項規定正確？</p>
+                    <p>
+                    (1) 規定來臺者必須住在府城（今臺南市）<br>
+                    (2) 規定須事先向官府提出申請，且不准攜帶家眷<br>
+                    (3) 規定所有來臺者不准從事開墾土地的工作<br>
+                    (4) 規定來臺後不准與平埔族群通婚
+                    </p>
+                </div>
+                <div class="success-box">
+                    <p><strong>【解析】</strong>此為<span style="color:#155724;font-weight:bold;">基礎能力題</span>，目標是從課本中直接擷取單一事實。<br><br>
+                    課本第 56 頁明確指出：「清帝國將臺灣納入版圖後...規定須事先向官府提出申請，且不准攜帶家眷。」<br><br>
+                    <strong>答案：(2)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: 題目範例 - 訊息統整題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>題目範例：訊息統整歸納（核心能力題）</h2>
+                <div class="info-box">
+                    <p style="font-size:18px;"><strong>題目：</strong>根據本文對清朝前期的描述，當時臺灣島上吸引漢人冒險渡海的「拉力」（吸引因素），最主要可歸納為下列何者？</p>
+                    <p>
+                    (1) 為了傳播西方醫學和基督教，例如馬偕來臺<br>
+                    (2) 中國大陸沿海生活困苦，加上臺灣有土地與科舉的新機會<br>
+                    (3) 臺灣經濟重心已經從南部轉移到北部，發展前景無限<br>
+                    (4) 清廷派遣沈葆楨、劉銘傳來臺，積極推動現代化建設
+                    </p>
+                </div>
+                <div class="success-box">
+                    <p><strong>【解析】</strong>此為<span style="color:#155724;font-weight:bold;">核心統整題</span>，目標是歸納文章中提及的「拉力」（吸引因素）和「推力」（排斥因素）。<br><br>
+                    本文提及的拉力：島上未開發土地多、科舉考試機會增加。<br>
+                    本文提及的推力：大陸沿海因海禁與遷界令導致生活困苦。<br><br>
+                    <strong>答案：(2)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: 題目範例 - 邏輯推論題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>題目範例：邏輯推論與預測（高階能力題）</h2>
+                <div class="info-box">
+                    <p style="font-size:18px;"><strong>題目：</strong>文章提到清朝管理臺灣是「天高皇帝遠」，使治安和行政力量相對薄弱。根據此一情況推論，對當時社會發展最可能帶來的影響是什麼？</p>
+                    <p>
+                    (1) 地方官員因缺乏管理而不敢收稅，使百姓生活輕鬆<br>
+                    (2) 官員可長期留在臺灣，與在地建立深厚關係，減少衝突<br>
+                    (3) 促使秘密組織（如天地會）和民變有機會發展與壯大<br>
+                    (4) 臺灣經濟重心加速轉往南部發展，成為重要的貿易中心
+                    </p>
+                </div>
+                <div class="success-box">
+                    <p><strong>【解析】</strong>此為<span style="color:#155724;font-weight:bold;">邏輯推論題</span>，需要從文意推測出未直接寫明的結論。<br><br>
+                    推論：管理鬆散（原因）→ 治安力量薄弱 → 反政府力量（如民變或秘密組織）得以趁機發展和壯大。<br><br>
+                    <strong>答案：(3)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: 修正 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Step 5 修正：請自行審閱一次題目</h2>
+                <div class="warning-box" style="font-size:22px;">
+                    <p><strong>還是要強調，AI 只是輔助，老師的專業判斷才是關鍵。</strong></p>
+                </div>
+                <ul style="font-size:22px;line-height:2;">
+                    <li>AI 產出的題目，記得要<span style="color:#e06c75;font-weight:bold;">「二次審核」</span>！</li>
+                    <li>雖然 AI 很強大，但難免會有錯誤</li>
+                    <li>特別是<span style="color:#e06c75;font-weight:bold;">專業或時事性較高的內容</span></li>
+                    <li>每次都講一樣的話，但這很重要！</li>
+                </ul>
+                <div class="success-box">
+                    <p><strong>審題檢核清單：</strong><br>
+                    - 答案是否確實能在課本/文章中找到依據？<br>
+                    - 選項是否有足夠的誘答性？<br>
+                    - 題目敘述是否清楚、沒有歧義？<br>
+                    - 難度分布是否合理？</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: 基本題庫提示詞 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>一般題庫生成提示詞</h2>
+                <p>除了閱讀測驗，也可以用 AI 快速生成各種題型：</p>
                 <pre>請幫我設計評量題目:
 
-主題:國小五年級數學 - 分數的加減
-題型:選擇題 10 題
-難度:中等
-要求:
+<span class="highlight">【基本資訊】</span>
+主題: 國小五年級數學 - 分數的加減
+題型: 選擇題 10 題
+難度: 中等
+
+<span class="highlight">【題目要求】</span>
 1. 包含基礎計算與應用題
 2. 提供四個選項
 3. 附上詳解
-4. 標示正確答案</pre>
+4. 標示正確答案
+
+<span class="highlight">【注意事項】</span>
+- 使用繁體中文
+- 題目敘述清楚完整
+- 選擇題選項要有鑑別度</pre>
             </div>
         </div>
+
+        <!-- Slide 17: 總結 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🎉 Part 7 總結</h2>
-                <ul style="font-size:22px;line-height:2">
-                    <li>✅ 快速生成各種題型</li>
-                    <li>✅ 設計不同難度題目</li>
-                    <li>✅ 對應課綱能力指標</li>
+                <h2>Part 7 總結</h2>
+                <ul style="font-size:22px;line-height:2.2">
+                    <li><strong>閱讀測驗出題五步驟：</strong>備料 → 上傳參考資料 → 產出題目 → 審題 → 修正</li>
+                    <li><strong>三種參考資料：</strong>命題原則、閱讀理解出題技巧、課本</li>
+                    <li><strong>三種閱讀理解題型：</strong>核心資訊擷取、訊息統整歸納、邏輯推論與預測</li>
+                    <li><strong>重要提醒：</strong>AI 只是輔助，老師的專業判斷才是關鍵</li>
                 </ul>
-                <p style="text-align:center;margin-top:40px;font-size:24px"><strong>下一個 Part:</strong> 學習數據分析與視覺化 📊</p>
+                <div class="success-box" style="text-align:center;margin-top:30px;">
+                    <p style="font-size:24px;"><strong>下一個 Part:</strong> 學習數據分析與視覺化</p>
+                </div>
+                <p style="text-align:center;margin-top:20px;font-size:16px;color:#888;">教學內容改編自 teacherlaw2022（教師不會的法律）IG 分享</p>
             </div>
         </div>
     </div>
-    <button class="nav-arrow prev-arrow" onclick="changeSlide(-1)">❮</button><button class="nav-arrow next-arrow"
-        onclick="changeSlide(1)">❯</button>
+    <button class="nav-arrow prev-arrow" onclick="changeSlide(-1)">&#10094;</button>
+    <button class="nav-arrow next-arrow" onclick="changeSlide(1)">&#10095;</button>
     <div class="indicators" id="indicatorContainer"></div>
-    <script>let currentSlide = 0; const slides = document.querySelectorAll('.slide'); function init() { createIndicators(); showSlide(0); document.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') changeSlide(-1); if (e.key === 'ArrowRight') changeSlide(1); }); } function createIndicators() { const c = document.getElementById('indicatorContainer'); slides.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot'; d.onclick = () => goToSlide(i); c.appendChild(d); }); } function showSlide(i) { if (i < 0) i = 0; if (i >= slides.length) i = slides.length - 1; slides.forEach(s => s.classList.remove('active')); slides[i].classList.add('active'); currentSlide = i; document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === i)); } function changeSlide(d) { showSlide(currentSlide + d); } function goToSlide(i) { showSlide(i); } init();</script>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function init() {
+            createIndicators();
+            showSlide(0);
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft') changeSlide(-1);
+                if (e.key === 'ArrowRight') changeSlide(1);
+            });
+        }
+
+        function createIndicators() {
+            const c = document.getElementById('indicatorContainer');
+            slides.forEach((_, i) => {
+                const d = document.createElement('div');
+                d.className = 'dot';
+                d.onclick = () => goToSlide(i);
+                c.appendChild(d);
+            });
+        }
+
+        function showSlide(i) {
+            if (i < 0) i = 0;
+            if (i >= slides.length) i = slides.length - 1;
+            slides.forEach(s => s.classList.remove('active'));
+            slides[i].classList.add('active');
+            currentSlide = i;
+            document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+        }
+
+        function changeSlide(d) {
+            showSlide(currentSlide + d);
+        }
+
+        function goToSlide(i) {
+            showSlide(i);
+        }
+
+        init();
+    </script>
 </body>
 
 </html>

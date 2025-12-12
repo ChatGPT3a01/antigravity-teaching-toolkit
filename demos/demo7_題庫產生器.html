@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>題庫/測驗產生器 - 教育 × 企業雙軌版</title>
+    <title>題庫/測驗產生器 - 含閱讀測驗 SOP</title>
     <style>
         * {
             margin: 0;
@@ -47,11 +47,12 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
-            padding: 15px 40px;
-            font-size: 18px;
+            padding: 15px 30px;
+            font-size: 16px;
             font-weight: 600;
             border: 2px solid #667eea;
             background: white;
@@ -244,6 +245,12 @@
             color: #e65100;
         }
 
+        .info-box.reading {
+            background: #fce4ec;
+            border-left-color: #e91e63;
+            color: #880e4f;
+        }
+
         .back-btn {
             display: inline-block;
             background: rgba(102, 126, 234, 0.1);
@@ -258,6 +265,68 @@
         .back-btn:hover {
             background: rgba(102, 126, 234, 0.2);
         }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .step-badge {
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .step-badge.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+        }
+
+        .checkbox-item.checked {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-item input {
+            width: auto;
+        }
+
+        .tip-box {
+            background: #fff9c4;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -265,23 +334,128 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📋 題庫/測驗產生器</h1>
-        <p class="subtitle">教育 × 企業雙軌版 - 快速產生各種評量試題與測驗</p>
+        <h1>題庫/測驗產生器</h1>
+        <p class="subtitle">教育 × 企業雙軌版 - 含完整閱讀測驗出題 SOP</p>
 
         <div class="tab-container">
-            <button class="tab-btn active" onclick="switchTab('edu')">🎓 教育版</button>
-            <button class="tab-btn" onclick="switchTab('biz')">🏢 企業版</button>
+            <button class="tab-btn active" onclick="switchTab('reading')">閱讀測驗</button>
+            <button class="tab-btn" onclick="switchTab('edu')">一般題庫（教育版）</button>
+            <button class="tab-btn" onclick="switchTab('biz')">企業版</button>
         </div>
 
-        <!-- 教育版內容 -->
-        <div id="edu-content" class="tab-content active">
-            <div class="info-box edu">
-                <strong>🎓 教育版特色：</strong>支援國小到研究所各階段，多種題型、難度等級、含答案與解析。
+        <!-- 閱讀測驗內容 -->
+        <div id="reading-content" class="tab-content active">
+            <div class="info-box reading">
+                <strong>閱讀測驗出題 SOP</strong>：根據 PIRLS 閱讀理解定義，自動生成核心資訊擷取、訊息統整歸納、邏輯推論與預測等多層次題目。
+            </div>
+
+            <div class="step-indicator">
+                <span class="step-badge">Step 1: 備料</span>
+                <span class="step-badge">Step 2: 上傳參考資料</span>
+                <span class="step-badge active">Step 3: 產出題目</span>
+                <span class="step-badge">Step 4: 審題</span>
+                <span class="step-badge">Step 5: 修正</span>
+            </div>
+
+            <div class="tip-box">
+                <strong>使用前請先準備：</strong><br>
+                1. 原始文章（書籍、新聞、課外讀物）<br>
+                2. 命題原則（可使用學校或他校版本）<br>
+                3. 課本（確保範圍正確）<br>
+                將以上資料先上傳給 AI，再使用本工具生成提示詞。
             </div>
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="eduSubject">📘 科目</label>
+                    <label for="readingGrade">閱讀對象</label>
+                    <select id="readingGrade">
+                        <option value="國小三年級">國小三年級</option>
+                        <option value="國小四年級">國小四年級</option>
+                        <option value="國小五年級" selected>國小五年級</option>
+                        <option value="國小六年級">國小六年級</option>
+                        <option value="國中一年級">國中一年級</option>
+                        <option value="國中二年級">國中二年級</option>
+                        <option value="國中三年級">國中三年級</option>
+                        <option value="高中一年級">高中一年級</option>
+                        <option value="高中二年級">高中二年級</option>
+                        <option value="高中三年級">高中三年級</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="readingSubject">科目領域</label>
+                    <select id="readingSubject">
+                        <option value="國語">國語</option>
+                        <option value="社會">社會</option>
+                        <option value="自然">自然</option>
+                        <option value="英語">英語</option>
+                        <option value="綜合">綜合</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="readingWordCount">文章字數限制</label>
+                    <select id="readingWordCount">
+                        <option value="200">約 200 字</option>
+                        <option value="300" selected>約 300 字</option>
+                        <option value="400">約 400 字</option>
+                        <option value="500">約 500 字</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="readingQuestionCount">題目數量</label>
+                    <select id="readingQuestionCount">
+                        <option value="3">3 題</option>
+                        <option value="4" selected>4 題</option>
+                        <option value="5">5 題</option>
+                        <option value="6">6 題</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>題目類型（依 PIRLS 閱讀理解定義）</label>
+                <div class="checkbox-group" id="readingQuestionTypes">
+                    <div class="checkbox-item checked" onclick="toggleReadingType(this)">
+                        <input type="checkbox" checked data-type="核心資訊擷取">
+                        <span>核心資訊擷取（基礎題）</span>
+                    </div>
+                    <div class="checkbox-item checked" onclick="toggleReadingType(this)">
+                        <input type="checkbox" checked data-type="訊息統整歸納">
+                        <span>訊息統整歸納（核心題）</span>
+                    </div>
+                    <div class="checkbox-item checked" onclick="toggleReadingType(this)">
+                        <input type="checkbox" checked data-type="邏輯推論與預測">
+                        <span>邏輯推論與預測（高階題）</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="readingTopic">文章主題/單元（選填）</label>
+                <input type="text" id="readingTopic" placeholder="例如：清朝初期臺灣歷史、環境保護、生態平衡">
+            </div>
+
+            <div class="form-group">
+                <label for="readingExtra">額外需求（選填）</label>
+                <textarea id="readingExtra" rows="3" placeholder="例如：&#10;- 選項要有較高的誘答性&#10;- 包含圖表判讀題&#10;- 要符合學校命題原則"></textarea>
+            </div>
+
+            <button class="generate-btn" onclick="generateReadingPrompt()">生成閱讀測驗提示詞</button>
+        </div>
+
+        <!-- 教育版內容 -->
+        <div id="edu-content" class="tab-content">
+            <div class="info-box edu">
+                <strong>教育版特色：</strong>支援國小到研究所各階段，多種題型、難度等級、含答案與解析。
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="eduSubject">科目</label>
                     <select id="eduSubject">
                         <option value="國語">國語</option>
                         <option value="數學">數學</option>
@@ -296,7 +470,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="eduGrade">🎓 教育階段</label>
+                    <label for="eduGrade">教育階段</label>
                     <select id="eduGrade">
                         <option value="國小一年級">國小一年級</option>
                         <option value="國小二年級">國小二年級</option>
@@ -317,12 +491,12 @@
             </div>
 
             <div class="form-group">
-                <label for="eduTopic">📝 評量範圍/單元</label>
+                <label for="eduTopic">評量範圍/單元</label>
                 <input type="text" id="eduTopic" placeholder="例如：第一課到第三課、分數的四則運算、台灣的地理環境">
             </div>
 
             <div class="form-group">
-                <label>📊 題型選擇（點選可複選）</label>
+                <label>題型選擇（點選可複選）</label>
                 <div class="question-types" id="eduQuestionTypes">
                     <div class="type-card selected" onclick="toggleEduType(this, '選擇題')">
                         <div class="type-icon">🔘</div>
@@ -345,7 +519,7 @@
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="eduCount">📋 題目數量</label>
+                    <label for="eduCount">題目數量</label>
                     <select id="eduCount">
                         <option value="5">5 題</option>
                         <option value="10" selected>10 題</option>
@@ -355,7 +529,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="eduDifficulty">📈 難度等級</label>
+                    <label for="eduDifficulty">難度等級</label>
                     <select id="eduDifficulty">
                         <option value="簡單">簡單（基礎概念）</option>
                         <option value="中等" selected>中等（一般程度）</option>
@@ -366,22 +540,22 @@
             </div>
 
             <div class="form-group">
-                <label for="eduExtra">📌 額外需求（選填）</label>
+                <label for="eduExtra">額外需求（選填）</label>
                 <textarea id="eduExtra" rows="3" placeholder="例如：&#10;- 選擇題要有4個選項&#10;- 包含圖表判讀題&#10;- 避免太相似的題目"></textarea>
             </div>
 
-            <button class="generate-btn" onclick="generateEduPrompt()">🚀 生成題庫提示詞</button>
+            <button class="generate-btn" onclick="generateEduPrompt()">生成題庫提示詞</button>
         </div>
 
         <!-- 企業版內容 -->
         <div id="biz-content" class="tab-content">
             <div class="info-box biz">
-                <strong>🏢 企業版特色：</strong>支援培訓測驗、認證考試、面試題目、技能檢定等企業應用場景。
+                <strong>企業版特色：</strong>支援培訓測驗、認證考試、面試題目、技能檢定等企業應用場景。
             </div>
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="bizTestType">📋 測驗類型</label>
+                    <label for="bizTestType">測驗類型</label>
                     <select id="bizTestType">
                         <option value="培訓測驗">培訓測驗</option>
                         <option value="認證考試">認證考試</option>
@@ -393,7 +567,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="bizIndustry">🏭 產業/領域</label>
+                    <label for="bizIndustry">產業/領域</label>
                     <select id="bizIndustry">
                         <option value="科技業">科技業</option>
                         <option value="金融業">金融業</option>
@@ -412,12 +586,12 @@
             </div>
 
             <div class="form-group">
-                <label for="bizTopic">📝 測驗主題/範圍</label>
+                <label for="bizTopic">測驗主題/範圍</label>
                 <input type="text" id="bizTopic" placeholder="例如：資訊安全基礎、客戶服務技巧、專案管理入門">
             </div>
 
             <div class="form-group">
-                <label>📊 題型選擇（點選可複選）</label>
+                <label>題型選擇（點選可複選）</label>
                 <div class="question-types" id="bizQuestionTypes">
                     <div class="type-card selected" onclick="toggleBizType(this, '選擇題')">
                         <div class="type-icon">🔘</div>
@@ -444,7 +618,7 @@
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="bizCount">📋 題目數量</label>
+                    <label for="bizCount">題目數量</label>
                     <select id="bizCount">
                         <option value="5">5 題</option>
                         <option value="10" selected>10 題</option>
@@ -455,7 +629,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="bizDifficulty">📈 難度等級</label>
+                    <label for="bizDifficulty">難度等級</label>
                     <select id="bizDifficulty">
                         <option value="入門">入門（基礎知識）</option>
                         <option value="中級" selected>中級（實務應用）</option>
@@ -466,18 +640,18 @@
             </div>
 
             <div class="form-group">
-                <label for="bizExtra">📌 額外需求（選填）</label>
+                <label for="bizExtra">額外需求（選填）</label>
                 <textarea id="bizExtra" rows="3" placeholder="例如：&#10;- 著重實務應用情境&#10;- 需要包含法規相關題目&#10;- 要能測試實際操作能力"></textarea>
             </div>
 
-            <button class="generate-btn" onclick="generateBizPrompt()">🚀 生成測驗提示詞</button>
+            <button class="generate-btn" onclick="generateBizPrompt()">生成測驗提示詞</button>
         </div>
 
         <!-- 結果區域 -->
         <div class="result-section" id="resultSection">
-            <div class="result-title">✨ 生成的提示詞</div>
+            <div class="result-title">生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
-            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+            <button class="copy-btn" onclick="copyPrompt()">複製提示詞</button>
         </div>
     </div>
 
@@ -491,6 +665,12 @@
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById(tab + '-content').classList.add('active');
             document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function toggleReadingType(item) {
+            item.classList.toggle('checked');
+            const checkbox = item.querySelector('input');
+            checkbox.checked = !checkbox.checked;
         }
 
         function toggleEduType(card, type) {
@@ -509,6 +689,72 @@
             } else {
                 selectedBizTypes = selectedBizTypes.filter(t => t !== type);
             }
+        }
+
+        function generateReadingPrompt() {
+            const grade = document.getElementById('readingGrade').value;
+            const subject = document.getElementById('readingSubject').value;
+            const wordCount = document.getElementById('readingWordCount').value;
+            const questionCount = document.getElementById('readingQuestionCount').value;
+            const topic = document.getElementById('readingTopic').value.trim();
+            const extra = document.getElementById('readingExtra').value.trim();
+
+            // 取得選中的題目類型
+            const selectedTypes = [];
+            document.querySelectorAll('#readingQuestionTypes .checkbox-item.checked input').forEach(input => {
+                selectedTypes.push(input.dataset.type);
+            });
+
+            if (selectedTypes.length === 0) {
+                alert('請至少選擇一種題目類型！');
+                return;
+            }
+
+            let prompt = '請根據我提供的這篇文章，出一組閱讀測驗。\n\n';
+            prompt += '【文章改寫要求】\n';
+            prompt += '- 將文章內容濃縮至 ' + wordCount + ' 字左右\n';
+            prompt += '- 給予一個合適的標題\n';
+            prompt += '- 改寫成適合' + grade + '學生閱讀的程度\n';
+            prompt += '- 必須避免生難字詞\n';
+            prompt += '- 文章必須保持主題不離題\n';
+            prompt += '- 不得引用課本原文，以確保是純粹的改寫版本\n\n';
+
+            prompt += '【題目要求】\n';
+            prompt += '- 閱讀測驗需要 ' + questionCount + ' 題選擇題\n';
+            prompt += '- 選擇題出題需要符合我上傳的：\n';
+            prompt += '  - 閱讀理解出題技巧\n';
+            prompt += '  - 命題原則\n';
+            prompt += '  - 課本內容\n';
+            prompt += '- 選項都要從文章或課本中出現\n';
+            prompt += '- 選項用圈碼標示\n\n';
+
+            prompt += '【題目類型分布】\n';
+            prompt += '請依照 PIRLS 閱讀理解定義，包含以下類型的題目：\n';
+            selectedTypes.forEach(type => {
+                if (type === '核心資訊擷取') {
+                    prompt += '- 核心資訊擷取（基礎能力題）：直接針對文章中明確提到的單一事實來提問\n';
+                } else if (type === '訊息統整歸納') {
+                    prompt += '- 訊息統整歸納（核心能力題）：詢問文章的核心思想、或多項資訊之間的比較\n';
+                } else if (type === '邏輯推論與預測') {
+                    prompt += '- 邏輯推論與預測（高階能力題）：從文意推測出未直接寫明的結論\n';
+                }
+            });
+
+            prompt += '\n【注意事項】\n';
+            prompt += '- 使用繁體中文\n';
+            prompt += '- 題目敘述清楚完整，適合' + grade + '學生程度\n';
+            prompt += '- 選擇題選項要有鑑別度，避免明顯錯誤的選項\n';
+            prompt += '- 每題提供四個選項\n';
+
+            if (topic) {
+                prompt += '- 文章主題/單元：' + topic + '\n';
+            }
+
+            if (extra) {
+                prompt += '\n【額外需求】\n' + extra;
+            }
+
+            displayResult(prompt);
         }
 
         function generateEduPrompt() {
@@ -622,9 +868,9 @@
             const promptText = document.getElementById('promptOutput').textContent;
             navigator.clipboard.writeText(promptText).then(() => {
                 const btn = event.target;
-                btn.textContent = '✅ 已複製！';
+                btn.textContent = '已複製！';
                 setTimeout(() => {
-                    btn.textContent = '📋 複製提示詞';
+                    btn.textContent = '複製提示詞';
                 }, 2000);
             });
         }
