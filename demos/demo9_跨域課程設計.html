@@ -109,7 +109,6 @@
 
         textarea {
             min-height: 150px;
-            font-family: 'Consolas', monospace;
         }
 
         .options-grid {
@@ -119,14 +118,14 @@
             margin-bottom: 30px;
         }
 
-        .analysis-types {
+        .subject-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 12px;
             margin-bottom: 20px;
         }
 
-        .analysis-card {
+        .subject-card {
             border: 2px solid #e0e0e0;
             border-radius: 12px;
             padding: 15px;
@@ -135,23 +134,60 @@
             transition: all 0.3s;
         }
 
-        .analysis-card:hover {
+        .subject-card:hover {
             border-color: #667eea;
         }
 
-        .analysis-card.selected {
+        .subject-card.selected {
             border-color: #667eea;
             background: rgba(102, 126, 234, 0.1);
         }
 
-        .analysis-icon {
+        .subject-icon {
             font-size: 32px;
             margin-bottom: 8px;
         }
 
-        .analysis-name {
+        .subject-name {
             font-size: 14px;
             font-weight: 600;
+        }
+
+        .theme-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .theme-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .theme-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .theme-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .theme-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
         }
 
         .generate-btn {
@@ -250,21 +286,6 @@
             background: rgba(102, 126, 234, 0.2);
         }
 
-        .sample-btn {
-            background: #17a2b8;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-
-        .sample-btn:hover {
-            background: #138496;
-        }
-
         .tip-box {
             background: #fff3cd;
             border-left: 5px solid #ffc107;
@@ -274,6 +295,41 @@
             font-size: 14px;
             color: #856404;
         }
+
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dept-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dept-card:hover {
+            border-color: #667eea;
+        }
+
+        .dept-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .dept-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .dept-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -281,11 +337,11 @@
     <div class="container">
         <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1>📊 跨域課程設計 - 教育 × 企業雙軌版</h1>
-        <p class="subtitle">一個工具，雙重應用：教育數據分析 + 企業商業分析</p>
+        <h1>🔗 跨域課程設計 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">一個工具，雙重應用：跨領域統整課程設計 + 跨部門專案規劃</p>
 
         <div class="info-box">
-            <strong>💡 功能說明：</strong>切換教育版或企業版，輸入相應數據，AI 幫你產生專業分析報告與視覺化建議。
+            <strong>💡 功能說明：</strong>教育版協助設計跨領域/STEAM 統整課程；企業版協助規劃跨部門協作專案。AI 幫你產生完整的課程架構或專案計畫書。
         </div>
 
         <!-- Tab 切換按鈕 -->
@@ -297,171 +353,217 @@
         <!-- 教育版內容 -->
         <div id="education" class="tab-content active">
             <div class="form-group">
-                <label>
-                    📈 輸入數據
-                    <button class="sample-btn" onclick="fillSampleEdu()">填入範例數據</button>
-                </label>
-                <textarea id="dataEdu" placeholder="格式範例（每行一位學生）：
-學生姓名, 國語, 數學, 自然, 社會
-
-例如：
-王小明, 85, 72, 90, 88
-李小華, 92, 95, 88, 91
-張小美, 78, 65, 72, 80
-..."></textarea>
+                <label>📚 選擇整合領域（至少選 2 個）</label>
+                <div class="subject-grid">
+                    <div class="subject-card selected" onclick="toggleSubject(this, '國語文')">
+                        <div class="subject-icon">📖</div>
+                        <div class="subject-name">國語文</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '英語文')">
+                        <div class="subject-icon">🌐</div>
+                        <div class="subject-name">英語文</div>
+                    </div>
+                    <div class="subject-card selected" onclick="toggleSubject(this, '數學')">
+                        <div class="subject-icon">📐</div>
+                        <div class="subject-name">數學</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '自然科學')">
+                        <div class="subject-icon">🔬</div>
+                        <div class="subject-name">自然科學</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '社會')">
+                        <div class="subject-icon">🌍</div>
+                        <div class="subject-name">社會</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '藝術')">
+                        <div class="subject-icon">🎨</div>
+                        <div class="subject-name">藝術</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '科技')">
+                        <div class="subject-icon">💻</div>
+                        <div class="subject-name">科技</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '健體')">
+                        <div class="subject-icon">⚽</div>
+                        <div class="subject-name">健體</div>
+                    </div>
+                    <div class="subject-card" onclick="toggleSubject(this, '綜合活動')">
+                        <div class="subject-icon">🎯</div>
+                        <div class="subject-name">綜合活動</div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>📊 分析類型（可複選）</label>
-                <div class="analysis-types">
-                    <div class="analysis-card selected" onclick="toggleAnalysis('edu', this, '成績分析')">
-                        <div class="analysis-icon">📉</div>
-                        <div class="analysis-name">成績分析</div>
+                <label>🎯 選擇課程主題</label>
+                <div class="theme-cards">
+                    <div class="theme-card selected" onclick="selectTheme(this, 'SDGs永續發展')">
+                        <div class="theme-icon">🌱</div>
+                        <div class="theme-name">SDGs 永續發展</div>
                     </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '班級數據')">
-                        <div class="analysis-icon">👥</div>
-                        <div class="analysis-name">班級數據</div>
+                    <div class="theme-card" onclick="selectTheme(this, '在地文化探究')">
+                        <div class="theme-icon">🏛️</div>
+                        <div class="theme-name">在地文化探究</div>
                     </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '學習進度追蹤')">
-                        <div class="analysis-icon">📈</div>
-                        <div class="analysis-name">學習進度追蹤</div>
+                    <div class="theme-card" onclick="selectTheme(this, 'STEAM創客')">
+                        <div class="theme-icon">🤖</div>
+                        <div class="theme-name">STEAM 創客</div>
                     </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '問卷結果分析')">
-                        <div class="analysis-icon">📋</div>
-                        <div class="analysis-name">問卷結果分析</div>
+                    <div class="theme-card" onclick="selectTheme(this, '生涯探索')">
+                        <div class="theme-icon">🧭</div>
+                        <div class="theme-name">生涯探索</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, '媒體素養')">
+                        <div class="theme-icon">📱</div>
+                        <div class="theme-name">媒體素養</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this, '自訂主題')">
+                        <div class="theme-icon">✏️</div>
+                        <div class="theme-name">自訂主題</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="form-group" id="customThemeGroup" style="display: none;">
+                <label for="customTheme">📝 自訂主題名稱</label>
+                <input type="text" id="customTheme" placeholder="例如：校園生態調查、社區問題解決...">
             </div>
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="gradeEdu">🎓 年級/班級</label>
+                    <label for="gradeEdu">🎓 年級</label>
                     <select id="gradeEdu">
-                        <option value="國小三年級">國小三年級</option>
-                        <option value="國小四年級">國小四年級</option>
-                        <option value="國小五年級">國小五年級</option>
-                        <option value="國小六年級">國小六年級</option>
-                        <option value="國中一年級">國中一年級</option>
-                        <option value="國中二年級">國中二年級</option>
-                        <option value="國中三年級">國中三年級</option>
-                        <option value="高中一年級">高中一年級</option>
-                        <option value="高中二年級">高中二年級</option>
-                        <option value="高中三年級">高中三年級</option>
+                        <option value="國小中年級（3-4年級）">國小中年級（3-4年級）</option>
+                        <option value="國小高年級（5-6年級）">國小高年級（5-6年級）</option>
+                        <option value="國中（7-9年級）" selected>國中（7-9年級）</option>
+                        <option value="高中（10-12年級）">高中（10-12年級）</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="outputEdu">📋 輸出格式</label>
-                    <select id="outputEdu">
-                        <option value="詳細報告">詳細報告（含所有分析）</option>
-                        <option value="摘要報告">摘要報告（重點整理）</option>
-                        <option value="Excel建議">Excel 公式建議</option>
-                        <option value="家長通知">家長通知版（簡化）</option>
+                    <label for="durationEdu">⏱️ 課程時長</label>
+                    <select id="durationEdu">
+                        <option value="微課程（1-2週）">微課程（1-2週）</option>
+                        <option value="短期課程（3-4週）" selected>短期課程（3-4週）</option>
+                        <option value="中期課程（1-2個月）">中期課程（1-2個月）</option>
+                        <option value="長期課程（1學期）">長期課程（1學期）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="approachEdu">📋 教學取向</label>
+                    <select id="approachEdu">
+                        <option value="PBL專題導向" selected>PBL 專題導向</option>
+                        <option value="議題融入">議題融入</option>
+                        <option value="主題統整">主題統整</option>
+                        <option value="問題解決">問題解決</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="extraEdu">📌 額外需求（選填）</label>
-                <input type="text" id="extraEdu" placeholder="例如：標示及格邊緣的學生、建議補救教學策略">
+                <label for="contextEdu">🏫 學校/在地特色（選填）</label>
+                <input type="text" id="contextEdu" placeholder="例如：偏鄉學校、原住民族地區、海邊社區、都市學校...">
             </div>
 
-            <button class="generate-btn" onclick="generatePromptEdu()">🚀 生成教育版分析提示詞</button>
+            <div class="form-group">
+                <label for="extraEdu">📌 額外需求（選填）</label>
+                <input type="text" id="extraEdu" placeholder="例如：需包含戶外教學、希望有社區踏查、需要成果發表會...">
+            </div>
+
+            <button class="generate-btn" onclick="generatePromptEdu()">🚀 生成跨域課程設計提示詞</button>
         </div>
 
         <!-- 企業版內容 -->
         <div id="business" class="tab-content">
             <div class="form-group">
-                <label>
-                    📊 輸入企業數據
-                    <button class="sample-btn" onclick="fillSampleBiz()">填入範例數據</button>
-                </label>
-                <textarea id="dataBiz" placeholder="格式範例（可自由調整欄位）：
-
-銷售數據範例：
-日期, 產品, 銷售額, 數量, 區域
-
-財務數據範例：
-月份, 收入, 支出, 利潤, 成長率
-
-客戶數據範例：
-客戶ID, 購買次數, 消費金額, 滿意度
-
-..."></textarea>
+                <label>🏢 選擇參與部門（至少選 2 個）</label>
+                <div class="dept-grid">
+                    <div class="dept-card selected" onclick="toggleDept(this, '研發部')">
+                        <div class="dept-icon">💡</div>
+                        <div class="dept-name">研發部</div>
+                    </div>
+                    <div class="dept-card selected" onclick="toggleDept(this, '行銷部')">
+                        <div class="dept-icon">📣</div>
+                        <div class="dept-name">行銷部</div>
+                    </div>
+                    <div class="dept-card" onclick="toggleDept(this, '業務部')">
+                        <div class="dept-icon">🤝</div>
+                        <div class="dept-name">業務部</div>
+                    </div>
+                    <div class="dept-card" onclick="toggleDept(this, '財務部')">
+                        <div class="dept-icon">💰</div>
+                        <div class="dept-name">財務部</div>
+                    </div>
+                    <div class="dept-card" onclick="toggleDept(this, '人資部')">
+                        <div class="dept-icon">👥</div>
+                        <div class="dept-name">人資部</div>
+                    </div>
+                    <div class="dept-card" onclick="toggleDept(this, '資訊部')">
+                        <div class="dept-icon">🖥️</div>
+                        <div class="dept-name">資訊部</div>
+                    </div>
+                    <div class="dept-card" onclick="toggleDept(this, '客服部')">
+                        <div class="dept-icon">📞</div>
+                        <div class="dept-name">客服部</div>
+                    </div>
+                    <div class="dept-card" onclick="toggleDept(this, '生產部')">
+                        <div class="dept-icon">🏭</div>
+                        <div class="dept-name">生產部</div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>📊 分析類型（可複選）</label>
-                <div class="analysis-types">
-                    <div class="analysis-card selected" onclick="toggleAnalysis('biz', this, '銷售數據')">
-                        <div class="analysis-icon">💰</div>
-                        <div class="analysis-name">銷售數據</div>
-                    </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '市場分析')">
-                        <div class="analysis-icon">📈</div>
-                        <div class="analysis-name">市場分析</div>
-                    </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, 'KPI追蹤')">
-                        <div class="analysis-icon">🎯</div>
-                        <div class="analysis-name">KPI追蹤</div>
-                    </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '財務報表')">
-                        <div class="analysis-icon">💼</div>
-                        <div class="analysis-name">財務報表</div>
-                    </div>
-                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '客戶分析')">
-                        <div class="analysis-icon">👥</div>
-                        <div class="analysis-name">客戶分析</div>
-                    </div>
-                </div>
+                <label for="projectBiz">📋 專案名稱/目標</label>
+                <textarea id="projectBiz" placeholder="例如：
+• 新產品上市專案：整合研發、行銷、業務，推動新產品 Q3 上市
+• 數位轉型專案：導入新系統，優化跨部門協作流程
+• 客戶體驗升級：整合客服、行銷、資訊，提升顧客滿意度"></textarea>
             </div>
 
             <div class="options-grid">
                 <div class="form-group">
                     <label for="industryBiz">🏢 產業類型</label>
                     <select id="industryBiz">
+                        <option value="科技業">科技業</option>
+                        <option value="製造業">製造業</option>
                         <option value="零售業">零售業</option>
                         <option value="服務業">服務業</option>
-                        <option value="製造業">製造業</option>
-                        <option value="科技業">科技業</option>
                         <option value="金融業">金融業</option>
-                        <option value="餐飲業">餐飲業</option>
-                        <option value="電商">電商</option>
-                        <option value="教育培訓">教育培訓</option>
                         <option value="醫療保健">醫療保健</option>
+                        <option value="教育培訓">教育培訓</option>
                         <option value="其他">其他</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="periodBiz">📅 數據週期</label>
-                    <select id="periodBiz">
-                        <option value="日報">日報</option>
-                        <option value="週報">週報</option>
-                        <option value="月報">月報</option>
-                        <option value="季報">季報</option>
-                        <option value="年報">年報</option>
-                        <option value="自訂期間">自訂期間</option>
+                    <label for="durationBiz">⏱️ 專案時程</label>
+                    <select id="durationBiz">
+                        <option value="短期（1個月內）">短期（1個月內）</option>
+                        <option value="中期（1-3個月）" selected>中期（1-3個月）</option>
+                        <option value="長期（3-6個月）">長期（3-6個月）</option>
+                        <option value="年度專案">年度專案</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="outputBiz">📋 輸出格式</label>
                     <select id="outputBiz">
-                        <option value="管理層報告">管理層報告（策略導向）</option>
-                        <option value="數據儀表板">數據儀表板（視覺化）</option>
-                        <option value="詳細分析">詳細分析（完整數據）</option>
-                        <option value="執行摘要">執行摘要（簡報用）</option>
+                        <option value="完整專案計畫書">完整專案計畫書</option>
+                        <option value="執行摘要" selected>執行摘要</option>
+                        <option value="甘特圖規劃">甘特圖規劃</option>
+                        <option value="RACI矩陣">RACI 矩陣</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="extraBiz">📌 額外需求（選填）</label>
-                <input type="text" id="extraBiz" placeholder="例如：重點關注成長趨勢、比較同期數據、預測下季表現">
+                <label for="extraBiz">📌 特殊需求（選填）</label>
+                <input type="text" id="extraBiz" placeholder="例如：需考量預算限制、遠端協作需求、既有系統整合...">
             </div>
 
-            <button class="generate-btn" onclick="generatePromptBiz()">🚀 生成企業版分析提示詞</button>
+            <button class="generate-btn" onclick="generatePromptBiz()">🚀 生成跨部門專案提示詞</button>
         </div>
 
         <!-- 結果顯示區 -->
@@ -472,18 +574,18 @@
 
             <div class="tip-box">
                 <strong>💡 使用建議：</strong><br>
-                • 將數據和提示詞一起貼到 Antigravity 或其他 AI 工具<br>
-                • AI 可以產生分析結果，也可以建議 Excel 圖表製作方式<br>
-                • 教育版：如需保護學生隱私，可使用代號取代真實姓名<br>
-                • 企業版：可要求 AI 提供可執行的商業建議與行動方案
+                • 將提示詞貼到 Antigravity 或其他 AI 工具，獲得完整課程/專案規劃<br>
+                • 教育版：可進一步要求 AI 產生學習單、評量規準、教學簡報<br>
+                • 企業版：可要求 AI 產生會議議程、進度追蹤表、風險評估表
             </div>
         </div>
     </div>
 
     <script>
         let currentTab = 'education';
-        let selectedAnalysisEdu = ['成績分析'];
-        let selectedAnalysisBiz = ['銷售數據'];
+        let selectedSubjects = ['國語文', '數學'];
+        let selectedTheme = 'SDGs永續發展';
+        let selectedDepts = ['研發部', '行銷部'];
 
         function switchTab(tab) {
             currentTab = tab;
@@ -501,105 +603,92 @@
             document.getElementById('resultSection').classList.remove('show');
         }
 
-        function toggleAnalysis(type, card, analysisName) {
+        function toggleSubject(card, subject) {
             card.classList.toggle('selected');
-
-            if (type === 'edu') {
-                if (card.classList.contains('selected')) {
-                    selectedAnalysisEdu.push(analysisName);
-                } else {
-                    selectedAnalysisEdu = selectedAnalysisEdu.filter(t => t !== analysisName);
-                }
+            if (card.classList.contains('selected')) {
+                selectedSubjects.push(subject);
             } else {
-                if (card.classList.contains('selected')) {
-                    selectedAnalysisBiz.push(analysisName);
-                } else {
-                    selectedAnalysisBiz = selectedAnalysisBiz.filter(t => t !== analysisName);
-                }
+                selectedSubjects = selectedSubjects.filter(s => s !== subject);
             }
         }
 
-        function fillSampleEdu() {
-            const sampleData = `學生, 國語, 數學, 自然, 社會
-王小明, 85, 72, 90, 88
-李小華, 92, 95, 88, 91
-張小美, 78, 65, 72, 80
-陳大偉, 88, 82, 85, 87
-林小琳, 95, 90, 92, 94
-黃小龍, 62, 58, 70, 65
-周小芳, 75, 78, 80, 76
-吳小強, 70, 88, 75, 72
-趙小雲, 82, 75, 78, 85
-鄭小敏, 90, 85, 88, 90
-劉小傑, 55, 48, 60, 58
-許小玲, 80, 70, 82, 78
-蔡小偉, 87, 92, 85, 82
-謝小君, 73, 68, 75, 70
-楊小豪, 91, 88, 90, 92`;
-            document.getElementById('dataEdu').value = sampleData;
+        function selectTheme(card, theme) {
+            document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedTheme = theme;
+
+            document.getElementById('customThemeGroup').style.display =
+                theme === '自訂主題' ? 'block' : 'none';
         }
 
-        function fillSampleBiz() {
-            const sampleData = `日期, 產品, 銷售額, 數量, 區域
-2025-01-01, 產品A, 125000, 50, 北區
-2025-01-02, 產品B, 98000, 35, 中區
-2025-01-03, 產品A, 142000, 58, 南區
-2025-01-04, 產品C, 87000, 42, 北區
-2025-01-05, 產品B, 115000, 48, 東區
-2025-01-06, 產品A, 138000, 55, 中區
-2025-01-07, 產品C, 92000, 45, 南區
-2025-01-08, 產品B, 105000, 40, 北區
-2025-01-09, 產品A, 128000, 52, 東區
-2025-01-10, 產品C, 95000, 47, 中區`;
-            document.getElementById('dataBiz').value = sampleData;
+        function toggleDept(card, dept) {
+            card.classList.toggle('selected');
+            if (card.classList.contains('selected')) {
+                selectedDepts.push(dept);
+            } else {
+                selectedDepts = selectedDepts.filter(d => d !== dept);
+            }
         }
 
         function generatePromptEdu() {
-            const data = document.getElementById('dataEdu').value.trim();
+            if (selectedSubjects.length < 2) {
+                alert('請至少選擇 2 個整合領域！');
+                return;
+            }
+
             const grade = document.getElementById('gradeEdu').value;
-            const output = document.getElementById('outputEdu').value;
+            const duration = document.getElementById('durationEdu').value;
+            const approach = document.getElementById('approachEdu').value;
+            const context = document.getElementById('contextEdu').value.trim();
             const extra = document.getElementById('extraEdu').value.trim();
 
-            if (!data) {
-                alert('請輸入數據！');
-                return;
+            let theme = selectedTheme;
+            if (theme === '自訂主題') {
+                theme = document.getElementById('customTheme').value.trim() || '自訂跨域課程';
             }
 
-            if (selectedAnalysisEdu.length === 0) {
-                alert('請至少選擇一種分析類型！');
-                return;
+            let prompt = `請設計一個跨領域統整課程：
+
+【課程基本資訊】
+課程主題：${theme}
+整合領域：${selectedSubjects.join('、')}
+適用年級：${grade}
+課程時長：${duration}
+教學取向：${approach}`;
+
+            if (context) {
+                prompt += `\n學校/在地特色：${context}`;
             }
 
-            let prompt = `請幫我分析以下教育數據：
+            prompt += `
 
-【基本資訊】
-年級/班級：${grade}
-
-【數據內容】
-${data}
-
-【分析需求】
-${selectedAnalysisEdu.map(a => `- ${a}`).join('\n')}
-
-【輸出格式】${output}
-
-【請提供以下分析】
-1. 基本統計：平均分、最高分、最低分、及格率
-2. 各科目表現分析與比較
-3. 需要特別關注的學生（含原因說明）
-4. 教學建議與改進方向
-5. 視覺化建議（建議製作的圖表類型及 Excel 製作步驟）`;
+【請提供完整課程設計】
+1. 課程名稱與核心問題（驅動問題）
+2. 課程目標（對應各領域核心素養）
+3. 各領域整合方式與知識連結
+4. 課程架構與階段規劃
+   - 引起動機
+   - 發展活動
+   - 統整應用
+   - 反思評量
+5. 各階段詳細教學活動設計
+6. 跨領域學習任務設計
+7. 評量方式與規準（含形成性與總結性評量）
+8. 學習資源與教材建議
+9. 預期學習成果展現形式`;
 
             if (extra) {
                 prompt += `\n\n【額外需求】\n${extra}`;
             }
 
-            prompt += `\n
-【注意事項】
-- 使用繁體中文
-- 數據解讀要客觀
-- 建議要具體可行
-- 適合老師用於班級經營參考`;
+            prompt += `
+
+【設計原則】
+- 符合 108 課綱跨領域統整精神
+- 以學生為中心，重視探究與實作
+- 連結真實生活情境
+- 培養核心素養與 21 世紀關鍵能力
+- 使用繁體中文`;
 
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
@@ -607,53 +696,57 @@ ${selectedAnalysisEdu.map(a => `- ${a}`).join('\n')}
         }
 
         function generatePromptBiz() {
-            const data = document.getElementById('dataBiz').value.trim();
+            if (selectedDepts.length < 2) {
+                alert('請至少選擇 2 個參與部門！');
+                return;
+            }
+
+            const project = document.getElementById('projectBiz').value.trim();
             const industry = document.getElementById('industryBiz').value;
-            const period = document.getElementById('periodBiz').value;
+            const duration = document.getElementById('durationBiz').value;
             const output = document.getElementById('outputBiz').value;
             const extra = document.getElementById('extraBiz').value.trim();
 
-            if (!data) {
-                alert('請輸入企業數據！');
+            if (!project) {
+                alert('請輸入專案名稱或目標！');
                 return;
             }
 
-            if (selectedAnalysisBiz.length === 0) {
-                alert('請至少選擇一種分析類型！');
-                return;
-            }
+            let prompt = `請規劃一個跨部門協作專案：
 
-            let prompt = `請幫我分析以下企業數據：
-
-【基本資訊】
+【專案基本資訊】
+專案目標：${project}
+參與部門：${selectedDepts.join('、')}
 產業類型：${industry}
-數據週期：${period}
+專案時程：${duration}
+輸出格式：${output}
 
-【數據內容】
-${data}
-
-【分析需求】
-${selectedAnalysisBiz.map(a => `- ${a}`).join('\n')}
-
-【輸出格式】${output}
-
-【請提供以下分析】
-1. 核心指標分析：關鍵數據統計與趨勢
-2. 數據洞察：發現的重要模式與異常
-3. 商業建議：基於數據的可執行策略
-4. 風險提示：需要注意的潛在問題
-5. 視覺化建議：建議製作的圖表類型及工具使用方式`;
+【請提供完整專案規劃】
+1. 專案概述與目標定義（SMART 原則）
+2. 各部門角色與職責分配
+3. 跨部門協作機制設計
+   - 溝通管道
+   - 會議頻率
+   - 決策流程
+4. 專案里程碑與時程規劃
+5. 關鍵可交付成果（Deliverables）
+6. 資源需求評估
+7. 風險識別與應對策略
+8. 成效評估指標（KPI）
+9. 專案管理工具建議`;
 
             if (extra) {
-                prompt += `\n\n【額外需求】\n${extra}`;
+                prompt += `\n\n【特殊需求】\n${extra}`;
             }
 
-            prompt += `\n
-【注意事項】
-- 使用繁體中文
-- 分析要深入且具商業價值
-- 建議要可執行且符合產業特性
-- 適合商業決策參考`;
+            prompt += `
+
+【規劃原則】
+- 確保各部門權責清晰
+- 建立有效的跨部門溝通機制
+- 設定可量化的成功指標
+- 預留彈性應對變化
+- 使用繁體中文`;
 
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
