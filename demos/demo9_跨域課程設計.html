@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H/�- - Y� � m��H</title>
+    <title>跨域課程設計 - 教育 × 企業雙軌版</title>
     <style>
         * {
             margin: 0;
@@ -39,30 +39,30 @@
             text-align: center;
             color: #666;
             font-size: 18px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .tab-container {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-bottom: 40px;
         }
 
         .tab-btn {
-            padding: 15px 40px;
-            font-size: 18px;
-            font-weight: 600;
-            border: 2px solid #667eea;
-            background: white;
+            background: rgba(102, 126, 234, 0.1);
             color: #667eea;
+            border: 2px solid #667eea;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .tab-btn:hover {
-            background: #f0f4ff;
+            background: rgba(102, 126, 234, 0.2);
         }
 
         .tab-btn.active {
@@ -78,11 +78,6 @@
         .tab-content.active {
             display: block;
             animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -112,6 +107,11 @@
             border-color: #667eea;
         }
 
+        textarea {
+            min-height: 150px;
+            font-family: 'Consolas', monospace;
+        }
+
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -119,45 +119,14 @@
             margin-bottom: 30px;
         }
 
-        .subject-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .subject-tag {
-            padding: 10px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 2px solid;
-        }
-
-        .subject-tag.chinese { background: #ffebee; border-color: #ef5350; color: #c62828; }
-        .subject-tag.math { background: #e3f2fd; border-color: #42a5f5; color: #1565c0; }
-        .subject-tag.science { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
-        .subject-tag.social { background: #fff3e0; border-color: #ffa726; color: #e65100; }
-        .subject-tag.english { background: #f3e5f5; border-color: #ab47bc; color: #7b1fa2; }
-        .subject-tag.art { background: #fce4ec; border-color: #ec407a; color: #c2185b; }
-        .subject-tag.tech { background: #e0f2f1; border-color: #26a69a; color: #00695c; }
-        .subject-tag.pe { background: #fff8e1; border-color: #ffca28; color: #f57f17; }
-
-        .subject-tag.selected {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        }
-
-        .theme-cards {
+        .analysis-types {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
             margin-bottom: 20px;
         }
 
-        .theme-card {
+        .analysis-card {
             border: 2px solid #e0e0e0;
             border-radius: 12px;
             padding: 15px;
@@ -166,21 +135,21 @@
             transition: all 0.3s;
         }
 
-        .theme-card:hover {
+        .analysis-card:hover {
             border-color: #667eea;
         }
 
-        .theme-card.selected {
+        .analysis-card.selected {
             border-color: #667eea;
             background: rgba(102, 126, 234, 0.1);
         }
 
-        .theme-icon {
+        .analysis-icon {
             font-size: 32px;
             margin-bottom: 8px;
         }
 
-        .theme-name {
+        .analysis-name {
             font-size: 14px;
             font-weight: 600;
         }
@@ -215,6 +184,11 @@
         .result-section.show {
             display: block;
             animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .result-title {
@@ -253,18 +227,12 @@
         }
 
         .info-box {
-            background: #e8f5e9;
-            border-left: 5px solid #4caf50;
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
-            color: #1b5e20;
-        }
-
-        .info-box.biz {
-            background: #fff3e0;
-            border-left-color: #ff9800;
-            color: #e65100;
+            color: #0d47a1;
         }
 
         .back-btn {
@@ -281,567 +249,412 @@
         .back-btn:hover {
             background: rgba(102, 126, 234, 0.2);
         }
+
+        .sample-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .sample-btn:hover {
+            background: #138496;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <a href="../index.html" class="back-btn">� �0�</a>
+        <a href="../index.html" class="back-btn">← 回到首頁</a>
 
-        <h1><� H/�-</h1>
-        <p class="subtitle">Y� � m��H</p>
+        <h1>📊 跨域課程設計 - 教育 × 企業雙軌版</h1>
+        <p class="subtitle">一個工具，雙重應用：教育數據分析 + 企業商業分析</p>
 
+        <div class="info-box">
+            <strong>💡 功能說明：</strong>切換教育版或企業版，輸入相應數據，AI 幫你產生專業分析報告與視覺化建議。
+        </div>
+
+        <!-- Tab 切換按鈕 -->
         <div class="tab-container">
-            <button class="tab-btn active" onclick="switchTab('edu')"><� Y�H</button>
-            <button class="tab-btn" onclick="switchTab('biz')"><� mH</button>
+            <button class="tab-btn active" onclick="switchTab('education')">🎓 教育版</button>
+            <button class="tab-btn" onclick="switchTab('business')">🏢 企業版</button>
         </div>
 
-        <!-- Y�Hg� -->
-        <div id="edu-content" class="tab-content active">
-            <div class="info-box">
-                <strong><� Y�H�</strong><br>
-                -��Hx�PBL	��;x�kbmLtx��X�z�OL
+        <!-- 教育版內容 -->
+        <div id="education" class="tab-content active">
+            <div class="form-group">
+                <label>
+                    📈 輸入數據
+                    <button class="sample-btn" onclick="fillSampleEdu()">填入範例數據</button>
+                </label>
+                <textarea id="dataEdu" placeholder="格式範例（每行一位學生）：
+學生姓名, 國語, 數學, 自然, 社會
+
+例如：
+王小明, 85, 72, 90, 88
+李小華, 92, 95, 88, 91
+張小美, 78, 65, 72, 80
+..."></textarea>
             </div>
 
             <div class="form-group">
-                <label>=� x�t�x��x 2 	</label>
-                <div class="subject-tags" id="eduSubjects">
-                    <span class="subject-tag chinese selected" onclick="toggleSubject(this, '�')">�</span>
-                    <span class="subject-tag math selected" onclick="toggleSubject(this, 'xx')">xx</span>
-                    <span class="subject-tag science" onclick="toggleSubject(this, '�6')">�6</span>
-                    <span class="subject-tag social" onclick="toggleSubject(this, '>')">></span>
-                    <span class="subject-tag english" onclick="toggleSubject(this, '�')">�</span>
-                    <span class="subject-tag art" onclick="toggleSubject(this, '�S')">�S</span>
-                    <span class="subject-tag tech" onclick="toggleSubject(this, 'р')">р</span>
-                    <span class="subject-tag pe" onclick="toggleSubject(this, 'e�')">e�</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label><� H;L�</label>
-                <div class="theme-cards" id="eduThemes">
-                    <div class="theme-card selected" onclick="selectTheme(this, '��8�')">
-                        <div class="theme-icon"><</div>
-                        <div class="theme-name">��8�</div>
+                <label>📊 分析類型（可複選）</label>
+                <div class="analysis-types">
+                    <div class="analysis-card selected" onclick="toggleAnalysis('edu', this, '成績分析')">
+                        <div class="analysis-icon">📉</div>
+                        <div class="analysis-name">成績分析</div>
                     </div>
-                    <div class="theme-card" onclick="selectTheme(this, '(0�')">
-                        <div class="theme-icon"><�</div>
-                        <div class="theme-name">(0�</div>
+                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '班級數據')">
+                        <div class="analysis-icon">👥</div>
+                        <div class="analysis-name">班級數據</div>
                     </div>
-                    <div class="theme-card" onclick="selectTheme(this, 'e�;')">
-                        <div class="theme-icon">=�</div>
-                        <div class="theme-name">e�;</div>
+                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '學習進度追蹤')">
+                        <div class="analysis-icon">📈</div>
+                        <div class="analysis-name">學習進度追蹤</div>
                     </div>
-                    <div class="theme-card" onclick="selectTheme(this, 'р�(')">
-                        <div class="theme-icon">></div>
-                        <div class="theme-name">р�(</div>
-                    </div>
-                    <div class="theme-card" onclick="selectTheme(this, '>pL')">
-                        <div class="theme-icon">></div>
-                        <div class="theme-name">>pL</div>
-                    </div>
-                    <div class="theme-card" onclick="selectTheme(this, '�;L')">
-                        <div class="theme-icon"></div>
-                        <div class="theme-name">�;L</div>
+                    <div class="analysis-card" onclick="toggleAnalysis('edu', this, '問卷結果分析')">
+                        <div class="analysis-icon">📋</div>
+                        <div class="analysis-name">問卷結果分析</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="form-group" id="eduCustomThemeGroup" style="display: none;">
-                <label for="eduCustomTheme">=� �H;L</label>
-                <input type="text" id="eduCustomTheme" placeholder="���!>@�L*��-">
             </div>
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="eduGrade"><� t/x6</label>
-                    <select id="eduGrade">
-                        <option value="Nt1-2t	">Nt1-2t	</option>
-                        <option value="-t3-4t	">-t3-4t	</option>
-                        <option value="�t5-6t	" selected>�t5-6t	</option>
-                        <option value="-">-</option>
-                        <option value="�-">�-</option>
-                        <option value="�w">�w</option>
-                        <option value="'x">'x</option>
-                        <option value="v@">v@</option>
+                    <label for="gradeEdu">🎓 年級/班級</label>
+                    <select id="gradeEdu">
+                        <option value="國小三年級">國小三年級</option>
+                        <option value="國小四年級">國小四年級</option>
+                        <option value="國小五年級">國小五年級</option>
+                        <option value="國小六年級">國小六年級</option>
+                        <option value="國中一年級">國中一年級</option>
+                        <option value="國中二年級">國中二年級</option>
+                        <option value="國中三年級">國中三年級</option>
+                        <option value="高中一年級">高中一年級</option>
+                        <option value="高中二年級">高中二年級</option>
+                        <option value="高中三年級">高中三年級</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="eduProjectType">=� L^�</label>
-                    <select id="eduProjectType">
-                        <option value="PBLL" selected>PBLL</option>
-                        <option value="�߲">�߲</option>
-                        <option value="�;x�k">�;x�k</option>
-                        <option value="bmL">bmL</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="eduDuration">� �Bw</label>
-                    <select id="eduDuration">
-                        <option value="114-6��	">114-6��	</option>
-                        <option value="218-12��	" selected>218-12��	</option>
-                        <option value="116-20��	">1</option>
-                        <option value=" xH"> xH</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="eduOutput">=� �U�</label>
-                    <select id="eduOutput">
-                        <option value="w1U�">w1U�</option>
-                        <option value="�-1J" selected>�-1J</option>
-                        <option value="�\\�">�\\�</option>
-                        <option value="qG�\">qG�\</option>
-                        <option value="�U">�U</option>
+                    <label for="outputEdu">📋 輸出格式</label>
+                    <select id="outputEdu">
+                        <option value="詳細報告">詳細報告（含所有分析）</option>
+                        <option value="摘要報告">摘要報告（重點整理）</option>
+                        <option value="Excel建議">Excel 公式建議</option>
+                        <option value="家長通知">家長通知版（簡化）</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="eduGoals"><� ��xk	</label>
-                <textarea id="eduGoals" rows="3" placeholder="��&#10;- �
-x�zOL���&#10;- x��\�&#10;- #P�,�X;�("></textarea>
+                <label for="extraEdu">📌 額外需求（選填）</label>
+                <input type="text" id="extraEdu" placeholder="例如：標示及格邊緣的學生、建議補救教學策略">
             </div>
 
-            <button class="generate-btn" onclick="generateEduPrompt()">=� Y�H�:^</button>
+            <button class="generate-btn" onclick="generatePromptEdu()">🚀 生成教育版分析提示詞</button>
         </div>
 
-        <!-- mHg� -->
-        <div id="biz-content" class="tab-content">
-            <div class="info-box biz">
-                <strong><� mH�</strong><br>
-                -H��Fm�HL��;�� OKR �i(�."m��!
+        <!-- 企業版內容 -->
+        <div id="business" class="tab-content">
+            <div class="form-group">
+                <label>
+                    📊 輸入企業數據
+                    <button class="sample-btn" onclick="fillSampleBiz()">填入範例數據</button>
+                </label>
+                <textarea id="dataBiz" placeholder="格式範例（可自由調整欄位）：
+
+銷售數據範例：
+日期, 產品, 銷售額, 數量, 區域
+
+財務數據範例：
+月份, 收入, 支出, 利潤, 成長率
+
+客戶數據範例：
+客戶ID, 購買次數, 消費金額, 滿意度
+
+..."></textarea>
             </div>
 
             <div class="form-group">
-                <label for="bizProjectType">=� �^�</label>
-                <select id="bizProjectType">
-                    <option value="H��" selected>H��</option>
-                    <option value="Fm�H">Fm�H</option>
-                    <option value="L��">L��</option>
-                    <option value=";��">;��</option>
-                    <option value="OKR�-�">OKR�-�</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="bizTheme"><� �;L/H1</label>
-                <input type="text" id="bizTheme" placeholder="��Q4�Lba�Gk�"�
-�t�>Y;�">
+                <label>📊 分析類型（可複選）</label>
+                <div class="analysis-types">
+                    <div class="analysis-card selected" onclick="toggleAnalysis('biz', this, '銷售數據')">
+                        <div class="analysis-icon">💰</div>
+                        <div class="analysis-name">銷售數據</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '市場分析')">
+                        <div class="analysis-icon">📈</div>
+                        <div class="analysis-name">市場分析</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, 'KPI追蹤')">
+                        <div class="analysis-icon">🎯</div>
+                        <div class="analysis-name">KPI追蹤</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '財務報表')">
+                        <div class="analysis-icon">💼</div>
+                        <div class="analysis-name">財務報表</div>
+                    </div>
+                    <div class="analysis-card" onclick="toggleAnalysis('biz', this, '客戶分析')">
+                        <div class="analysis-icon">👥</div>
+                        <div class="analysis-name">客戶分析</div>
+                    </div>
+                </div>
             </div>
 
             <div class="options-grid">
                 <div class="form-group">
-                    <label for="bizIndustry"><� "m^�</label>
-                    <select id="bizIndustry">
-                        <option value="рm" selected>рm</option>
-                        <option value="эm">эm</option>
-                        <option value="�.m">�.m</option>
-                        <option value="� m">� m</option>
-                        <option value="�m">�m</option>
-                        <option value="�Bm">�Bm</option>
-                        <option value="�m">�m</option>
-                        <option value="Y�m">Y�m</option>
-                        <option value="�um">�um</option>
-                        <option value="v�">v�</option>
+                    <label for="industryBiz">🏢 產業類型</label>
+                    <select id="industryBiz">
+                        <option value="零售業">零售業</option>
+                        <option value="服務業">服務業</option>
+                        <option value="製造業">製造業</option>
+                        <option value="科技業">科技業</option>
+                        <option value="金融業">金融業</option>
+                        <option value="餐飲業">餐飲業</option>
+                        <option value="電商">電商</option>
+                        <option value="教育培訓">教育培訓</option>
+                        <option value="醫療保健">醫療保健</option>
+                        <option value="其他">其他</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="bizBudget">=� ��!</label>
-                    <select id="bizBudget">
-                        <option value="�10,�	">�10,�	</option>
-                        <option value="-�10-50,	" selected>-�10-50,	</option>
-                        <option value="'�50-200,	">'�50-200,	</option>
-                        <option value="�'�200,�
-	">�'�200,�
-	</option>
+                    <label for="periodBiz">📅 數據週期</label>
+                    <select id="periodBiz">
+                        <option value="日報">日報</option>
+                        <option value="週報">週報</option>
+                        <option value="月報">月報</option>
+                        <option value="季報">季報</option>
+                        <option value="年報">年報</option>
+                        <option value="自訂期間">自訂期間</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="bizDuration">� �L</label>
-                    <select id="bizDuration">
-                        <option value="�1g	">�1g	</option>
-                        <option value="-1-3	" selected>-1-3	</option>
-                        <option value="w3-6	">w3-6	</option>
-                        <option value="t�H6�
-	">t�H6�
-	</option>
+                    <label for="outputBiz">📋 輸出格式</label>
+                    <select id="outputBiz">
+                        <option value="管理層報告">管理層報告（策略導向）</option>
+                        <option value="數據儀表板">數據儀表板（視覺化）</option>
+                        <option value="詳細分析">詳細分析（完整數據）</option>
+                        <option value="執行摘要">執行摘要（簡報用）</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="bizTarget"><� ��></label>
-                    <input type="text" id="bizTarget" placeholder="��25-35r�s'-m;B2B�6">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="bizGoals"><� H�xk	</label>
-                <textarea id="bizGoals" rows="3" placeholder="��&#10;- �G�L�� 30%&#10;- ����6 500 �&#10;- �6w 20%"></textarea>
+                <label for="extraBiz">📌 額外需求（選填）</label>
+                <input type="text" id="extraBiz" placeholder="例如：重點關注成長趨勢、比較同期數據、預測下季表現">
             </div>
 
-            <div class="form-group">
-                <label for="bizContext">=� �o�xk	</label>
-                <textarea id="bizContext" rows="3" placeholder="!�H�o�� B"></textarea>
-            </div>
-
-            <button class="generate-btn" onclick="generateBizPrompt()">=� mH�:^</button>
+            <button class="generate-btn" onclick="generatePromptBiz()">🚀 生成企業版分析提示詞</button>
         </div>
 
-        <!-- P�@� -->
+        <!-- 結果顯示區 -->
         <div class="result-section" id="resultSection">
-            <div class="result-title">( ��:^</div>
+            <div class="result-title">✨ 生成的提示詞</div>
             <div class="prompt-box" id="promptOutput"></div>
-            <button class="copy-btn" onclick="copyPrompt()">=� ��:^</button>
+            <button class="copy-btn" onclick="copyPrompt()">📋 複製提示詞</button>
+
+            <div class="tip-box">
+                <strong>💡 使用建議：</strong><br>
+                • 將數據和提示詞一起貼到 Antigravity 或其他 AI 工具<br>
+                • AI 可以產生分析結果，也可以建議 Excel 圖表製作方式<br>
+                • 教育版：如需保護學生隱私，可使用代號取代真實姓名<br>
+                • 企業版：可要求 AI 提供可執行的商業建議與行動方案
+            </div>
         </div>
     </div>
 
     <script>
-        let selectedSubjects = ['�', 'xx'];
-        let selectedTheme = '��8�';
-        let currentTab = 'edu';
+        let currentTab = 'education';
+        let selectedAnalysisEdu = ['成績分析'];
+        let selectedAnalysisBiz = ['銷售數據'];
 
         function switchTab(tab) {
             currentTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(tab + '-content').classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tab).classList.add('active');
+
             document.getElementById('resultSection').classList.remove('show');
-
-            // �nx�
-            if (tab === 'edu') {
-                selectedSubjects = ['�', 'xx'];
-                selectedTheme = '��8�';
-            }
         }
 
-        function toggleSubject(tag, subject) {
-            tag.classList.toggle('selected');
-            if (tag.classList.contains('selected')) {
-                selectedSubjects.push(subject);
-            } else {
-                selectedSubjects = selectedSubjects.filter(s => s !== subject);
-            }
-        }
+        function toggleAnalysis(type, card, analysisName) {
+            card.classList.toggle('selected');
 
-        function selectTheme(card, theme) {
-            const parent = card.parentElement;
-            parent.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            selectedTheme = theme;
-
-            // o:/���;L8eF
-            const customGroup = document.getElementById('eduCustomThemeGroup');
-            if (customGroup) {
-                customGroup.style.display = theme === '�;L' ? 'block' : 'none';
-            }
-        }
-
-        function generateEduPrompt() {
-            const grade = document.getElementById('eduGrade').value;
-            const projectType = document.getElementById('eduProjectType').value;
-            const duration = document.getElementById('eduDuration').value;
-            const output = document.getElementById('eduOutput').value;
-            const goals = document.getElementById('eduGoals').value.trim();
-            const customTheme = document.getElementById('eduCustomTheme').value.trim();
-
-            if (selectedSubjects.length < 2) {
-                alert('��x� 2 tx�');
-                return;
-            }
-
-            let theme = selectedTheme;
-            if (selectedTheme === '�;L') {
-                if (!customTheme) {
-                    alert('�8e�H;L');
-                    return;
+            if (type === 'edu') {
+                if (card.classList.contains('selected')) {
+                    selectedAnalysisEdu.push(analysisName);
+                } else {
+                    selectedAnalysisEdu = selectedAnalysisEdu.filter(t => t !== analysisName);
                 }
-                theme = customTheme;
+            } else {
+                if (card.classList.contains('selected')) {
+                    selectedAnalysisBiz.push(analysisName);
+                } else {
+                    selectedAnalysisBiz = selectedAnalysisBiz.filter(t => t !== analysisName);
+                }
             }
-
-            let prompt = `�k- ${projectType}
-
-�,�
-
-- t/x6${grade}
-- L^�${projectType}
-- H;L${theme}
-- �Bw${duration}
-- �U�${output}
-
-tx�
-${selectedSubjects.map(s => `- ${s}`).join('\n')}
-
-- B
-�Л�t��-+
-
-1. H18x�L	
-
-2. �!�
-   - 8�OLDriving Question	
-   - x��xф#P�	
-
-3. x�t�
-   - �x�(H-n��r
-   - wԄx�g���
-
-4. �A1/�!��	
-   - w�_
-   - �"��
-   - �\��
-   - |h��
-   - ���
-
-5. x�;�-
-   - ���
-   - D��
-   - h�;�
-
-6. UϹ
-   - b'U�
-   - =P'U�
-   - UϏ�Rubric	
-
-7. @ ǐP�
-
-8. Y+���p`;
-
-            if (goals) {
-                prompt += `\n\n��\n${goals}`;
-            }
-
-            prompt += `\n
-��
-- (A�-�
-- ;�-�w���L
-- �xtay'
-- 7�x-Äx�
-- ͖�xф�6#P`;
-
-            displayResult(prompt);
         }
 
-        function generateBizPrompt() {
-            const projectType = document.getElementById('bizProjectType').value;
-            const theme = document.getElementById('bizTheme').value.trim();
-            const industry = document.getElementById('bizIndustry').value;
-            const budget = document.getElementById('bizBudget').value;
-            const duration = document.getElementById('bizDuration').value;
-            const target = document.getElementById('bizTarget').value.trim();
-            const goals = document.getElementById('bizGoals').value.trim();
-            const context = document.getElementById('bizContext').value.trim();
+        function fillSampleEdu() {
+            const sampleData = `學生, 國語, 數學, 自然, 社會
+王小明, 85, 72, 90, 88
+李小華, 92, 95, 88, 91
+張小美, 78, 65, 72, 80
+陳大偉, 88, 82, 85, 87
+林小琳, 95, 90, 92, 94
+黃小龍, 62, 58, 70, 65
+周小芳, 75, 78, 80, 76
+吳小強, 70, 88, 75, 72
+趙小雲, 82, 75, 78, 85
+鄭小敏, 90, 85, 88, 90
+劉小傑, 55, 48, 60, 58
+許小玲, 80, 70, 82, 78
+蔡小偉, 87, 92, 85, 82
+謝小君, 73, 68, 75, 70
+楊小豪, 91, 88, 90, 92`;
+            document.getElementById('dataEdu').value = sampleData;
+        }
 
-            if (!theme) {
-                alert('�8e�;L/H1');
+        function fillSampleBiz() {
+            const sampleData = `日期, 產品, 銷售額, 數量, 區域
+2025-01-01, 產品A, 125000, 50, 北區
+2025-01-02, 產品B, 98000, 35, 中區
+2025-01-03, 產品A, 142000, 58, 南區
+2025-01-04, 產品C, 87000, 42, 北區
+2025-01-05, 產品B, 115000, 48, 東區
+2025-01-06, 產品A, 138000, 55, 中區
+2025-01-07, 產品C, 92000, 45, 南區
+2025-01-08, 產品B, 105000, 40, 北區
+2025-01-09, 產品A, 128000, 52, 東區
+2025-01-10, 產品C, 95000, 47, 中區`;
+            document.getElementById('dataBiz').value = sampleData;
+        }
+
+        function generatePromptEdu() {
+            const data = document.getElementById('dataEdu').value.trim();
+            const grade = document.getElementById('gradeEdu').value;
+            const output = document.getElementById('outputEdu').value;
+            const extra = document.getElementById('extraEdu').value.trim();
+
+            if (!data) {
+                alert('請輸入數據！');
                 return;
             }
 
-            let prompt = `�k�� �${projectType}
-
-�,�
-
-- �^�${projectType}
-- H1${theme}
-- "m^�${industry}
-- ��!${budget}
-- �L${duration}`;
-
-            if (target) {
-                prompt += `\n- ��>${target}`;
+            if (selectedAnalysisEdu.length === 0) {
+                alert('請至少選擇一種分析類型！');
+                return;
             }
 
-            if (context) {
-                prompt += `\n\n�o�\n${context}`;
+            let prompt = `請幫我分析以下教育數據：
+
+【基本資訊】
+年級/班級：${grade}
+
+【數據內容】
+${data}
+
+【分析需求】
+${selectedAnalysisEdu.map(a => `- ${a}`).join('\n')}
+
+【輸出格式】${output}
+
+【請提供以下分析】
+1. 基本統計：平均分、最高分、最低分、及格率
+2. 各科目表現分析與比較
+3. 需要特別關注的學生（含原因說明）
+4. 教學建議與改進方向
+5. 視覺化建議（建議製作的圖表類型及 Excel 製作步驟）`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
             }
-
-            if (goals) {
-                prompt += `\n\nH�\n${goals}`;
-            }
-
-            const templates = {
-                'H��': `
-
-�g��B
-
-1. �LX�
-   - H�o�_
-   - 8���
-   - �u��
-
-2. 4�
-   - �4��
-   - �-�
-   - SWOT �
-
-3. H��
-   - �LVe
-   - �\�By	
-   - ��Mn
-
-4. ���
-   - s0�h
-   - ,H��
-
-5. ���
-   - [(��X%
-   - �Ve
-
-6. H�U0
-   - KPI -�
-   - H�d_6`,
-
-                'Fm�H': `
-
-�Hg��B
-
-1. �HX�
-   - �z�OL
-   - Л��z�H
-   - hy�<;5
-
-2. 4_
-   - 4�!��
-   - ����
-   - �� B
-
-3. �z�H
-   - "�/٪
-   - �-*�
-   - Fm!
-
-4. �Lk
-   - |U�
-   - ��-�
-   - ǐ B
-
-5. �ُ�
-   - �� B
-   - 6�,
-   - ��1l�
-
-6. ��9
-   - 8��
-   - gO/\%4`,
-
-                'L��': `
-
-�g��B
-
-1. L�X�
-   - L��
-   - �4
-   - 8�
-o
-
-2. 4�
-   - ���
-   - ���
-   - 4�M
-
-3. L�Ve
-   - 4P Ve"��<���	
-   - tL���k
-   - xML�Ve
-
-4. �Lk
-   - ;�Bh
-   - �ԏ�
-   - u��
-
-5. �M
-   - �(0
-   - ROI 0
-
-6. HU0
-   - KPI -�
-   - �d_6`,
-
-                ';��': `
-
-�g��B
-
-1. ;Ղ�
-   - ;�;L�
-   - �a
-   - H�
-
-2. ;�-
-   - ;�ARundown	
-   - g���
-   - �հ�-
-
-3. �L0�
-   - 40��
-   - ��Mn
-   - -� B
-
-4. ����
-   - ���S
-   - 1_6
-   -  P-
-
-5. ���
-   - �(0
-   - 6/sa
-
-6. ���
-   - �Hk
-   - �%U
-
-7. HU0
-   - ����
-   - �`,
-
-                'OKR�-�': `
-
-OKR g��B
-
-1. �-�Objectives	
-   - 3-5 �u�
-   - w�	0'�T
-   - DTVe#P
-
-2. �uP�Key Results	
-   - ��-� 3-5 �uP�
-   - ��	BP
-   - SMART �G
-
-3. LչHInitiatives	
-   - T KR �w�L�
-   - ���B
-   - ǐ B
-
-4. �d_6
-   - �8;�
-   - 2��1�
-   - �t_6
-
-5. J2o
-   - 
-d OKR J
-   - ��T\
-   - � OKR #P`
-            };
-
-            prompt += templates[projectType] || '';
 
             prompt += `\n
-��
-- (A�-�
-- g�w���L
-- &${industry}y'
-- ��P6
-- ͖���L'`;
+【注意事項】
+- 使用繁體中文
+- 數據解讀要客觀
+- 建議要具體可行
+- 適合老師用於班級經營參考`;
 
-            displayResult(prompt);
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        function displayResult(prompt) {
+        function generatePromptBiz() {
+            const data = document.getElementById('dataBiz').value.trim();
+            const industry = document.getElementById('industryBiz').value;
+            const period = document.getElementById('periodBiz').value;
+            const output = document.getElementById('outputBiz').value;
+            const extra = document.getElementById('extraBiz').value.trim();
+
+            if (!data) {
+                alert('請輸入企業數據！');
+                return;
+            }
+
+            if (selectedAnalysisBiz.length === 0) {
+                alert('請至少選擇一種分析類型！');
+                return;
+            }
+
+            let prompt = `請幫我分析以下企業數據：
+
+【基本資訊】
+產業類型：${industry}
+數據週期：${period}
+
+【數據內容】
+${data}
+
+【分析需求】
+${selectedAnalysisBiz.map(a => `- ${a}`).join('\n')}
+
+【輸出格式】${output}
+
+【請提供以下分析】
+1. 核心指標分析：關鍵數據統計與趨勢
+2. 數據洞察：發現的重要模式與異常
+3. 商業建議：基於數據的可執行策略
+4. 風險提示：需要注意的潛在問題
+5. 視覺化建議：建議製作的圖表類型及工具使用方式`;
+
+            if (extra) {
+                prompt += `\n\n【額外需求】\n${extra}`;
+            }
+
+            prompt += `\n
+【注意事項】
+- 使用繁體中文
+- 分析要深入且具商業價值
+- 建議要可執行且符合產業特性
+- 適合商業決策參考`;
+
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -851,9 +664,9 @@ d OKR J
             const promptText = document.getElementById('promptOutput').textContent;
             navigator.clipboard.writeText(promptText).then(() => {
                 const btn = event.target;
-                btn.textContent = ' ��';
+                btn.textContent = '✅ 已複製！';
                 setTimeout(() => {
-                    btn.textContent = '=� ��:^';
+                    btn.textContent = '📋 複製提示詞';
                 }, 2000);
             });
         }
